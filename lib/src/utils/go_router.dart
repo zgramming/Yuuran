@@ -118,7 +118,99 @@ class AccountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("Person", style: bFont);
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(32.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Card(
+              color: secondary,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text.rich(
+                      TextSpan(
+                        text: "Hello ",
+                        children: [
+                          TextSpan(
+                            text: "Zeffry Reynando",
+                            style: hFontWhite.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                            ),
+                          )
+                        ],
+                      ),
+                      style: hFontWhite.copyWith(fontSize: 14.0),
+                    ),
+                    const SizedBox(height: 16.0),
+                    Text(
+                      "Halaman Account ini untuk mengatur tentang profile kamu",
+                      style: bFontWhite.copyWith(fontWeight: FontWeight.w300, fontSize: 12.0),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
+            GridView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+              children: [
+                InkWell(
+                  onTap: () {},
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [BoxShadow(blurRadius: 2.0, color: black.withOpacity(.25))],
+                    ),
+                    // margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: CircleAvatar(
+                              backgroundColor: danger,
+                              foregroundColor: Colors.white,
+                              child: Icon(Icons.logout),
+                            ),
+                          ),
+                          const SizedBox(height: 16.0),
+                          Text(
+                            "LOGOUT",
+                            style: bFont.copyWith(
+                                fontWeight: FontWeight.bold, letterSpacing: 1.1, fontSize: 16.0),
+                          ),
+                          const SizedBox(height: 8.0),
+                          Text(
+                            "Keluar aplikasi",
+                            style: bFont.copyWith(
+                              letterSpacing: 1.1,
+                              color: grey,
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -194,7 +286,12 @@ class HomePage extends StatelessWidget {
                       Align(
                         alignment: Alignment.centerLeft,
                         child: OutlinedButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            await showDialog(
+                              context: context,
+                              builder: (ctx) => const MonthYearPicker(),
+                            );
+                          },
                           style: OutlinedButton.styleFrom(
                               side: const BorderSide(color: secondaryDark)),
                           child: Text(
@@ -343,9 +440,25 @@ class HomePage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 40.0),
-            Text(
-              "Iuran April 2022",
-              style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Aktifitas Terbaru April 2022",
+                  style: bFont.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: Text(
+                    'Lihat Semua',
+                    style: bFont.copyWith(
+                        fontWeight: FontWeight.bold, fontSize: 10.0, color: secondaryDark),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 16.0),
             ListView.builder(
@@ -354,50 +467,45 @@ class HomePage extends StatelessWidget {
               itemCount: 10,
               itemBuilder: (ctx, index) {
                 return Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                   margin: const EdgeInsets.only(bottom: 16.0),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(16.0),
-                    leading: const CircleAvatar(backgroundColor: warning),
-                    title: Text(
-                      "Zeffry Reynando",
-                      style: hFont.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
-                    ),
-                    subtitle: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: Text.rich(
-                        TextSpan(
-                          text: "2 ",
-                          children: [
-                            TextSpan(
-                              text: "Iuran",
-                              style: bFont.copyWith(
-                                fontWeight: FontWeight.normal,
-                                fontSize: 10.0,
-                              ),
-                            ),
-                          ],
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                        decoration: BoxDecoration(
+                          color: index.isEven ? warning : secondary,
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)),
                         ),
-                        style: bFont.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: secondary,
-                          fontSize: 24.0,
+                        child: Text(
+                          index.isOdd ? "IURAN KEAMANAN (IRKM)" : "IURAN KEBERSIHAN (IRKB)",
+                          style: hFontWhite,
                         ),
                       ),
-                    ),
-                    trailing: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            blurRadius: 2.0,
-                            color: black.withOpacity(.25),
+                      ListTile(
+                        title: Text(
+                          "Zeffry Reynando",
+                          style: hFont.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Text(
+                            "Update terakhir ${GlobalFunction.formatYMDHM(DateTime.now())}",
+                            style: bFont.copyWith(color: grey),
                           ),
-                        ],
-                      ),
-                      child: ClipOval(child: Image.asset(pathLogo, fit: BoxFit.cover)),
-                    ),
+                        ),
+                        trailing: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              GlobalFunction.formatNumber(index.isOdd ? 25000 : 10000),
+                              style: bFont.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 );
               },
@@ -405,6 +513,99 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 16.0),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class MonthYearPicker extends StatefulWidget {
+  const MonthYearPicker({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<MonthYearPicker> createState() => _MonthYearPickerState();
+}
+
+class _MonthYearPickerState extends State<MonthYearPicker> {
+  final years = <int>[
+    for (final year in GlobalFunction.range(min: 2010, max: DateTime.now().year)) year
+  ];
+
+  final months = <int>[for (final month in GlobalFunction.range(min: 1, max: 12)) month];
+
+  int _selectedYear = DateTime.now().year;
+  int _selectedMonth = DateTime.now().month;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      title: Text(
+        "Pilih Bulan dan Tahun",
+        style: hFont.copyWith(fontWeight: FontWeight.bold),
+      ),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 16.0),
+          DropdownButton<int>(
+            isExpanded: true,
+            items: years
+                .map<DropdownMenuItem<int>>(
+                  (year) => DropdownMenuItem<int>(
+                    child: Text(
+                      '$year',
+                      style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
+                    ),
+                    value: year,
+                  ),
+                )
+                .toList(),
+            value: _selectedYear,
+            onChanged: (value) {
+              setState(() => _selectedYear = value ?? DateTime.now().year);
+            },
+          ),
+          const SizedBox(height: 16.0),
+          DropdownButton<int>(
+            isExpanded: true,
+            items: months
+                .map<DropdownMenuItem<int>>(
+                  (month) => DropdownMenuItem<int>(
+                    child: Text(
+                      sharedFunction.monthString(month),
+                      style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
+                    ),
+                    value: month,
+                  ),
+                )
+                .toList(),
+            value: _selectedMonth,
+            onChanged: (value) {
+              setState(() => _selectedMonth = value ?? DateTime.now().month);
+            },
+          ),
+          const SizedBox(height: 16.0),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.all(16.0),
+              primary: primary,
+            ),
+            child: Text(
+              "Update",
+              style: bFont.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16.0),
+        ],
       ),
     );
   }

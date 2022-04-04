@@ -27,7 +27,7 @@ class App extends ConsumerWidget {
       title: "Yuuran",
       debugShowCheckedModeBanner: false,
       theme: _theme.copyWith(
-        textTheme: bFontTextTheme(context),
+        textTheme: bFontTextTheme(context).copyWith(),
         scaffoldBackgroundColor: scaffoldColor,
         colorScheme: _theme.colorScheme.copyWith(
           primary: primary,

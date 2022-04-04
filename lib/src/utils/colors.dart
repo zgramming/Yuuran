@@ -16,6 +16,6 @@ const scaffoldColor = Color(0xFFFBF7FF);
 const black = Color(0xFF1C1A27);
 const grey = Color(0xFFACA9BB);
 
-const warning = Color(0xFFF9F871);
+const warning = Color(0xFFFFD36E);
 const danger = Color(0xFFEF0033);
 const info = Color(0xFF007EFF);
