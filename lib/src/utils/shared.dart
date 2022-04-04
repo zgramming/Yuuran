@@ -54,21 +54,31 @@ class SharedFunction {
   }
 
   Map<String, List> groupByFirstCharacter(List<String> names) {
-    var tempMap = <String, List>{};
+    final tempMap = <String, List<String>>{};
 
     if (names.isEmpty) return tempMap;
 
+    /// Group By List By First Character
     for (var name in names) {
       final isExists = tempMap[name[0]];
-      if (isExists == null) {
-        tempMap[name[0]] = [];
-      }
+
+      if (isExists == null) tempMap[name[0]] = [];
 
       tempMap[name[0]]!.add(name);
     }
 
-    final sortedByKey =
-        SplayTreeMap<String, List>.from(tempMap, (key1, key2) => key1.compareTo(key2));
+    /// Sorted Map By Key
+    final sortedByKey = SplayTreeMap<String, List<String>>.from(
+      tempMap,
+      (key1, key2) => key1.compareTo(key2),
+    );
+
+    /// Sorted Map By Values
+    final resultMap = <String, List<String>>{};
+    for (var key in sortedByKey.keys) {
+      sortedByKey[key]?.sort((a, b) => a.compareTo(b));
+      resultMap[key] = sortedByKey[key] ?? [];
+    }
 
     return sortedByKey;
   }
