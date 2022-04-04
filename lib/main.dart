@@ -1,7 +1,9 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/date_symbol_data_local.dart';
+
 import 'src/utils/utils.dart';
 
 Future<void> main() async {
@@ -38,4 +40,39 @@ class App extends ConsumerWidget {
       routerDelegate: _goRouter.routerDelegate,
     );
   }
+}
+
+class Person extends Equatable {
+  const Person({
+    this.name = '',
+  });
+
+  final String name;
+
+  @override
+  List<Object> get props => [name];
+
+  Person copyWith({
+    String? name,
+  }) {
+    return Person(
+      name: name ?? this.name,
+    );
+  }
+
+  static const persons = [
+    Person(name: "Zeffry Reynando"),
+    Person(name: "Helmi Aji Hamamamiardi"),
+    Person(name: "Syarif Hidayatulllah"),
+    Person(name: "Umar Bawazir"),
+    Person(name: "Anggit PP"),
+    Person(name: "Rifda Kamila"),
+    Person(name: "Nakia"),
+    Person(name: "Caul"),
+    Person(name: "Ruth"),
+    Person(name: "Cindy"),
+    Person(name: "Rangga"),
+    Person(name: "Andi S"),
+    Person(name: "Engkoh"),
+  ];
 }

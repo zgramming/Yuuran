@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:global_template/global_template.dart';
 import 'package:go_router/go_router.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:yuuran/main.dart';
 
 import 'utils.dart';
 
@@ -243,7 +244,93 @@ class SearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text("Search", style: bFont);
+    var outlineInputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(30.0),
+      borderSide: const BorderSide(color: grey),
+    );
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: 16.0),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TextFormField(
+              style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 12.0),
+              decoration: InputDecoration(
+                hintText: "Cari warga berdasarkan namanya",
+                hintStyle: bFont.copyWith(fontSize: 10.0, color: grey),
+                prefixIcon: const Icon(Icons.search),
+                enabledBorder: outlineInputBorder,
+                focusedBorder: outlineInputBorder.copyWith(
+                  borderSide: const BorderSide(color: primary),
+                ),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16.0),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (final entry in sharedFunction
+                      .groupByFirstCharacter(Person.persons.map((e) => e.name).toList())
+                      .entries) ...[
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Card(
+                        color: primary,
+                        margin: EdgeInsets.zero,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            entry.key,
+                            style: hFontWhite.copyWith(fontWeight: FontWeight.bold, fontSize: 20.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                    ListView.separated(
+                      separatorBuilder: (context, index) => const Divider(height: 1),
+                      itemCount: entry.value.length,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (ctx, index) {
+                        final name = entry.value[index];
+                        return ListTile(
+                          onTap: () {},
+                          leading: CircleAvatar(
+                            backgroundColor: primaryShade2,
+                            child: FittedBox(
+                              child: Text(
+                                name[0],
+                                style: hFontWhite.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                          title: Text(
+                            '$name',
+                            style: hFont.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+                  ],
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16.0),
+      ],
+    );
   }
 }
 
@@ -492,7 +579,10 @@ class HomePage extends StatelessWidget {
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Text(
                             "Update terakhir ${GlobalFunction.formatYMDHM(DateTime.now())}",
-                            style: bFont.copyWith(color: grey),
+                            style: bFont.copyWith(
+                              color: grey,
+                              fontSize: 12.0,
+                            ),
                           ),
                         ),
                         trailing: Card(

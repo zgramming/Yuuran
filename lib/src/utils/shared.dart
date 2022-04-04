@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 
 class SharedFunction {
@@ -49,6 +51,26 @@ class SharedFunction {
       default:
         return '-';
     }
+  }
+
+  Map<String, List> groupByFirstCharacter(List<String> names) {
+    var tempMap = <String, List>{};
+
+    if (names.isEmpty) return tempMap;
+
+    for (var name in names) {
+      final isExists = tempMap[name[0]];
+      if (isExists == null) {
+        tempMap[name[0]] = [];
+      }
+
+      tempMap[name[0]]!.add(name);
+    }
+
+    final sortedByKey =
+        SplayTreeMap<String, List>.from(tempMap, (key1, key2) => key1.compareTo(key2));
+
+    return sortedByKey;
   }
 }
 
