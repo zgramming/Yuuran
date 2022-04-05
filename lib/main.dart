@@ -29,7 +29,7 @@ class App extends ConsumerWidget {
       title: "Yuuran",
       debugShowCheckedModeBanner: false,
       theme: _theme.copyWith(
-        textTheme: bFontTextTheme(context).copyWith(),
+        textTheme: bFontTextTheme(context),
         scaffoldBackgroundColor: scaffoldColor,
         colorScheme: _theme.colorScheme.copyWith(
           primary: primary,
@@ -74,5 +74,33 @@ class Person extends Equatable {
     Person(name: "Rangga"),
     Person(name: "Andi S"),
     Person(name: "Engkoh"),
+  ];
+}
+
+class MyEvent extends Equatable {
+  const MyEvent({
+    this.title = '',
+  });
+
+  final String title;
+
+  @override
+  List<Object> get props => [title];
+
+  @override
+  String toString() => 'MyEvent(title: $title)';
+
+  MyEvent copyWith({
+    String? title,
+  }) {
+    return MyEvent(
+      title: title ?? this.title,
+    );
+  }
+
+  static const myEvents = <MyEvent>[
+    MyEvent(title: "Event 1"),
+    MyEvent(title: "Event 2"),
+    MyEvent(title: "Event 3"),
   ];
 }
