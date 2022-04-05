@@ -1478,7 +1478,14 @@ class SearchPage extends StatelessWidget {
                                       ),
                                     ),
                                     TextButton(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+
+                                        context.pushNamed(
+                                          citizenFormRouteName,
+                                          params: {"username": name},
+                                        );
+                                      },
                                       style: TextButton.styleFrom(
                                         padding: const EdgeInsets.all(16.0),
                                       ),
