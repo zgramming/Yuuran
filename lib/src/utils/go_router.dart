@@ -19,11 +19,16 @@ const splashRouteName = "splash";
 const onboardingRouteName = "onboarding";
 const loginRouteName = "login";
 const welcomeRouteName = "welcome";
+
 const duesRouteName = "dues";
 const duesCategoryRouteName = "duesCategory";
 const duesCategoryFormRouteName = "duesCategoryForm";
+
 const citizenDuesRouteName = "citizenDues";
+const citizenFormRouteName = "citizenForm";
 const citizenProfileRouteName = "citizenProfile";
+
+const myProfileRouteName = "myProfile";
 
 final goRouter = Provider<GoRouter>(
   (ref) => GoRouter(
@@ -56,17 +61,21 @@ final goRouter = Provider<GoRouter>(
       GoRoute(
         path: "/dues",
         name: duesRouteName,
-        builder: (ctx, state) => const DuesPage(),
-      ),
-      GoRoute(
-        path: "/dues/category",
-        name: duesCategoryRouteName,
-        builder: (ctx, state) => const DuesCategoryPage(),
+        builder: (ctx, state) => const DuesFormPage(),
         routes: [
+          /// [/dues/category]
           GoRoute(
-            path: "form/:codeCategory",
-            name: duesCategoryFormRouteName,
-            builder: (ctx, state) => const DuesCategoryFormPage(),
+            path: "category",
+            name: duesCategoryRouteName,
+            builder: (ctx, state) => const DuesCategoryPage(),
+            routes: [
+              /// [/dues/category/form/code-category]
+              GoRoute(
+                path: "form/:codeCategory",
+                name: duesCategoryFormRouteName,
+                builder: (ctx, state) => const DuesCategoryFormPage(),
+              ),
+            ],
           ),
         ],
       ),
@@ -75,9 +84,156 @@ final goRouter = Provider<GoRouter>(
         name: citizenDuesRouteName,
         builder: (ctx, state) => const CitizenDuesPage(),
       ),
+      GoRoute(
+        path: "/citizen/form/:username",
+        name: citizenFormRouteName,
+        builder: (ctx, state) => const CitizenFormPage(),
+      ),
     ],
   ),
 );
+
+class CitizenFormPage extends StatelessWidget {
+  const CitizenFormPage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final outlineInputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0),
+      borderSide: const BorderSide(color: grey),
+    );
+    final _inputDecoration = InputDecoration(
+      filled: true,
+      fillColor: Colors.white,
+      hintText: "",
+      hintStyle: bFont.copyWith(fontSize: 12.0, color: grey),
+      enabledBorder: outlineInputBorder,
+      focusedBorder: outlineInputBorder.copyWith(borderSide: const BorderSide(color: primary)),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+    );
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          "Tambah Warga",
+          style: hFontWhite.copyWith(
+            // fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Card(
+          margin: const EdgeInsets.all(16.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 16.0),
+                ...[
+                  Text(
+                    'Username',
+                    style: hFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFormField(
+                    style: bFont.copyWith(fontWeight: FontWeight.bold),
+                    decoration: _inputDecoration.copyWith(hintText: "Username"),
+                  ),
+                ],
+                const SizedBox(height: 16.0),
+                ...[
+                  Text(
+                    'Nama',
+                    style: hFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFormField(
+                    style: bFont.copyWith(fontWeight: FontWeight.bold),
+                    decoration: _inputDecoration.copyWith(hintText: "Nama"),
+                  ),
+                ],
+                const SizedBox(height: 16.0),
+                ...[
+                  Text(
+                    'Email',
+                    style: hFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    style: bFont.copyWith(fontWeight: FontWeight.bold),
+                    decoration: _inputDecoration.copyWith(hintText: "Email"),
+                  ),
+                ],
+                const SizedBox(height: 16.0),
+                ...[
+                  Text(
+                    'Password',
+                    style: hFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFormField(
+                    obscureText: true,
+                    style: bFont.copyWith(fontWeight: FontWeight.bold),
+                    decoration: _inputDecoration.copyWith(hintText: "Password"),
+                  ),
+                ],
+                const SizedBox(height: 16.0),
+                ...[
+                  Text(
+                    'Konfirmasi Password',
+                    style: hFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFormField(
+                    obscureText: true,
+                    style: bFont.copyWith(fontWeight: FontWeight.bold),
+                    decoration: _inputDecoration.copyWith(hintText: "Konfirmasi Password"),
+                  ),
+                ],
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(16.0),
+                    primary: primary,
+                  ),
+                  child: Text(
+                    "Submit",
+                    style: bFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 class DuesCategoryFormPage extends StatelessWidget {
   const DuesCategoryFormPage({
@@ -484,16 +640,16 @@ class _CitizenDuesFilterState extends State<CitizenDuesFilter> {
   }
 }
 
-class DuesPage extends StatefulWidget {
-  const DuesPage({
+class DuesFormPage extends StatefulWidget {
+  const DuesFormPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<DuesPage> createState() => _DuesPageState();
+  State<DuesFormPage> createState() => _DuesFormPageState();
 }
 
-class _DuesPageState extends State<DuesPage> {
+class _DuesFormPageState extends State<DuesFormPage> {
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
 
@@ -645,29 +801,31 @@ class _DuesPageState extends State<DuesPage> {
                         ),
                       ],
                       const SizedBox(height: 16.0),
-                      Text(
-                        'Keterangan',
-                        style: hFont.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16.0,
+                      ...[
+                        Text(
+                          'Keterangan',
+                          style: hFont.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8.0),
-                      TextFormField(
-                        controller: descriptionController,
-                        style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 12.0),
-                        minLines: 3,
-                        maxLines: 3,
-                        decoration: _inputDecoration.copyWith(hintText: "Keterangan"),
-                      ),
-                      const SizedBox(height: 8.0),
-                      Text(
-                        "Kamu bisa menggunakan field ini untuk memberikan keterangan pada iuran ini, bisa berupa alasan pembayaran iuran tidak full, alasan kenapa iuran dibayar oleh pihak lain, dan sebagainya.",
-                        style: bFont.copyWith(
-                          fontSize: 10.0,
-                          color: grey,
+                        const SizedBox(height: 8.0),
+                        TextFormField(
+                          controller: descriptionController,
+                          style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 12.0),
+                          minLines: 3,
+                          maxLines: 3,
+                          decoration: _inputDecoration.copyWith(hintText: "Keterangan"),
                         ),
-                      ),
+                        const SizedBox(height: 8.0),
+                        Text(
+                          "Kamu bisa menggunakan field ini untuk memberikan keterangan pada iuran ini, bisa berupa alasan pembayaran iuran tidak full, alasan kenapa iuran dibayar oleh pihak lain, dan sebagainya.",
+                          style: bFont.copyWith(
+                            fontSize: 10.0,
+                            color: grey,
+                          ),
+                        ),
+                      ],
                       const SizedBox(height: 16.0),
                       ElevatedButton(
                         onPressed: () {},
@@ -1241,7 +1399,12 @@ class SearchPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () => context.pushNamed(
+                      citizenFormRouteName,
+                      params: {
+                        "username": "zeffry",
+                      },
+                    ),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.all(16.0),
                       primary: secondary,
