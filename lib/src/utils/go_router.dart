@@ -20,7 +20,10 @@ const onboardingRouteName = "onboarding";
 const loginRouteName = "login";
 const welcomeRouteName = "welcome";
 const duesRouteName = "dues";
-const citizenRouteName = "citizen";
+const duesCategoryRouteName = "duesCategory";
+const duesCategoryFormRouteName = "duesCategoryForm";
+const citizenDuesRouteName = "citizenDues";
+const citizenProfileRouteName = "citizenProfile";
 
 final goRouter = Provider<GoRouter>(
   (ref) => GoRouter(
@@ -55,9 +58,431 @@ final goRouter = Provider<GoRouter>(
         name: duesRouteName,
         builder: (ctx, state) => const DuesPage(),
       ),
+      GoRoute(
+        path: "/dues/category",
+        name: duesCategoryRouteName,
+        builder: (ctx, state) => const DuesCategoryPage(),
+        routes: [
+          GoRoute(
+            path: "form/:codeCategory",
+            name: duesCategoryFormRouteName,
+            builder: (ctx, state) => const DuesCategoryFormPage(),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: "/citizen/dues/:username",
+        name: citizenDuesRouteName,
+        builder: (ctx, state) => const CitizenDuesPage(),
+      ),
     ],
   ),
 );
+
+class DuesCategoryFormPage extends StatelessWidget {
+  const DuesCategoryFormPage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final outlineInputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0),
+      borderSide: const BorderSide(color: grey),
+    );
+    final _inputDecoration = InputDecoration(
+      filled: true,
+      fillColor: Colors.white,
+      hintText: "",
+      hintStyle: bFont.copyWith(fontSize: 12.0, color: grey),
+      enabledBorder: outlineInputBorder,
+      focusedBorder: outlineInputBorder.copyWith(borderSide: const BorderSide(color: primary)),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+    );
+
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          "Iuran Kebersihan",
+          style: hFontWhite.copyWith(
+            // fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        child: Card(
+          margin: const EdgeInsets.all(16.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 16.0),
+                ...[
+                  Text(
+                    'Kode',
+                    style: hFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFormField(
+                    style: bFont.copyWith(fontWeight: FontWeight.bold),
+                    decoration: _inputDecoration.copyWith(hintText: "Kode"),
+                  ),
+                ],
+                const SizedBox(height: 16.0),
+                ...[
+                  Text(
+                    'Nama',
+                    style: hFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFormField(
+                    style: bFont.copyWith(fontWeight: FontWeight.bold),
+                    decoration: _inputDecoration.copyWith(hintText: "Nama"),
+                  ),
+                ],
+                const SizedBox(height: 16.0),
+                ...[
+                  Text(
+                    'Deskripsi',
+                    style: hFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  const SizedBox(height: 8.0),
+                  TextFormField(
+                    minLines: 3,
+                    maxLines: 3,
+                    style: bFont.copyWith(fontWeight: FontWeight.bold),
+                    decoration: _inputDecoration.copyWith(hintText: "Nama"),
+                  ),
+                ],
+                const SizedBox(height: 16.0),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(16.0),
+                    primary: primary,
+                  ),
+                  child: Text(
+                    "Submit",
+                    style: bFont.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DuesCategoryPage extends StatelessWidget {
+  const DuesCategoryPage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text(
+          "Kategori Iuran",
+          style: hFontWhite.copyWith(fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemCount: 5,
+        shrinkWrap: true,
+        itemBuilder: (ctx, state) {
+          return Card(
+            margin: const EdgeInsets.symmetric(vertical: 8.0),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundColor: primaryShade,
+                child: FittedBox(
+                  child: Text(
+                    "IKB",
+                    style: bFontWhite.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              title: Text(
+                "Iuran Kebersihan",
+                style: hFont.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              subtitle: Text(
+                "Disini deskripsi iuran kebersihan loh",
+                style: bFont.copyWith(
+                  color: grey,
+                  fontSize: 10.0,
+                ),
+              ),
+              trailing: IconButton(
+                onPressed: () => context.pushNamed(
+                  duesCategoryFormRouteName,
+                  params: {
+                    "codeCategory": "test",
+                  },
+                ),
+                icon: const Icon(Icons.edit, color: info),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+class CitizenDuesPage extends StatelessWidget {
+  const CitizenDuesPage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text("Iuran XXX"),
+        actions: [
+          IconButton(
+            onPressed: () async {
+              await showDialog(
+                context: context,
+                builder: (ctx) => const CitizenDuesFilter(),
+              );
+            },
+            icon: const Icon(Icons.filter_alt),
+          )
+        ],
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            margin: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: secondary,
+              borderRadius: BorderRadius.circular(10.0),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 2.0,
+                  color: black.withOpacity(.25),
+                ),
+              ],
+            ),
+            child: Text(
+              "Iuran Kebersihan April 2022",
+              style: hFontWhite.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+                letterSpacing: 1.1,
+              ),
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              itemCount: 10,
+              shrinkWrap: true,
+              itemBuilder: (ctx, index) {
+                return InkWell(
+                  onTap: () => context.pushNamed(duesRouteName),
+                  child: Card(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                    margin: const EdgeInsets.only(bottom: 16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                          decoration: BoxDecoration(
+                            color: index.isEven ? warning : secondary,
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)),
+                          ),
+                          child: Text(
+                            index.isOdd ? "IURAN KEAMANAN (IRKM)" : "IURAN KEBERSIHAN (IRKB)",
+                            style: hFontWhite,
+                          ),
+                        ),
+                        ListTile(
+                          title: Text(
+                            "Zeffry Reynando",
+                            style: hFont.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: Text(
+                              "Update terakhir ${GlobalFunction.formatYMDHM(DateTime.now())}",
+                              style: bFont.copyWith(
+                                color: grey,
+                                fontSize: 12.0,
+                              ),
+                            ),
+                          ),
+                          trailing: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                GlobalFunction.formatNumber(index.isOdd ? 25000 : 10000),
+                                style: bFont.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CitizenDuesFilter extends StatefulWidget {
+  const CitizenDuesFilter({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<CitizenDuesFilter> createState() => _CitizenDuesFilterState();
+}
+
+class _CitizenDuesFilterState extends State<CitizenDuesFilter> {
+  final years = <int>[
+    for (final year in GlobalFunction.range(min: 2010, max: DateTime.now().year)) year
+  ];
+
+  final months = <int>[for (final month in GlobalFunction.range(min: 1, max: 12)) month];
+
+  int _selectedYear = DateTime.now().year;
+  int _selectedMonth = DateTime.now().month;
+  String? _selectedDuesCategory;
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      title: Text(
+        "Filter berdasarkan :",
+        style: hFont.copyWith(fontWeight: FontWeight.bold),
+      ),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 16.0),
+          DropdownButton<String>(
+            value: _selectedDuesCategory,
+            isExpanded: true,
+            hint: Text(
+              "Pilih Kategori",
+              style: bFont.copyWith(
+                color: grey,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            onChanged: (value) => setState(() => _selectedDuesCategory = value),
+            items: ["Iuran Keamanan", "Iuran Kesehatan", "Iuran Kebersihan"]
+                .map(
+                  (e) => DropdownMenuItem(
+                    value: e,
+                    child: Text(
+                      e,
+                      style: bFont.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+          const SizedBox(height: 16.0),
+          DropdownButton<int>(
+            isExpanded: true,
+            items: years
+                .map<DropdownMenuItem<int>>(
+                  (year) => DropdownMenuItem<int>(
+                    child: Text(
+                      '$year',
+                      style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
+                    ),
+                    value: year,
+                  ),
+                )
+                .toList(),
+            value: _selectedYear,
+            onChanged: (value) => setState(() => _selectedYear = value ?? DateTime.now().year),
+          ),
+          const SizedBox(height: 16.0),
+          DropdownButton<int>(
+            isExpanded: true,
+            items: months
+                .map<DropdownMenuItem<int>>(
+                  (month) => DropdownMenuItem<int>(
+                    child: Text(
+                      sharedFunction.monthString(month),
+                      style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
+                    ),
+                    value: month,
+                  ),
+                )
+                .toList(),
+            value: _selectedMonth,
+            onChanged: (value) => setState(() => _selectedMonth = value ?? DateTime.now().month),
+          ),
+          const SizedBox(height: 16.0),
+          ElevatedButton(
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.all(16.0),
+              primary: primary,
+            ),
+            child: Text(
+              "Submit",
+              style: bFont.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16.0),
+        ],
+      ),
+    );
+  }
+}
 
 class DuesPage extends StatefulWidget {
   const DuesPage({
@@ -203,17 +628,20 @@ class _DuesPageState extends State<DuesPage> {
                           controlAffinity: ListTileControlAffinity.leading,
                           contentPadding: const EdgeInsets.only(),
                           activeColor: primary,
-                          onChanged: (value) =>
-                              setState(() => _selectedPaidBySomeoneElse = value ?? false),
-                          title: Text("Dibayarkan orang lain ?",
-                              style: hFont.copyWith(fontWeight: FontWeight.bold)),
+                          title: Text(
+                            "Dibayarkan orang lain ?",
+                            style: hFont.copyWith(fontWeight: FontWeight.bold),
+                          ),
                           subtitle: Text(
-                            "Memberitahukan bahwa iuran ini dibayarkan oleh orang lain, bukan dengan orang yang bersangkutan.",
+                            "Memberitahukan bahwa iuran ini dibayarkan oleh orang lain, bukan dengan warga yang bersangkutan.",
                             style: bFont.copyWith(
                               fontSize: 10.0,
                               color: grey,
                             ),
                           ),
+                          onChanged: (value) {
+                            setState(() => _selectedPaidBySomeoneElse = value ?? false);
+                          },
                         ),
                       ],
                       const SizedBox(height: 16.0),
@@ -230,7 +658,7 @@ class _DuesPageState extends State<DuesPage> {
                         style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 12.0),
                         minLines: 3,
                         maxLines: 3,
-                        decoration: _inputDecoration,
+                        decoration: _inputDecoration.copyWith(hintText: "Keterangan"),
                       ),
                       const SizedBox(height: 8.0),
                       Text(
@@ -399,6 +827,14 @@ class AccountPage extends StatelessWidget {
                   circleForegroundColor: Colors.white,
                   title: "Profile",
                   subtitle: "Mengatur profile kamu",
+                ),
+                AccountMenu(
+                  onTap: () {},
+                  icon: Icons.settings_applications_outlined,
+                  circleBackgroundColor: Colors.lightBlue,
+                  circleForegroundColor: Colors.white,
+                  title: "Tentang Aplikasi",
+                  subtitle: "Informasi lengkap tentang aplikasi Yuuran",
                 ),
                 AccountMenu(
                   onTap: () {},
@@ -622,56 +1058,57 @@ class _CalendarPageState extends State<CalendarPage> {
             ),
             const SizedBox(height: 32.0),
             ListView.builder(
-                itemCount: 5,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (ctx, index) {
-                  return Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                    margin: const EdgeInsets.only(bottom: 16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                          decoration: BoxDecoration(
-                            color: index.isEven ? warning : secondary,
-                            borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)),
-                          ),
+              itemCount: 5,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (ctx, index) {
+                return Card(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                  margin: const EdgeInsets.only(bottom: 16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                        decoration: BoxDecoration(
+                          color: index.isEven ? warning : secondary,
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)),
+                        ),
+                        child: Text(
+                          index.isOdd ? "IURAN KEAMANAN (IRKM)" : "IURAN KEBERSIHAN (IRKB)",
+                          style: hFontWhite,
+                        ),
+                      ),
+                      ListTile(
+                        title: Text(
+                          "Zeffry Reynando",
+                          style: hFont.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Text(
-                            index.isOdd ? "IURAN KEAMANAN (IRKM)" : "IURAN KEBERSIHAN (IRKB)",
-                            style: hFontWhite,
+                            "Update terakhir ${GlobalFunction.formatYMDHM(DateTime.now())}",
+                            style: bFont.copyWith(
+                              color: grey,
+                              fontSize: 12.0,
+                            ),
                           ),
                         ),
-                        ListTile(
-                          title: Text(
-                            "Zeffry Reynando",
-                            style: hFont.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        trailing: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              "Update terakhir ${GlobalFunction.formatYMDHM(DateTime.now())}",
-                              style: bFont.copyWith(
-                                color: grey,
-                                fontSize: 12.0,
-                              ),
+                              GlobalFunction.formatNumber(index.isOdd ? 25000 : 10000),
+                              style: bFont.copyWith(fontWeight: FontWeight.bold),
                             ),
                           ),
-                          trailing: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                GlobalFunction.formatNumber(index.isOdd ? 25000 : 10000),
-                                style: bFont.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  );
-                }),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              },
+            ),
             const SizedBox(height: 32.0),
           ],
         ),
@@ -694,57 +1131,70 @@ class ChooseActionPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const SizedBox(height: 16.0),
-          Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-            margin: EdgeInsets.zero,
-            child: ListTile(
-              onTap: () => context.pushNamed(duesRouteName),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              leading: const CircleAvatar(
-                backgroundColor: primary,
-                foregroundColor: Colors.white,
-                child: Icon(Icons.money),
-              ),
-              title: Text(
-                "Tambah Iuran",
-                style: hFont.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                ),
-              ),
-              subtitle: Text(
-                "Menambahkan iuran warga",
-                style: bFont.copyWith(fontSize: 10.0, color: grey),
-              ),
-            ),
+          ChooseActionMenu(
+            onTap: () => context.pushNamed(duesRouteName),
+            circleBackgroudColor: secondary,
+            iconData: Icons.attach_money_rounded,
+            title: "Tambah Iuran",
+            subtitle: "Membuat dan menyimpan iuran warga",
           ),
           const SizedBox(height: 16.0),
-          Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-            margin: EdgeInsets.zero,
-            child: ListTile(
-              onTap: () {},
-              contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              leading: const CircleAvatar(
-                backgroundColor: primary,
-                foregroundColor: Colors.white,
-                child: Icon(Icons.person),
-              ),
-              title: Text(
-                "Tambah Warga",
-                style: hFont.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16.0,
-                ),
-              ),
-              subtitle: Text(
-                "Menambahkan data warga jika sebelumnya warga tersebut belum terdaftar di aplikasi",
-                style: bFont.copyWith(fontSize: 10.0, color: grey),
-              ),
-            ),
+          ChooseActionMenu(
+            onTap: () => context.pushNamed(duesCategoryRouteName),
+            circleBackgroudColor: warning,
+            iconData: Icons.category_rounded,
+            title: "Kategori Iuran",
+            subtitle: "Memanage Kategori Iuran ",
           ),
           const SizedBox(height: 16.0),
         ],
+      ),
+    );
+  }
+}
+
+class ChooseActionMenu extends StatelessWidget {
+  const ChooseActionMenu({
+    Key? key,
+    this.title = '',
+    this.subtitle = '',
+    this.circleBackgroudColor,
+    this.circleForegroundColor,
+    required this.iconData,
+    this.onTap,
+  }) : super(key: key);
+
+  final String title;
+  final String subtitle;
+  final Color? circleBackgroudColor;
+  final Color? circleForegroundColor;
+  final IconData iconData;
+  final void Function()? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      margin: EdgeInsets.zero,
+      child: ListTile(
+        onTap: onTap,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        leading: CircleAvatar(
+          backgroundColor: circleBackgroudColor ?? primary,
+          foregroundColor: circleForegroundColor ?? Colors.white,
+          child: Icon(iconData),
+        ),
+        title: Text(
+          title,
+          style: hFont.copyWith(
+            fontWeight: FontWeight.bold,
+            fontSize: 16.0,
+          ),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: bFont.copyWith(fontSize: 10.0, color: grey),
+        ),
       ),
     );
   }
@@ -783,7 +1233,6 @@ class SearchPage extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 16.0),
         Expanded(
           child: SingleChildScrollView(
             child: Padding(
@@ -791,6 +1240,24 @@ class SearchPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  OutlinedButton(
+                    onPressed: () {},
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.all(16.0),
+                      primary: secondary,
+                      side: const BorderSide(color: secondary),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                    ),
+                    child: Text(
+                      "Tambah Warga",
+                      style: bFont.copyWith(
+                        color: secondary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14.0,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16.0),
                   for (final entry in sharedFunction
                       .groupByFirstCharacter(Person.persons.map((e) => e.name).toList())
                       .entries) ...[
@@ -817,7 +1284,62 @@ class SearchPage extends StatelessWidget {
                       itemBuilder: (ctx, index) {
                         final name = entry.value[index];
                         return ListTile(
-                          onTap: () {},
+                          onTap: () async {
+                            await showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: Text(
+                                  "Pilih aksi",
+                                  style: hFont.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                                content: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        context.pushNamed(
+                                          citizenDuesRouteName,
+                                          params: {
+                                            "username": name,
+                                          },
+                                        );
+                                      },
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.all(16.0),
+                                      ),
+                                      child: Text(
+                                        "Lihat Iuran",
+                                        style: bFont.copyWith(fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {},
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.all(16.0),
+                                      ),
+                                      child: Text(
+                                        "Update Profile",
+                                        style: bFont.copyWith(fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.all(16.0),
+                                    ),
+                                    child: Text("Batal", style: bFont.copyWith(color: grey)),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                           leading: CircleAvatar(
                             backgroundColor: primaryShade2,
                             child: FittedBox(
