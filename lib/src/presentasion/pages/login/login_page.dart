@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:global_template/global_template.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../injection.dart';
 import '../../../utils/utils.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({
     Key? key,
   }) : super(key: key);
 
-  static final _inputDecoration = InputDecoration(
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends ConsumerState<LoginPage> {
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+  final _inputDecoration = InputDecoration(
     filled: true,
     fillColor: Colors.white,
     hintText: "Username",
@@ -22,7 +32,6 @@ class LoginPage extends StatelessWidget {
       borderSide: const BorderSide(color: secondary, width: 1),
     ),
   );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,11 +84,13 @@ class LoginPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     TextFormField(
+                      controller: usernameController,
                       style: bFont.copyWith(color: black, fontSize: 16.0),
                       decoration: _inputDecoration,
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
+                      controller: passwordController,
                       style: bFont.copyWith(color: black, fontSize: 16.0),
                       obscureText: true,
                       obscuringCharacter: "⁂",
@@ -87,7 +98,39 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () => context.goNamed(welcomeRouteName),
+                      onPressed: () async {
+                        await ref.read(userNotifier.notifier).login(
+                              username: usernameController.text,
+                              password: passwordController.text,
+                            );
+
+                        final notifier = ref.read(userNotifier);
+                        if (notifier.isError) {
+                          GlobalFunction.showSnackBar(
+                            context,
+                            snackBarType: SnackBarType.error,
+                            content: Text(
+                              notifier.message,
+                              style: hFontWhite.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          );
+                        } else {
+                          GlobalFunction.showSnackBar(
+                            context,
+                            snackBarType: SnackBarType.success,
+                            content: Text(
+                              "Success Login",
+                              style: hFontWhite.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          );
+                          context.goNamed(welcomeRouteName);
+                        }
+                        // context.goNamed(welcomeRouteName);
+                      },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(24.0),
                         side: const BorderSide(color: Colors.white),

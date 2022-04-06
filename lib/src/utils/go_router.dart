@@ -29,7 +29,7 @@ const myProfileRouteName = "myProfile";
 final goRouter = Provider<GoRouter>(
   (ref) => GoRouter(
     debugLogDiagnostics: true,
-    initialLocation: "/welcome",
+    initialLocation: "/",
     redirect: (state) {
       return null;
     },

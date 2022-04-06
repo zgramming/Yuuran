@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:yuuran/src/presentasion/riverpod/app_config/app_config_notifier.dart';
 
 import '../../../utils/utils.dart';
 
-class OnboardingPage extends StatefulWidget {
+class OnboardingPage extends ConsumerStatefulWidget {
   const OnboardingPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<OnboardingPage> createState() => _OnboardingPageState();
+  _OnboardingPageState createState() => _OnboardingPageState();
 }
 
-class _OnboardingPageState extends State<OnboardingPage> {
+class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   final _decoration = PageDecoration(
     titleTextStyle: hFontWhite.copyWith(
       fontWeight: FontWeight.bold,
@@ -80,7 +82,10 @@ class _OnboardingPageState extends State<OnboardingPage> {
       ],
       done: Text("Selesai", style: bFontWhite.copyWith(fontWeight: FontWeight.bold)),
       next: Text("Lanjut", style: bFontWhite),
-      onDone: () => context.goNamed(loginRouteName),
+      onDone: () async {
+        await ref.read(appConfigNotifer.notifier).setOnboarding(true);
+        context.goNamed(loginRouteName);
+      },
     );
   }
 }
