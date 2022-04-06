@@ -403,6 +403,17 @@ class DuesCategoryPage extends StatelessWidget {
           "Kategori Iuran",
           style: hFontWhite.copyWith(fontWeight: FontWeight.bold),
         ),
+        actions: [
+          IconButton(
+            onPressed: () => context.pushNamed(
+              duesCategoryFormRouteName,
+              params: {
+                "codeCategory": "0",
+              },
+            ),
+            icon: const Icon(Icons.add),
+          ),
+        ],
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16.0),
