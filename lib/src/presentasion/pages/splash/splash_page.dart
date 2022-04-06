@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:yuuran/src/presentasion/pages/login/login_page.dart';
 import 'package:yuuran/src/presentasion/pages/onboarding/onboarding_page.dart';
 import 'package:yuuran/src/presentasion/riverpod/app_config/app_config_notifier.dart';

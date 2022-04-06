@@ -1,8 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../domain/repository/user_repository.dart';
 import '../../model/user/user_model.dart';
 
 abstract class UserRemoteDataSource {
