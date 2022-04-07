@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../injection.dart';
 import '../../../data/model/dues_detail/dues_detail_model.dart';
-import '../../../domain/repository/dues_recent_activity_repository.dart';
+import '../../../domain/repository/dues_repository.dart';
 import '../global/global_notifier.dart';
 
 part 'dues_recent_activity_state.dart';
@@ -11,14 +11,14 @@ part 'dues_recent_activity_state.dart';
 class DuesRecentActivityNotifier extends StateNotifier<DuesRecentActivityState> {
   DuesRecentActivityNotifier({required this.repository}) : super(const DuesRecentActivityState());
 
-  final DuesRecentActivityRepository repository;
+  final DuesRepository repository;
 
   Future<DuesRecentActivityState> get({
     int? month,
     int? year,
     int? limit,
   }) async {
-    final result = await repository.get(
+    final result = await repository.getRecentActivity(
       limit: limit,
       month: month,
       year: year,

@@ -67,11 +67,22 @@ class CalendarMenu extends StatelessWidget {
                       margin: EdgeInsets.zero,
                       child: Padding(
                         padding: const EdgeInsets.all(2.0),
-                        child: Text(
-                          "${events.length} Iuran",
+                        child: Text.rich(
+                          TextSpan(
+                            text: "${events.length} ",
+                            children: [
+                              TextSpan(
+                                text: "Aktifitas",
+                                style: bFontWhite.copyWith(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 8.0,
+                                ),
+                              ),
+                            ],
+                          ),
                           style: bFontWhite.copyWith(
                             fontWeight: FontWeight.bold,
-                            fontSize: 10.0,
+                            fontSize: 12.0,
                           ),
                         ),
                       ),

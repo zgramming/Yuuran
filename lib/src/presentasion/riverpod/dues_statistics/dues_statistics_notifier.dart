@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../injection.dart';
 import '../../../data/model/dues_statistics/dues_statistics_model.dart';
-import '../../../domain/repository/dues_statistics_repository.dart';
+import '../../../domain/repository/dues_repository.dart';
 import '../global/global_notifier.dart';
 
 part 'dues_statistics_state.dart';
@@ -13,13 +13,13 @@ class DuesStatisticsNotifier extends StateNotifier<DuesStatisticsState> {
     required this.repository,
   }) : super(const DuesStatisticsState());
 
-  final DuesStatisticsRepository repository;
+  final DuesRepository repository;
 
   Future<DuesStatisticsState> get({
     int? month,
     int? year,
   }) async {
-    final result = await repository.get(month: month, year: year);
+    final result = await repository.getStatistics(month: month, year: year);
     return result.fold(
       (failure) => state = state.init(
         value: null,

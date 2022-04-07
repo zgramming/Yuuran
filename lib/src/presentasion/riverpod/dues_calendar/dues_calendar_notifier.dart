@@ -6,7 +6,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../injection.dart';
 import '../../../data/model/dues_detail/dues_detail_model.dart';
-import '../../../domain/repository/dues_calendar_repository.dart';
+import '../../../domain/repository/dues_repository.dart';
 import '../global/global_notifier.dart';
 
 part 'dues_calendar_state.dart';
@@ -16,13 +16,13 @@ class DuesCalendarNotifier extends StateNotifier<DuesCalendarState> {
     required this.repository,
   }) : super(const DuesCalendarState());
 
-  final DuesCalendarRepository repository;
+  final DuesRepository repository;
 
   Future<DuesCalendarState> get({
     int? month,
     int? year,
   }) async {
-    final result = await repository.get(
+    final result = await repository.getCalendarActivity(
       month: month,
       year: year,
     );
