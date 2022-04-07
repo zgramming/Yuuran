@@ -45,7 +45,7 @@ class _SearchModalFilterState extends ConsumerState<SearchModalFilter> {
           Expanded(
             child: Consumer(
               builder: (context, ref, child) {
-                final _citizenFiltered = ref.watch(citizenFiltered);
+                final _citizenFiltered = ref.watch(citizenGroupingFiltered);
                 return ListView.builder(
                   itemCount: _citizenFiltered.length,
                   shrinkWrap: true,

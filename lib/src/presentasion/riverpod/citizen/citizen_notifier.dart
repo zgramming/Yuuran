@@ -19,14 +19,14 @@ class CitizenNotifier extends StateNotifier<CitizenState> {
     final result = await repository.get();
     return result.fold(
       (failure) => state = state.init(
-        values: [],
+        items: [],
         isError: true,
         message: failure.message,
       ),
       (values) => state = state.init(
         isError: false,
         message: null,
-        values: values,
+        items: values,
       ),
     );
   }
@@ -35,15 +35,53 @@ class CitizenNotifier extends StateNotifier<CitizenState> {
 final getCitizen = FutureProvider.autoDispose((ref) async {
   final notifier = ref.watch(citizenNotifier.notifier);
 
-  final result = await notifier.get();
-  return result;
+  /// Load Citizen from API
+  await notifier.get();
+
+  return ref.watch(citizenGrouping);
 });
 
 final citizenQuery = StateProvider<String?>((ref) => null);
 
-final citizenFiltered = Provider((ref) {
+final citizenGrouping = Provider<Map<String, List<UserModel>>>((ref) {
+  final values = ref.watch(citizenNotifier).items;
+  if (values.isEmpty) return {};
+
+  final tempMap = <String, List<UserModel>>{};
+
+  for (final value in values) {
+    /// Get first character of string
+    /// zeffry = z
+    /// syarif = s
+    final isExists = tempMap[value.name[0]];
+
+    /// Check if key with character is exists or not
+    /// if not exist create empty List
+    if (isExists == null) tempMap[value.name[0]] = [];
+
+    /// Add user depend of first character
+    tempMap[value.name[0]]?.add(value);
+  }
+
+  /// Sort By Key
+  final sortedByKey = SplayTreeMap<String, List<UserModel>>.from(
+    tempMap,
+    (key1, key2) => key1.compareTo(key2),
+  );
+
+  /// Sort By Values
+  final resultMap = <String, List<UserModel>>{};
+  for (final key in sortedByKey.keys) {
+    sortedByKey[key]?.sort((a, b) => a.name.compareTo(b.name));
+    resultMap[key] = sortedByKey[key] ?? [];
+  }
+
+  return resultMap;
+});
+
+final citizenGroupingFiltered = Provider((ref) {
   final query = ref.watch(citizenQuery);
-  final citizen = ref.watch(citizenNotifier).maps;
+  final citizen = ref.watch(citizenGrouping);
 
   /// Flatten Map<String,List<UserModel>> to List<UserModel>
   final flattenCitizen = {for (final item in citizen.values) ...item}.toList();

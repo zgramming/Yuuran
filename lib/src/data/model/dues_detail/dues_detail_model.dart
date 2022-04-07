@@ -9,9 +9,23 @@ part 'dues_detail_model.g.dart';
 
 @JsonEnum(fieldRename: FieldRename.snake)
 enum StatusPaid {
+  @JsonValue("paid_off")
   paidOff,
+  @JsonValue("not_paid_off")
   notPaidOff,
+  @JsonValue("none")
   none,
+}
+
+String getStatusPaidText(StatusPaid status) {
+  switch (status) {
+    case StatusPaid.notPaidOff:
+      return 'not_paid_off';
+    case StatusPaid.paidOff:
+      return 'paid_off';
+    default:
+      return 'none';
+  }
 }
 
 @immutable

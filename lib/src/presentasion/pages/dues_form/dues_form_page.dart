@@ -1,31 +1,55 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:global_template/global_template.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../injection.dart';
+import '../../../data/model/dues_category/dues_category_model.dart';
+import '../../../data/model/dues_detail/dues_detail_model.dart';
+import '../../../data/model/user/user_model.dart';
 import '../../../utils/utils.dart';
+import '../../riverpod/app_config/app_config_notifier.dart';
+import '../../riverpod/citizen/citizen_notifier.dart';
+import '../../riverpod/dues_category/dues_category_notifier.dart';
 
-class DuesFormPage extends StatefulWidget {
+class DuesFormPage extends ConsumerStatefulWidget {
   const DuesFormPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<DuesFormPage> createState() => _DuesFormPageState();
+  _DuesFormPageState createState() => _DuesFormPageState();
 }
 
-class _DuesFormPageState extends State<DuesFormPage> {
+class _DuesFormPageState extends ConsumerState<DuesFormPage> {
+  final years = <int>[
+    for (final year in GlobalFunction.range(min: 2010, max: DateTime.now().year)) year
+  ];
+
+  final months = <int>[for (final month in GlobalFunction.range(min: 1, max: 12)) month];
+
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  String? _selectedCitizen;
-  String? _selectedDuesCategory;
+  late int _selectedYear;
+  late int _selectedMonth;
+  UserModel? _selectedCitizen;
+  DuesCategoryModel? _selectedDuesCategory;
   bool _selectedPaidBySomeoneElse = false;
+  StatusPaid? _selectedStatus = StatusPaid.notPaidOff;
 
   static const _locale = 'id';
   String _formatNumber(String s) => NumberFormat.decimalPattern(_locale).format(int.parse(s));
   String get _currency => NumberFormat.compactSimpleCurrency(locale: _locale).currencySymbol;
+
+  @override
+  void initState() {
+    super.initState();
+    final now = DateTime.now();
+    _selectedYear = now.year;
+    _selectedMonth = now.month;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +90,56 @@ class _DuesFormPageState extends State<DuesFormPage> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       ...[
+                        const SizedBox(height: 16.0),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Flexible(
+                              child: DropdownButton<int>(
+                                isExpanded: true,
+                                items: months
+                                    .map<DropdownMenuItem<int>>(
+                                      (month) => DropdownMenuItem<int>(
+                                        child: Text(
+                                          sharedFunction.monthString(month),
+                                          style: bFont.copyWith(
+                                              fontWeight: FontWeight.bold, fontSize: 16.0),
+                                        ),
+                                        value: month,
+                                      ),
+                                    )
+                                    .toList(),
+                                value: _selectedMonth,
+                                onChanged: (value) =>
+                                    setState(() => _selectedMonth = value ?? DateTime.now().month),
+                              ),
+                            ),
+                            const SizedBox(width: 16.0),
+                            Flexible(
+                              child: DropdownButton<int>(
+                                isExpanded: true,
+                                items: years
+                                    .map<DropdownMenuItem<int>>(
+                                      (year) => DropdownMenuItem<int>(
+                                        child: Text(
+                                          '$year',
+                                          style: bFont.copyWith(
+                                              fontWeight: FontWeight.bold, fontSize: 16.0),
+                                        ),
+                                        value: year,
+                                      ),
+                                    )
+                                    .toList(),
+                                value: _selectedYear,
+                                onChanged: (value) =>
+                                    setState(() => _selectedYear = value ?? DateTime.now().year),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 16.0),
+                      ],
+                      ...[
                         Text(
                           'Pilih Warga',
                           style: hFont.copyWith(
@@ -74,17 +148,32 @@ class _DuesFormPageState extends State<DuesFormPage> {
                           ),
                         ),
                         const SizedBox(height: 8.0),
-                        DropdownButton<String>(
-                          isExpanded: true,
-                          hint: Text(
-                            "Pilih warga yang ingin dibuatkan iuran",
-                            style: bFont.copyWith(fontSize: 12.0, color: grey),
-                          ),
-                          value: _selectedCitizen,
-                          items: ["Zeffry Reynando", "Syarif", "Helmi", "Engkoh"]
-                              .map((e) => DropdownMenuItem(child: Text(e), value: e))
-                              .toList(),
-                          onChanged: (value) => setState(() => _selectedCitizen = value),
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final _getCitizen = ref.watch(getCitizen);
+                            return _getCitizen.when(
+                              data: (data) {
+                                final flattenCitizen =
+                                    {for (final item in data.values) ...item}.toList();
+                                return DropdownButton<UserModel>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    "Pilih warga yang ingin dibuatkan iuran",
+                                    style: bFont.copyWith(fontSize: 12.0, color: grey),
+                                  ),
+                                  value: _selectedCitizen,
+                                  items: flattenCitizen
+                                      .map(
+                                        (e) => DropdownMenuItem(child: Text(e.name), value: e),
+                                      )
+                                      .toList(),
+                                  onChanged: (value) => setState(() => _selectedCitizen = value),
+                                );
+                              },
+                              error: (error, trace) => Center(child: Text("Error $error")),
+                              loading: () => const Center(child: CircularProgressIndicator()),
+                            );
+                          },
                         ),
                         const SizedBox(height: 8.0),
                       ],
@@ -98,17 +187,26 @@ class _DuesFormPageState extends State<DuesFormPage> {
                           ),
                         ),
                         const SizedBox(height: 8.0),
-                        DropdownButton<String>(
-                          isExpanded: true,
-                          hint: Text(
-                            "Pilih kategori iuran",
-                            style: bFont.copyWith(fontSize: 12.0, color: grey),
-                          ),
-                          value: _selectedDuesCategory,
-                          items: ["Iuran Kebersihan", "Iuran Kemanan", "Iuran Kesehatan"]
-                              .map((e) => DropdownMenuItem(child: Text(e), value: e))
-                              .toList(),
-                          onChanged: (value) => setState(() => _selectedDuesCategory = value),
+                        Consumer(
+                          builder: (context, ref, child) {
+                            final _getCategories = ref.watch(getDuesCategory);
+                            return _getCategories.when(
+                              data: (data) => DropdownButton<DuesCategoryModel>(
+                                isExpanded: true,
+                                hint: Text(
+                                  "Pilih kategori iuran",
+                                  style: bFont.copyWith(fontSize: 12.0, color: grey),
+                                ),
+                                value: _selectedDuesCategory,
+                                items: data.items
+                                    .map((e) => DropdownMenuItem(child: Text(e.name), value: e))
+                                    .toList(),
+                                onChanged: (value) => setState(() => _selectedDuesCategory = value),
+                              ),
+                              error: (error, trace) => Center(child: Text("Error $error")),
+                              loading: () => const Center(child: CircularProgressIndicator()),
+                            );
+                          },
                         ),
                         const SizedBox(height: 8.0),
                       ],
@@ -131,10 +229,7 @@ class _DuesFormPageState extends State<DuesFormPage> {
                             FilteringTextInputFormatter.digitsOnly,
                           ],
                           onChanged: (value) {
-                            log("before value $value");
                             if (value.isNotEmpty) value = _formatNumber(value.replaceAll(",", ""));
-
-                            log("after value value $value");
                             amountController.value = TextEditingValue(
                               text: value,
                               selection: TextSelection.collapsed(offset: value.length),
@@ -193,8 +288,70 @@ class _DuesFormPageState extends State<DuesFormPage> {
                         ),
                       ],
                       const SizedBox(height: 16.0),
+                      ...[
+                        Text(
+                          'Status',
+                          style: hFont.copyWith(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                        const SizedBox(height: 8.0),
+                        RadioListTile<StatusPaid>(
+                          value: StatusPaid.paidOff,
+                          groupValue: _selectedStatus,
+                          onChanged: (value) => setState(() => _selectedStatus = value),
+                          title: Text(
+                            "Lunas",
+                            style: hFont.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        RadioListTile<StatusPaid>(
+                          value: StatusPaid.notPaidOff,
+                          groupValue: _selectedStatus,
+                          onChanged: (value) => setState(() => _selectedStatus = value),
+                          title: Text(
+                            "Belum lunas",
+                            style: hFont.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 16.0),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          final userLogin = ref.read(appConfigNotifer).item.userSession;
+                          final result = await ref.read(duesNotifier.notifier).saveDues(
+                                "0",
+                                duesCategoryId: _selectedDuesCategory?.id ?? 0,
+                                usersId: _selectedCitizen?.id ?? 0,
+                                month: _selectedMonth,
+                                year: _selectedYear,
+                                amount: int.tryParse(amountController.text) ?? 0,
+                                status: _selectedStatus ?? StatusPaid.notPaidOff,
+                                paidBySomeoneElse: _selectedPaidBySomeoneElse,
+                                createdBy: userLogin?.id ?? 0,
+                              );
+
+                          if (result.isError) {
+                            GlobalFunction.showSnackBar(
+                              context,
+                              content: Text(
+                                result.message ?? '',
+                                style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              snackBarType: SnackBarType.error,
+                            );
+                          } else {
+                            GlobalFunction.showSnackBar(
+                              context,
+                              content: Text(
+                                result.message ?? '',
+                                style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
+                              ),
+                              snackBarType: SnackBarType.success,
+                            );
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(16.0),
                           primary: primary,

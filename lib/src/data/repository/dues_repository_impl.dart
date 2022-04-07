@@ -96,4 +96,37 @@ class DuesRepositoryImpl implements DuesRepository {
       return Left(UncaughtFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, String>> saveDues(
+    String duesDetailId, {
+    required int duesCategoryId,
+    required int usersId,
+    required int month,
+    required int year,
+    required int amount,
+    required StatusPaid status,
+    required bool paidBySomeoneElse,
+    required int createdBy,
+    String? description,
+  }) async {
+    try {
+      final result = await remoteDataSource.saveDues(
+        duesDetailId,
+        duesCategoryId: duesCategoryId,
+        usersId: usersId,
+        month: month,
+        year: year,
+        amount: amount,
+        status: status,
+        paidBySomeoneElse: paidBySomeoneElse,
+        createdBy: createdBy,
+      );
+      return Right(result);
+    } on DioError catch (error) {
+      return Left(dioUtils.onError(error));
+    } catch (e) {
+      return Left(UncaughtFailure(message: e.toString()));
+    }
+  }
 }

@@ -8,6 +8,7 @@ import 'src/data/repository/citizen_repository_impl.dart';
 import 'src/data/repository/dues_repository_impl.dart';
 import 'src/data/repository/user_repository_impl.dart';
 import 'src/presentasion/riverpod/citizen/citizen_notifier.dart';
+import 'src/presentasion/riverpod/dues/dues_notifier.dart';
 import 'src/presentasion/riverpod/dues_calendar/dues_calendar_notifier.dart';
 import 'src/presentasion/riverpod/dues_category/dues_category_notifier.dart';
 import 'src/presentasion/riverpod/dues_citizen/dues_citizen_notifier.dart';
@@ -79,6 +80,12 @@ final duesCategoryNotifier = StateNotifierProvider<DuesCategoryNotifier, DuesCat
     repository: ref.watch(_duesRepository),
   ),
 );
+
+///* [Dues Category]
+
+final duesNotifier = StateNotifierProvider<DuesNotifier, DuesState>((ref) {
+  return DuesNotifier(repository: ref.watch(_duesRepository));
+});
 
 final _duesRepository = Provider(
   (ref) => DuesRepositoryImpl(

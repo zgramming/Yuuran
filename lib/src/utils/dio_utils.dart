@@ -11,7 +11,7 @@ class DioUtils {
     final data = error.response?.data;
     switch (error.type) {
       case DioErrorType.response:
-        log("Error DioResponse");
+        log("Error DioResponse $data");
         return ResponseFailure(message: data['message']);
       case DioErrorType.connectTimeout:
         log("Error DioConnectionTimeOut");

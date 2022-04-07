@@ -19,6 +19,19 @@ abstract class DuesRemoteDataSource {
   Future<List<DuesDetailModel>> getCalendarActivity({int? month, int? year});
 
   Future<List<DuesCategoryModel>> getDuesCategory();
+
+  Future<String> saveDues(
+    String duesDetailId, {
+    required int duesCategoryId,
+    required int usersId,
+    required int month,
+    required int year,
+    required int amount,
+    required StatusPaid status,
+    required bool paidBySomeoneElse,
+    required int createdBy,
+    String? description,
+  });
 }
 
 class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
@@ -114,5 +127,39 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
         .toList();
 
     return listCategory;
+  }
+
+  @override
+  Future<String> saveDues(
+    String duesDetailId, {
+    required int duesCategoryId,
+    required int usersId,
+    required int month,
+    required int year,
+    required int amount,
+    required StatusPaid status,
+    required bool paidBySomeoneElse,
+    required int createdBy,
+    String? description,
+  }) async {
+    final formData = FormData.fromMap({
+      "dues_category_id": duesCategoryId,
+      "users_id": usersId,
+      "month": month,
+      "year": year,
+      "amount": amount,
+      "status": getStatusPaidText(status),
+      "paid_by_someone_else": paidBySomeoneElse ? 1 : 0,
+      "description": description,
+      "created_by": createdBy,
+    });
+
+    final result = await dioClient.post(
+      "/dues/save/$duesDetailId",
+      data: formData,
+    );
+    final response = result.data as Map<String, dynamic>;
+    final message = response['message'];
+    return message;
   }
 }

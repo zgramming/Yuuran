@@ -30,4 +30,17 @@ abstract class DuesRepository {
   });
 
   Future<Either<Failure, List<DuesCategoryModel>>> getDuesCategory();
+
+  Future<Either<Failure, String>> saveDues(
+    String duesDetailId, {
+    required int duesCategoryId,
+    required int usersId,
+    required int month,
+    required int year,
+    required int amount,
+    required StatusPaid status,
+    required bool paidBySomeoneElse,
+    required int createdBy,
+    String? description,
+  });
 }

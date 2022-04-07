@@ -88,7 +88,7 @@ class SearchPage extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              for (final entry in data.maps.entries) ...[
+                              for (final entry in data.entries) ...[
                                 Align(
                                   alignment: Alignment.centerLeft,
                                   child: Card(
