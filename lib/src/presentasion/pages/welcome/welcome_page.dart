@@ -1,5 +1,6 @@
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../utils/utils.dart';
 import '../account/account_page.dart';
@@ -8,16 +9,16 @@ import '../choose_action/choose_action_page.dart';
 import '../home/home_page.dart';
 import '../search/search_page.dart';
 
-class WelcomePage extends StatefulWidget {
+class WelcomePage extends ConsumerStatefulWidget {
   const WelcomePage({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<WelcomePage> createState() => _WelcomePageState();
+  _WelcomePageState createState() => _WelcomePageState();
 }
 
-class _WelcomePageState extends State<WelcomePage> {
+class _WelcomePageState extends ConsumerState<WelcomePage> {
   int _currentIndex = 0;
 
   _setIndex(int index) {

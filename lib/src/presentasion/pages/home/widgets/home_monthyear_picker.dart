@@ -1,26 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:global_template/global_template.dart';
 
 import '../../../../utils/utils.dart';
+import '../../../riverpod/dues_statistics/dues_statistics_notifier.dart';
 
-class MonthYearPicker extends StatefulWidget {
+class MonthYearPicker extends ConsumerStatefulWidget {
   const MonthYearPicker({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<MonthYearPicker> createState() => _MonthYearPickerState();
+  _MonthYearPickerState createState() => _MonthYearPickerState();
 }
 
-class _MonthYearPickerState extends State<MonthYearPicker> {
+class _MonthYearPickerState extends ConsumerState<MonthYearPicker> {
   final years = <int>[
     for (final year in GlobalFunction.range(min: 2010, max: DateTime.now().year)) year
   ];
 
   final months = <int>[for (final month in GlobalFunction.range(min: 1, max: 12)) month];
 
-  int _selectedYear = DateTime.now().year;
-  int _selectedMonth = DateTime.now().month;
+  late int _selectedYear;
+  late int _selectedMonth;
+
+  @override
+  void initState() {
+    super.initState();
+    final _duesParameter = ref.read(duesParameter);
+    _selectedYear = _duesParameter.year;
+    _selectedMonth = _duesParameter.month;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +86,17 @@ class _MonthYearPickerState extends State<MonthYearPicker> {
           ),
           const SizedBox(height: 16.0),
           ElevatedButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              /// Initialize dues parameter
+              ref.read(duesParameter.notifier).update(
+                    (state) => state.copyWith(
+                      month: _selectedMonth,
+                      year: _selectedYear,
+                    ),
+                  );
+
+              Navigator.pop(context);
+            },
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.all(16.0),
               primary: primary,

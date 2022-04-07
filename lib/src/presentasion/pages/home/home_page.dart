@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:global_template/global_template.dart';
 
 import '../../../utils/utils.dart';
+import '../../riverpod/app_config/app_config_notifier.dart';
+import '../../riverpod/dues_statistics/dues_statistics_notifier.dart';
+import 'widgets/dues_statistics_list.dart';
 import 'widgets/home_monthyear_picker.dart';
 
 class HomePage extends StatelessWidget {
@@ -25,19 +29,24 @@ class HomePage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Text.rich(
-                        TextSpan(
-                          text: "Hello ",
-                          children: [
+                      Consumer(
+                        builder: (context, ref, child) {
+                          final userSession = ref.watch(appConfigNotifer).item.userSession;
+                          return Text.rich(
                             TextSpan(
-                              text: "Zeffry Reynando",
-                              style: hFont.copyWith(fontWeight: FontWeight.bold),
+                              text: "Hello ",
+                              children: [
+                                TextSpan(
+                                  text: userSession?.name,
+                                  style: hFont.copyWith(fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        style: hFont.copyWith(
-                          fontSize: 14.0,
-                        ),
+                            style: hFont.copyWith(
+                              fontSize: 14.0,
+                            ),
+                          );
+                        },
                       ),
                       const SizedBox(height: 8.0),
                       Align(
@@ -83,138 +92,45 @@ class HomePage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 40.0),
-            Text(
-              "Statistik Iuran April 2022",
-              style: hFont.copyWith(
-                fontWeight: FontWeight.w900,
-                fontSize: 20.0,
-                letterSpacing: 1.1,
-              ),
+            Consumer(
+              builder: (context, ref, child) {
+                final _duesParameter = ref.watch(duesParameter);
+                return Text(
+                  "Statistik Iuran ${sharedFunction.monthString(_duesParameter.month)} ${_duesParameter.year}",
+                  style: hFont.copyWith(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 20.0,
+                    letterSpacing: 1.1,
+                  ),
+                );
+              },
             ),
             const SizedBox(height: 16.0),
-            SizedBox(
-              height: sharedFunction.vh(context) / 4,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemCount: 3,
-                itemExtent: sharedFunction.vw(context) / 1.25,
-                itemBuilder: (ctx, index) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-                    margin: const EdgeInsets.only(right: 16.0),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        colors: [secondary, secondaryShade],
-                        begin: Alignment.centerLeft,
-                        end: Alignment.centerRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20.0),
-                      boxShadow: [
-                        BoxShadow(
-                          blurRadius: 2.0,
-                          color: black.withOpacity(.25),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          'Iuran Kebersihan (IRK)'.toUpperCase(),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: hFontWhite.copyWith(fontSize: 20.0, fontWeight: FontWeight.bold),
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text.rich(
-                                    TextSpan(
-                                      text: "4/10 ",
-                                      children: [
-                                        TextSpan(
-                                          text: "Orang",
-                                          style: bFontWhite.copyWith(
-                                            fontWeight: FontWeight.normal,
-                                            fontSize: 12.0,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    style: bFontWhite.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16.0,
-                                    ),
-                                  ),
-                                  Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text("Dana terkumpul",
-                                          style: bFontWhite.copyWith(fontSize: 10.0)),
-                                      Text(
-                                        GlobalFunction.formatNumber(250000),
-                                        style: hFontWhite.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20.0,
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              const SizedBox(height: 16.0),
-                              Container(
-                                height: 10.0,
-                                alignment: Alignment.centerLeft,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                child: FractionallySizedBox(
-                                  widthFactor: (4 / 10),
-                                  child: Container(
-                                    height: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: secondaryDark,
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
+            const DuesStatisticsList(),
             const SizedBox(height: 40.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  "Aktifitas Terbaru April 2022",
-                  style: bFont.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+                Consumer(
+                  builder: (context, ref, child) {
+                    final _duesParameter = ref.watch(duesParameter);
+                    return Text(
+                      "Aktifitas Terbaru ${sharedFunction.monthString(_duesParameter.month)} ${_duesParameter.year}",
+                      style: bFont.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    );
+                  },
                 ),
-                TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'Lihat Semua',
-                    style: bFont.copyWith(
-                        fontWeight: FontWeight.bold, fontSize: 10.0, color: secondaryDark),
-                  ),
-                ),
+                // TextButton(
+                //   onPressed: () {},
+                //   child: Text(
+                //     'Lihat Semua',
+                //     style: bFont.copyWith(
+                //         fontWeight: FontWeight.bold, fontSize: 10.0, color: secondaryDark),
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(height: 16.0),
