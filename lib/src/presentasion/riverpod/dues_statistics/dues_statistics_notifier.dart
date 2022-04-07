@@ -2,9 +2,9 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../injection.dart';
-import '../../../data/model/dues_parameter.dart';
 import '../../../data/model/dues_statistics/dues_statistics_model.dart';
 import '../../../domain/repository/dues_statistics_repository.dart';
+import '../global/global_notifier.dart';
 
 part 'dues_statistics_state.dart';
 
@@ -37,16 +37,12 @@ class DuesStatisticsNotifier extends StateNotifier<DuesStatisticsState> {
   }
 }
 
-final duesParameter = StateProvider(
-  (ref) => DuesParameter(
-    month: DateTime.now().month,
-    year: DateTime.now().year,
-  ),
-);
-
 final getDuesStatistics = FutureProvider.autoDispose((ref) async {
   final notifier = ref.watch(duesStatisticsNotifier.notifier);
-  final params = ref.watch(duesParameter);
-  final result = await notifier.get(month: params.month, year: params.year);
+
+  /// Only trigger rebuild when month / year changed
+  final month = ref.watch(duesParameter.select((value) => value.month));
+  final year = ref.watch(duesParameter.select((value) => value.year));
+  final result = await notifier.get(month: month, year: year);
   return result;
 });

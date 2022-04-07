@@ -11,7 +11,7 @@ class DuesStatisticsRepositoryImpl implements DuesStatisticsRepository {
     required this.remoteDataSourceImpl,
   });
 
-  final DuesStatisticsRemoteDataSourceImpl remoteDataSourceImpl;
+  final DuesStatisticsRemoteDataSource remoteDataSourceImpl;
   @override
   Future<Either<Failure, DuesStatisticsModel>> get({
     int? month,

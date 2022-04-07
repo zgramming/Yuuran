@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:global_template/global_template.dart';
 
 import '../../../../utils/utils.dart';
-import '../../../riverpod/dues_statistics/dues_statistics_notifier.dart';
+import '../../../riverpod/global/global_notifier.dart';
 
 class MonthYearPicker extends ConsumerStatefulWidget {
   const MonthYearPicker({

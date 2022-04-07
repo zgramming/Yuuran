@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:global_template/global_template.dart';
 
 import '../../../utils/utils.dart';
 import '../../riverpod/app_config/app_config_notifier.dart';
-import '../../riverpod/dues_statistics/dues_statistics_notifier.dart';
-import 'widgets/dues_statistics_list.dart';
-import 'widgets/home_monthyear_picker.dart';
+import '../../riverpod/global/global_notifier.dart';
+import './widgets/dues_recent_activity_list.dart';
+import './widgets/dues_statistics_list.dart';
+import './widgets/home_monthyear_picker.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({
@@ -134,58 +134,7 @@ class HomePage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16.0),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 10,
-              itemBuilder: (ctx, index) {
-                return Card(
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                  margin: const EdgeInsets.only(bottom: 16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                        decoration: BoxDecoration(
-                          color: index.isEven ? warning : secondary,
-                          borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)),
-                        ),
-                        child: Text(
-                          index.isOdd ? "IURAN KEAMANAN (IRKM)" : "IURAN KEBERSIHAN (IRKB)",
-                          style: hFontWhite,
-                        ),
-                      ),
-                      ListTile(
-                        title: Text(
-                          "Zeffry Reynando",
-                          style: hFont.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(
-                            "Update terakhir ${GlobalFunction.formatYMDHM(DateTime.now())}",
-                            style: bFont.copyWith(
-                              color: grey,
-                              fontSize: 12.0,
-                            ),
-                          ),
-                        ),
-                        trailing: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              GlobalFunction.formatNumber(index.isOdd ? 25000 : 10000),
-                              style: bFont.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
-            ),
+            const DuesRecentActivityList(),
             const SizedBox(height: 16.0),
           ],
         ),
