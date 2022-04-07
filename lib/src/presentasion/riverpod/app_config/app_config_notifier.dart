@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:yuuran/src/utils/constant.dart';
-import 'package:yuuran/src/utils/shared_preferences.dart';
+
+import '../../../utils/utils.dart';
 
 class AppConfigModel extends Equatable {
   const AppConfigModel({

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:yuuran/src/utils/utils.dart';
+import 'utils/utils.dart';
 
 class App extends ConsumerWidget {
   const App({Key? key}) : super(key: key);

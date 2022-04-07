@@ -25,19 +25,7 @@ class UserRepositoryImpl implements UserRepository {
       );
       return Right(result);
     } on DioError catch (error) {
-      final data = error.response?.data;
-      switch (error.type) {
-        case DioErrorType.response:
-          return Left(ResponseFailure(message: data['message']));
-        case DioErrorType.connectTimeout:
-          return const Left(ConnectionTimeoutFailure());
-        case DioErrorType.receiveTimeout:
-          return const Left(ReceiveTimeoutFailure());
-        case DioErrorType.sendTimeout:
-          return const Left(SendTimeoutFailure());
-        default:
-          return const Left(UncaughtFailure());
-      }
+      return Left(dioUtils.onError(error));
     } catch (e) {
       return Left(UncaughtFailure(message: e.toString()));
     }
