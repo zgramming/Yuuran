@@ -23,8 +23,12 @@ class UserNotifier extends StateNotifier<UserState> {
     );
 
     result.fold(
-      (failure) => state = state.setUser(message: failure.message, isError: true),
-      (data) => state = state.setUser(user: data),
+      (failure) => state = state.setUser(
+        user: null,
+        message: failure.message,
+        isError: true,
+      ),
+      (user) => state = state.setUser(user: user),
     );
   }
 }

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../utils/utils.dart';
+import '../../riverpod/app_config/app_config_notifier.dart';
 import 'widgets/account_menu.dart';
 
-class AccountPage extends StatelessWidget {
+class AccountPage extends ConsumerWidget {
   const AccountPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -76,7 +79,10 @@ class AccountPage extends StatelessWidget {
                   subtitle: "Informasi lengkap tentang aplikasi Yuuran",
                 ),
                 AccountMenu(
-                  onTap: () {},
+                  onTap: () async {
+                    await ref.read(appConfigNotifer.notifier).deleteUserSession();
+                    context.goNamed(loginRouteName);
+                  },
                   icon: Icons.logout,
                   circleBackgroundColor: danger,
                   circleForegroundColor: Colors.white,

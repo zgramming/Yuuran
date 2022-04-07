@@ -1,0 +1,10 @@
+{
+	"configurations": [
+		{
+			"name": "Flutter (lib\\src\\data\\datasource\\local\\user_local_datasource.dart)",
+			"type": "dart",
+			"request": "launch",
+			"program": "lib\\src\\data\\datasource\\local\\user_local_datasource.dart"
+		}
+	]
+}

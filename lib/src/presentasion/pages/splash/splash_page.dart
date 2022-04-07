@@ -5,6 +5,7 @@ import '../onboarding/onboarding_page.dart';
 import '../../riverpod/app_config/app_config_notifier.dart';
 
 import '../../../utils/utils.dart';
+import '../welcome/welcome_page.dart';
 
 class SplashPage extends StatelessWidget {
   const SplashPage({
@@ -20,9 +21,10 @@ class SplashPage extends StatelessWidget {
           final _init = ref.watch(appConfigInitialize);
           return _init.when(
             data: (appConfig) {
-              if (appConfig.alreadyOnboarding) {
-                return const LoginPage();
-              }
+              if (appConfig.userSession != null) return const WelcomePage();
+
+              if (appConfig.alreadyOnboarding) return const LoginPage();
+
               return const OnboardingPage();
             },
             error: (error, stackTrace) => Center(child: Text("Error $error")),

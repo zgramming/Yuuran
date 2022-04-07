@@ -2,7 +2,7 @@ part of 'user_notifier.dart';
 
 class UserState extends Equatable {
   const UserState({
-    this.item = const UserModel(),
+    this.item,
     this.message = '',
     this.isError = false,
   });
@@ -26,9 +26,6 @@ class UserState extends Equatable {
   @override
   List<Object?> get props => [item, message, isError];
 
-  @override
-  String toString() => 'UserState(item: $item, message: $message)';
-
   UserState copyWith({
     UserModel? item,
     String? message,
@@ -40,4 +37,7 @@ class UserState extends Equatable {
       isError: isError ?? this.isError,
     );
   }
+
+  @override
+  String toString() => 'UserState(item: $item, message: $message, isError: $isError)';
 }

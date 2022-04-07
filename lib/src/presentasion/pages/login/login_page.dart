@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../injection.dart';
 import '../../../utils/utils.dart';
+import '../../riverpod/app_config/app_config_notifier.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({
@@ -105,6 +106,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             );
 
                         final notifier = ref.read(userNotifier);
+
                         if (notifier.isError) {
                           GlobalFunction.showSnackBar(
                             context,
@@ -117,6 +119,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ),
                           );
                         } else {
+                          /// Save Session User When success login
+                          await ref.read(appConfigNotifer.notifier).setSessionUser(notifier.item);
+
                           GlobalFunction.showSnackBar(
                             context,
                             snackBarType: SnackBarType.success,
@@ -129,7 +134,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           );
                           context.goNamed(welcomeRouteName);
                         }
-                        // context.goNamed(welcomeRouteName);
                       },
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(24.0),
