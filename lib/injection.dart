@@ -1,12 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'src/data/datasource/remote/dues_calendar_remote_datasource.dart';
 import 'src/data/datasource/remote/dues_recent_activity_remote_datasource.dart';
 import 'src/data/datasource/remote/dues_statistic_remote_datasource.dart';
 import 'src/data/datasource/remote/user_remote_datasource.dart';
+import 'src/data/repository/dues_calendar_repository_impl.dart';
 import 'src/data/repository/dues_recent_activity_repository_impl.dart';
 import 'src/data/repository/dues_statistics_repository_impl.dart';
 import 'src/data/repository/user_repository_impl.dart';
+import 'src/presentasion/riverpod/dues_calendar/dues_calendar_notifier.dart';
 import 'src/presentasion/riverpod/dues_recent_activity/dues_recent_activity_notifier.dart';
 import 'src/presentasion/riverpod/dues_statistics/dues_statistics_notifier.dart';
 import 'src/presentasion/riverpod/user/user_notifier.dart';
@@ -61,6 +64,20 @@ final duesRecentActivityRepository = Provider((ref) {
 
 final duesRecentActivityRemoteDataSource = Provider((ref) {
   return DuesRecentActivityRemoteDataSourceImpl(dioClient: ref.watch(_dio));
+});
+
+///* [Dues Calendar]
+
+final duesCalendarNotifier = StateNotifierProvider<DuesCalendarNotifier, DuesCalendarState>((ref) {
+  return DuesCalendarNotifier(repository: ref.watch(duesCalendarRepository));
+});
+
+final duesCalendarRepository = Provider((ref) {
+  return DuesCalendarRepositoryImpl(remoteDataSource: ref.watch(duesCalendarRemoteDataSource));
+});
+
+final duesCalendarRemoteDataSource = Provider((ref) {
+  return DuesCalendarRemoteDataSourceImpl(dioClient: ref.watch(_dio));
 });
 
 final _dio = Provider<Dio>(
