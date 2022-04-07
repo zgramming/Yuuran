@@ -1,14 +1,17 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'src/data/datasource/remote/citizen_remote_datasource.dart';
 import 'src/data/datasource/remote/dues_calendar_remote_datasource.dart';
 import 'src/data/datasource/remote/dues_recent_activity_remote_datasource.dart';
 import 'src/data/datasource/remote/dues_statistic_remote_datasource.dart';
 import 'src/data/datasource/remote/user_remote_datasource.dart';
+import 'src/data/repository/citizen_repository_impl.dart';
 import 'src/data/repository/dues_calendar_repository_impl.dart';
 import 'src/data/repository/dues_recent_activity_repository_impl.dart';
 import 'src/data/repository/dues_statistics_repository_impl.dart';
 import 'src/data/repository/user_repository_impl.dart';
+import 'src/presentasion/riverpod/citizen/citizen_notifier.dart';
 import 'src/presentasion/riverpod/dues_calendar/dues_calendar_notifier.dart';
 import 'src/presentasion/riverpod/dues_recent_activity/dues_recent_activity_notifier.dart';
 import 'src/presentasion/riverpod/dues_statistics/dues_statistics_notifier.dart';
@@ -79,6 +82,22 @@ final duesCalendarRepository = Provider((ref) {
 final duesCalendarRemoteDataSource = Provider((ref) {
   return DuesCalendarRemoteDataSourceImpl(dioClient: ref.watch(_dio));
 });
+
+///* [Citizen]
+
+final citizenNotifier = StateNotifierProvider<CitizenNotifier, CitizenState>((ref) {
+  return CitizenNotifier(repository: ref.watch(citizenRepository));
+});
+
+final citizenRepository = Provider((ref) {
+  return CitizenRepositoryImpl(remoteDataSource: ref.watch(citizenRemoteDataSource));
+});
+
+final citizenRemoteDataSource = Provider(
+  (ref) => CitizenRemoteDataSourceImpl(
+    dioClient: ref.watch(_dio),
+  ),
+);
 
 final _dio = Provider<Dio>(
   (ref) {
