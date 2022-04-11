@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../injection.dart';
 import '../../../utils/utils.dart';
-import '../../riverpod/app_config/app_config_notifier.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({

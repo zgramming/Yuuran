@@ -3,35 +3,11 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../data/model/app_config/app_config_model.dart';
 import '../../../data/model/user/user_model.dart';
 import '../../../utils/utils.dart';
 
-class AppConfigModel extends Equatable {
-  const AppConfigModel({
-    this.alreadyOnboarding = false,
-    this.userSession,
-  });
-
-  final bool alreadyOnboarding;
-  final UserModel? userSession;
-
-  @override
-  List<Object?> get props => [alreadyOnboarding, userSession];
-
-  @override
-  String toString() =>
-      'AppConfigModel(alreadyOnboarding: $alreadyOnboarding, userSession: $userSession)';
-
-  AppConfigModel copyWith({
-    bool? alreadyOnboarding,
-    UserModel? userSession,
-  }) {
-    return AppConfigModel(
-      alreadyOnboarding: alreadyOnboarding ?? this.alreadyOnboarding,
-      userSession: userSession ?? this.userSession,
-    );
-  }
-}
+part 'app_config_state.dart';
 
 class AppConfigNotifier extends StateNotifier<AppConfigState> {
   AppConfigNotifier() : super(const AppConfigState());
@@ -74,62 +50,3 @@ class AppConfigNotifier extends StateNotifier<AppConfigState> {
     state = state.deleteUserSession();
   }
 }
-
-class AppConfigState extends Equatable {
-  const AppConfigState({
-    this.item = const AppConfigModel(),
-  });
-
-  final AppConfigModel item;
-
-  AppConfigState setOnboarding(bool alreadyOnboarding) {
-    return copyWith(
-      item: item.copyWith(alreadyOnboarding: alreadyOnboarding),
-    );
-  }
-
-  AppConfigState getOnboarding(bool alreadyOnboarding) {
-    return copyWith(
-      item: item.copyWith(alreadyOnboarding: alreadyOnboarding),
-    );
-  }
-
-  AppConfigState setUserSession(UserModel? user) {
-    return copyWith(item: item.copyWith(userSession: user));
-  }
-
-  AppConfigState getUserSession(UserModel? user) {
-    return copyWith(item: item.copyWith(userSession: user));
-  }
-
-  AppConfigState deleteUserSession() {
-    return copyWith(item: item.copyWith(userSession: null));
-  }
-
-  @override
-  List<Object> get props => [item];
-
-  @override
-  String toString() => 'AppConfigState(item: $item)';
-
-  AppConfigState copyWith({
-    AppConfigModel? item,
-  }) {
-    return AppConfigState(
-      item: item ?? this.item,
-    );
-  }
-}
-
-final appConfigNotifer =
-    StateNotifierProvider<AppConfigNotifier, AppConfigState>((ref) => AppConfigNotifier());
-
-final appConfigInitialize = FutureProvider.autoDispose((ref) async {
-  final appNotifier = ref.watch(appConfigNotifer.notifier);
-
-  await appNotifier.getOnboarding();
-
-  await appNotifier.getSessionUser();
-
-  return ref.read(appConfigNotifer).item;
-});

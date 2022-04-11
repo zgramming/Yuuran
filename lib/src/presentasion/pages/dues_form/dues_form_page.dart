@@ -9,7 +9,6 @@ import '../../../data/model/dues_category/dues_category_model.dart';
 import '../../../data/model/dues_detail/dues_detail_model.dart';
 import '../../../data/model/user/user_model.dart';
 import '../../../utils/utils.dart';
-import '../../riverpod/app_config/app_config_notifier.dart';
 import '../../riverpod/citizen/citizen_notifier.dart';
 import '../../riverpod/dues_category/dues_category_notifier.dart';
 

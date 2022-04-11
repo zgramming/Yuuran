@@ -7,6 +7,7 @@ import 'src/data/datasource/remote/user_remote_datasource.dart';
 import 'src/data/repository/citizen_repository_impl.dart';
 import 'src/data/repository/dues_repository_impl.dart';
 import 'src/data/repository/user_repository_impl.dart';
+import 'src/presentasion/riverpod/app_config/app_config_notifier.dart';
 import 'src/presentasion/riverpod/citizen/citizen_notifier.dart';
 import 'src/presentasion/riverpod/dues_detail/dues_detail_notifier.dart';
 import 'src/presentasion/riverpod/dues_calendar/dues_calendar_notifier.dart';
@@ -16,6 +17,21 @@ import 'src/presentasion/riverpod/dues_recent_activity/dues_recent_activity_noti
 import 'src/presentasion/riverpod/dues_statistics/dues_statistics_notifier.dart';
 import 'src/presentasion/riverpod/user/user_notifier.dart';
 import 'src/utils/constant.dart';
+
+///* [App Config]
+
+final appConfigNotifer =
+    StateNotifierProvider<AppConfigNotifier, AppConfigState>((ref) => AppConfigNotifier());
+
+final appConfigInitialize = FutureProvider.autoDispose((ref) async {
+  final appNotifier = ref.watch(appConfigNotifer.notifier);
+
+  await appNotifier.getOnboarding();
+
+  await appNotifier.getSessionUser();
+
+  return ref.read(appConfigNotifer).item;
+});
 
 ///* [User]
 
@@ -81,7 +97,7 @@ final duesCategoryNotifier = StateNotifierProvider<DuesCategoryNotifier, DuesCat
   ),
 );
 
-///* [Dues Category]
+///* [Dues Detail Notifier]
 
 final duesDetailNotifier = StateNotifierProvider<DuesDetailNotifier, DuesDetailState>((ref) {
   return DuesDetailNotifier(repository: ref.watch(_duesRepository));
