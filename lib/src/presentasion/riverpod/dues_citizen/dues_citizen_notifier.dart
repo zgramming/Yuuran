@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../injection.dart';
+import '../../../data/model/dues_citizen/dues_citizen_model.dart';
 import '../../../data/model/dues_citizen_parameter.dart';
-import '../../../data/model/dues_detail/dues_detail_model.dart';
 import '../../../domain/repository/dues_repository.dart';
 
 part 'dues_citizen_state.dart';
@@ -20,7 +20,7 @@ class DuesCitizenNotifier extends StateNotifier<DuesCitizenState> {
     int? year,
     int? duesCategoryId,
   }) async {
-    final result = await repository.getDuesByUsername(
+    final result = await repository.getByUsername(
       name: name,
       duesCategoryId: duesCategoryId,
       month: month,
@@ -31,15 +31,15 @@ class DuesCitizenNotifier extends StateNotifier<DuesCitizenState> {
       (failure) {
         return state = state.init(
           isError: true,
-          items: [],
+          item: const DuesCitizenModel(),
           message: failure.message,
         );
       },
-      (values) {
+      (value) {
         return state = state.init(
           isError: false,
-          items: values,
           message: null,
+          item: value,
         );
       },
     );

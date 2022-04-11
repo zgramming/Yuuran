@@ -55,28 +55,31 @@ final goRouter = Provider<GoRouter>(
         builder: (ctx, state) => const WelcomePage(),
       ),
       GoRoute(
-        path: "/dues",
+        path: "/dues/form/:duesDetailID",
         name: duesRouteName,
-        builder: (ctx, state) => const DuesFormPage(),
+        builder: (ctx, state) {
+          final params = state.params;
+
+          return DuesFormPage(
+            duesDetailID: params['duesDetailID']!,
+          );
+        },
+      ),
+      GoRoute(
+        path: "/dues/category",
+        name: duesCategoryRouteName,
+        builder: (ctx, state) => const DuesCategoryPage(),
         routes: [
-          /// [/dues/category]
+          /// [/dues/category/form/code-category]
           GoRoute(
-            path: "category",
-            name: duesCategoryRouteName,
-            builder: (ctx, state) => const DuesCategoryPage(),
-            routes: [
-              /// [/dues/category/form/code-category]
-              GoRoute(
-                path: "form/:duesCategoryID",
-                name: duesCategoryFormRouteName,
-                builder: (ctx, state) {
-                  final param = state.params;
-                  return DuesCategoryFormPage(
-                    duesCategoryID: param['duesCategoryID'] ?? "0",
-                  );
-                },
-              ),
-            ],
+            path: "form/:duesCategoryID",
+            name: duesCategoryFormRouteName,
+            builder: (ctx, state) {
+              final param = state.params;
+              return DuesCategoryFormPage(
+                duesCategoryID: param['duesCategoryID'] ?? "0",
+              );
+            },
           ),
         ],
       ),
@@ -85,7 +88,9 @@ final goRouter = Provider<GoRouter>(
         name: citizenDuesRouteName,
         builder: (ctx, state) {
           final params = state.params;
-          return CitizenDuesPage(username: params['username'] ?? '0');
+          return CitizenDuesPage(
+            username: params['username'] ?? '0',
+          );
         },
       ),
       GoRoute(

@@ -36,9 +36,22 @@ final getCitizen = FutureProvider.autoDispose((ref) async {
   final notifier = ref.watch(citizenNotifier.notifier);
 
   /// Load Citizen from API
+  final result = await notifier.get();
+
+  // ref.maintainState = true;
+
+  return result;
+});
+
+final getCitizenGrouping = FutureProvider.autoDispose((ref) async {
+  final notifier = ref.watch(citizenNotifier.notifier);
+
+  /// Load Citizen from API
   await notifier.get();
 
-  return ref.watch(citizenGrouping);
+  // ref.maintainState = true;
+
+  return ref.read(citizenGrouping);
 });
 
 final citizenQuery = StateProvider<String?>((ref) => null);

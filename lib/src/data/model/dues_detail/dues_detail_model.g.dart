@@ -8,7 +8,7 @@ part of 'dues_detail_model.dart';
 
 DuesDetailModel _$DuesDetailModelFromJson(Map<String, dynamic> json) =>
     DuesDetailModel(
-      id: json['id'] as String? ?? '',
+      id: json['id'] as String?,
       duesCategoryId: json['dues_category_id'] as int? ?? 0,
       usersId: json['users_id'] as int? ?? 0,
       month: json['month'] as int? ?? 0,

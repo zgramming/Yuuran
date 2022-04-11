@@ -141,14 +141,6 @@ class HomePage extends ConsumerWidget {
                       );
                     },
                   ),
-                  // TextButton(
-                  //   onPressed: () {},
-                  //   child: Text(
-                  //     'Lihat Semua',
-                  //     style: bFont.copyWith(
-                  //         fontWeight: FontWeight.bold, fontSize: 10.0, color: secondaryDark),
-                  //   ),
-                  // ),
                 ],
               ),
               const SizedBox(height: 16.0),

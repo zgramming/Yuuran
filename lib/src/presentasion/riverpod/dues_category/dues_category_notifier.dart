@@ -16,7 +16,7 @@ class DuesCategoryNotifier extends StateNotifier<DuesCategoryState> {
   final DuesRepository repository;
 
   Future<DuesCategoryState> get() async {
-    final result = await repository.getDuesCategory();
+    final result = await repository.getCategory();
     return result.fold(
       (failure) => state = state.init(
         isError: true,
@@ -32,7 +32,7 @@ class DuesCategoryNotifier extends StateNotifier<DuesCategoryState> {
   }
 
   Future<DuesCategoryState> getByID(int duesCategoryID) async {
-    final result = await repository.getDuesCategoryByID(duesCategoryID);
+    final result = await repository.getCategoryByID(duesCategoryID);
 
     return result.fold(
       (failure) {
@@ -58,7 +58,7 @@ class DuesCategoryNotifier extends StateNotifier<DuesCategoryState> {
     required int amount,
     String? description,
   }) async {
-    final result = await repository.saveDuesCategory(
+    final result = await repository.saveCategory(
       code: code,
       name: name,
       amount: amount,

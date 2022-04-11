@@ -2,40 +2,40 @@ part of 'dues_citizen_notifier.dart';
 
 class DuesCitizenState extends Equatable {
   const DuesCitizenState({
-    this.items = const [],
+    this.item = const DuesCitizenModel(),
     this.isError = false,
     this.message,
   });
 
-  final List<DuesDetailModel> items;
+  final DuesCitizenModel item;
   final bool isError;
   final String? message;
 
   DuesCitizenState init({
-    List<DuesDetailModel> items = const [],
+    required DuesCitizenModel item,
     bool isError = false,
     String? message,
   }) {
     return copyWith(
-      items: items,
+      item: item,
       isError: isError,
       message: message,
     );
   }
 
   @override
-  List<Object?> get props => [items, isError, message];
+  List<Object?> get props => [item, isError, message];
 
   @override
-  String toString() => 'DuesState(items: $items, isError: $isError, message: $message)';
+  String toString() => 'DuesCitizenState(item: $item, isError: $isError, message: $message)';
 
   DuesCitizenState copyWith({
-    List<DuesDetailModel>? items,
+    DuesCitizenModel? item,
     bool? isError,
     String? message,
   }) {
     return DuesCitizenState(
-      items: items ?? this.items,
+      item: item ?? this.item,
       isError: isError ?? this.isError,
       message: message ?? this.message,
     );

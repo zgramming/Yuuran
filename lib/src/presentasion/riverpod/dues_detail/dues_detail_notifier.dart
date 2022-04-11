@@ -4,16 +4,32 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/model/dues_detail/dues_detail_model.dart';
 import '../../../domain/repository/dues_repository.dart';
 
-part 'dues_state.dart';
+part 'dues_detail_state.dart';
 
-class DuesNotifier extends StateNotifier<DuesState> {
-  DuesNotifier({
+class DuesDetailNotifier extends StateNotifier<DuesDetailState> {
+  DuesDetailNotifier({
     required this.repository,
-  }) : super(const DuesState());
+  }) : super(const DuesDetailState());
 
   final DuesRepository repository;
 
-  Future<DuesState> saveDues(
+  Future<DuesDetailState> getByID(String duesDetailID) async {
+    final result = await repository.getDetailByID(duesDetailID);
+    return result.fold(
+      (failure) => state = state.init(
+        isError: true,
+        message: failure.message,
+        item: null,
+      ),
+      (item) => state = state.init(
+        item: item ?? const DuesDetailModel(),
+        isError: false,
+        message: "Berhasil",
+      ),
+    );
+  }
+
+  Future<DuesDetailState> saveDues(
     String duesDetailId, {
     required int duesCategoryId,
     required int usersId,

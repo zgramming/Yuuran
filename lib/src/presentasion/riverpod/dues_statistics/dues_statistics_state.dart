@@ -24,7 +24,8 @@ class DuesStatisticsState extends Equatable {
   }
 
   int sumDuesByCategories(int duesCategoryId) {
-    final category = item!.duesCategory.firstWhere((element) => element.id == duesCategoryId);
+    final category = item?.duesCategory.firstWhere((element) => element.id == duesCategoryId);
+    if (category == null) return 0;
     return category.duesDetail
         .map((e) => e.amount)
         .fold(0, (previousValue, element) => previousValue + element);

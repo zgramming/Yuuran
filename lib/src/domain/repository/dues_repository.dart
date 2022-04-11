@@ -1,13 +1,14 @@
 import 'package:dartz/dartz.dart';
 
 import '../../data/model/dues_category/dues_category_model.dart';
+import '../../data/model/dues_citizen/dues_citizen_model.dart';
 import '../../data/model/dues_detail/dues_detail_model.dart';
 import '../../data/model/dues_statistics/dues_statistics_model.dart';
 import '../../utils/utils.dart';
 
 abstract class DuesRepository {
   /// [GET] Request
-  Future<Either<Failure, List<DuesDetailModel>>> getDuesByUsername({
+  Future<Either<Failure, DuesCitizenModel>> getByUsername({
     required String name,
     int? month,
     int? year,
@@ -30,9 +31,11 @@ abstract class DuesRepository {
     int? year,
   });
 
-  Future<Either<Failure, List<DuesCategoryModel>>> getDuesCategory();
+  Future<Either<Failure, List<DuesCategoryModel>>> getCategory();
 
-  Future<Either<Failure, DuesCategoryModel?>> getDuesCategoryByID(int duesCategoryID);
+  Future<Either<Failure, DuesCategoryModel?>> getCategoryByID(int duesCategoryID);
+
+  Future<Either<Failure, DuesDetailModel?>> getDetailByID(String duesDetailID);
 
   /// [POST] Request
   Future<Either<Failure, String>> saveDues(
@@ -48,7 +51,7 @@ abstract class DuesRepository {
     String? description,
   });
 
-  Future<Either<Failure, String>> saveDuesCategory({
+  Future<Either<Failure, String>> saveCategory({
     int? duesCategoryId,
     required String code,
     required String name,

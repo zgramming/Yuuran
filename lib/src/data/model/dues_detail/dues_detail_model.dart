@@ -32,7 +32,7 @@ String getStatusPaidText(StatusPaid status) {
 @JsonSerializable(fieldRename: FieldRename.snake)
 class DuesDetailModel extends Equatable {
   const DuesDetailModel({
-    this.id = '',
+    this.id,
     this.duesCategoryId = 0,
     this.usersId = 0,
     this.month = 0,
@@ -49,7 +49,7 @@ class DuesDetailModel extends Equatable {
     this.duesCategory,
   });
 
-  final String id;
+  final String? id;
   final int duesCategoryId;
   final int usersId;
   final int month;

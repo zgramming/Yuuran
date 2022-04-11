@@ -1,12 +1,13 @@
 import 'package:dio/dio.dart';
 
 import '../../model/dues_category/dues_category_model.dart';
+import '../../model/dues_citizen/dues_citizen_model.dart';
 import '../../model/dues_detail/dues_detail_model.dart';
 import '../../model/dues_statistics/dues_statistics_model.dart';
 
 abstract class DuesRemoteDataSource {
   /// [GET] Request
-  Future<List<DuesDetailModel>> getDuesByUsername({
+  Future<DuesCitizenModel> getByUsername({
     required String name,
     int? month,
     int? year,
@@ -19,12 +20,14 @@ abstract class DuesRemoteDataSource {
 
   Future<List<DuesDetailModel>> getCalendarActivity({int? month, int? year});
 
-  Future<List<DuesCategoryModel>> getDuesCategory();
+  Future<DuesDetailModel?> getDetailByID(String duesDetailID);
 
-  Future<DuesCategoryModel?> getDuesCategoryByID(int duesCategoryID);
+  Future<List<DuesCategoryModel>> getCategory();
+
+  Future<DuesCategoryModel?> getCategoryByID(int duesCategoryID);
 
   /// [POST] Request
-  Future<String> saveDues(
+  Future<String> save(
     String duesDetailId, {
     required int duesCategoryId,
     required int usersId,
@@ -37,7 +40,7 @@ abstract class DuesRemoteDataSource {
     String? description,
   });
 
-  Future<String> saveDuesCategory({
+  Future<String> saveCategory({
     required String code,
     required String name,
     required int amount,
@@ -54,7 +57,7 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
   final Dio dioClient;
 
   @override
-  Future<List<DuesDetailModel>> getDuesByUsername({
+  Future<DuesCitizenModel> getByUsername({
     required String name,
     int? month,
     int? year,
@@ -67,13 +70,15 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
     });
 
     final response = result.data as Map<String, dynamic>;
-    final list = List.from(response['data']);
-    final listDuesDetail = list
-        .map(
-          (e) => DuesDetailModel.fromJson(Map<String, dynamic>.from(e)),
-        )
-        .toList();
-    return listDuesDetail;
+    final dues = DuesCitizenModel.fromJson(response['data']);
+    return dues;
+    // final list = List.from(response['data']);
+    // final listDuesDetail = list
+    //     .map(
+    //       (e) => DuesDetailModel.fromJson(Map<String, dynamic>.from(e)),
+    //     )
+    //     .toList();
+    // return listDuesDetail;
   }
 
   @override
@@ -128,7 +133,7 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
   }
 
   @override
-  Future<List<DuesCategoryModel>> getDuesCategory() async {
+  Future<List<DuesCategoryModel>> getCategory() async {
     final result = await dioClient.get("/duesCategory");
     final response = result.data as Map<String, dynamic>;
     final list = List.from(response['data']);
@@ -142,7 +147,7 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
   }
 
   @override
-  Future<DuesCategoryModel?> getDuesCategoryByID(int duesCategoryID) async {
+  Future<DuesCategoryModel?> getCategoryByID(int duesCategoryID) async {
     final result = await dioClient.get("/duesCategory/$duesCategoryID");
     final response = result.data as Map<String, dynamic>;
 
@@ -154,9 +159,17 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
     return category;
   }
 
+  @override
+  Future<DuesDetailModel?> getDetailByID(String duesDetailID) async {
+    final result = await dioClient.get("/dues/$duesDetailID");
+    final response = result.data as Map<String, dynamic>;
+    final dues = DuesDetailModel.fromJson(Map<String, dynamic>.from(response['data']));
+    return dues;
+  }
+
   /// [POST] Request
   @override
-  Future<String> saveDues(
+  Future<String> save(
     String duesDetailId, {
     required int duesCategoryId,
     required int usersId,
@@ -190,7 +203,7 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
   }
 
   @override
-  Future<String> saveDuesCategory({
+  Future<String> saveCategory({
     int? duesCategoryId,
     required String code,
     required String name,

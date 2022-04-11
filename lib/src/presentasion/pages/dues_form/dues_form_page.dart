@@ -16,8 +16,10 @@ import '../../riverpod/dues_category/dues_category_notifier.dart';
 class DuesFormPage extends ConsumerStatefulWidget {
   const DuesFormPage({
     Key? key,
+    required this.duesDetailID,
   }) : super(key: key);
 
+  final String duesDetailID;
   @override
   _DuesFormPageState createState() => _DuesFormPageState();
 }
@@ -32,12 +34,16 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  late int _selectedYear;
-  late int _selectedMonth;
+  final now = DateTime.now();
+
+  DuesDetailModel? duesDetail;
+
+  int? _selectedYear;
+  int? _selectedMonth;
   UserModel? _selectedCitizen;
   DuesCategoryModel? _selectedDuesCategory;
   bool _selectedPaidBySomeoneElse = false;
-  StatusPaid? _selectedStatus = StatusPaid.notPaidOff;
+  StatusPaid _selectedStatus = StatusPaid.notPaidOff;
 
   static const _locale = 'id';
   String _formatNumber(String s) => NumberFormat.decimalPattern(_locale).format(int.parse(s));
@@ -46,31 +52,31 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
   @override
   void initState() {
     super.initState();
-    final now = DateTime.now();
-    _selectedYear = now.year;
-    _selectedMonth = now.month;
+    Future.microtask(() => _getDuesDetail());
+  }
+
+  Future<void> _getDuesDetail() async {
+    final result = await ref.read(duesDetailNotifier.notifier).getByID(widget.duesDetailID);
+    setState(() {
+      duesDetail = result.item;
+      _selectedYear = duesDetail?.year ?? now.year;
+      _selectedMonth = duesDetail?.month ?? now.month;
+      _selectedCitizen = duesDetail?.user;
+      _selectedDuesCategory = duesDetail?.duesCategory;
+      _selectedPaidBySomeoneElse = (duesDetail?.paidBySomeoneElse ?? true) == 1;
+      _selectedStatus = duesDetail?.status ?? StatusPaid.notPaidOff;
+
+      amountController.text = _formatNumber("${duesDetail?.amount ?? 0}");
+      descriptionController.text = duesDetail?.description ?? "";
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final outlineInputBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: const BorderSide(color: grey),
-    );
-    final _inputDecoration = InputDecoration(
-      filled: true,
-      fillColor: Colors.white,
-      hintText: "0",
-      hintStyle: bFont.copyWith(fontSize: 12.0, color: grey),
-      enabledBorder: outlineInputBorder,
-      focusedBorder: outlineInputBorder.copyWith(borderSide: const BorderSide(color: primary)),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-    );
-
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Tambah Iuran",
+          duesDetail == null ? "Tambah Iuran" : "Update Iuran",
           style: hFontWhite.copyWith(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -97,6 +103,7 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                             Flexible(
                               child: DropdownButton<int>(
                                 isExpanded: true,
+                                value: _selectedMonth,
                                 items: months
                                     .map<DropdownMenuItem<int>>(
                                       (month) => DropdownMenuItem<int>(
@@ -109,15 +116,14 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                                       ),
                                     )
                                     .toList(),
-                                value: _selectedMonth,
-                                onChanged: (value) =>
-                                    setState(() => _selectedMonth = value ?? DateTime.now().month),
+                                onChanged: (value) => setState(() => _selectedMonth = value),
                               ),
                             ),
                             const SizedBox(width: 16.0),
                             Flexible(
                               child: DropdownButton<int>(
                                 isExpanded: true,
+                                value: _selectedYear,
                                 items: years
                                     .map<DropdownMenuItem<int>>(
                                       (year) => DropdownMenuItem<int>(
@@ -130,9 +136,7 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                                       ),
                                     )
                                     .toList(),
-                                value: _selectedYear,
-                                onChanged: (value) =>
-                                    setState(() => _selectedYear = value ?? DateTime.now().year),
+                                onChanged: (value) => setState(() => _selectedYear = value),
                               ),
                             ),
                           ],
@@ -153,21 +157,21 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                             final _getCitizen = ref.watch(getCitizen);
                             return _getCitizen.when(
                               data: (data) {
-                                final flattenCitizen =
-                                    {for (final item in data.values) ...item}.toList();
                                 return DropdownButton<UserModel>(
                                   isExpanded: true,
+                                  value: _selectedCitizen,
                                   hint: Text(
                                     "Pilih warga yang ingin dibuatkan iuran",
                                     style: bFont.copyWith(fontSize: 12.0, color: grey),
                                   ),
-                                  value: _selectedCitizen,
-                                  items: flattenCitizen
+                                  items: data.items
                                       .map(
                                         (e) => DropdownMenuItem(child: Text(e.name), value: e),
                                       )
                                       .toList(),
-                                  onChanged: (value) => setState(() => _selectedCitizen = value),
+                                  onChanged: (value) {
+                                    setState(() => _selectedCitizen = value);
+                                  },
                                 );
                               },
                               error: (error, trace) => Center(child: Text("Error $error")),
@@ -193,11 +197,11 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                             return _getCategories.when(
                               data: (data) => DropdownButton<DuesCategoryModel>(
                                 isExpanded: true,
+                                value: _selectedDuesCategory,
                                 hint: Text(
                                   "Pilih kategori iuran",
                                   style: bFont.copyWith(fontSize: 12.0, color: grey),
                                 ),
-                                value: _selectedDuesCategory,
                                 items: data.items
                                     .map((e) =>
                                         DropdownMenuItem(child: Text(e.name ?? ""), value: e))
@@ -225,12 +229,18 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                           controller: amountController,
                           style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 12.0),
                           keyboardType: TextInputType.number,
-                          decoration: _inputDecoration.copyWith(prefixText: _currency),
+                          decoration:
+                              sharedFunction.myInputDecoration.copyWith(prefixText: _currency),
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly,
                           ],
                           onChanged: (value) {
-                            if (value.isNotEmpty) value = _formatNumber(value.replaceAll(",", ""));
+                            if (value.isNotEmpty) {
+                              value = _formatNumber(value.replaceAll(",", ""));
+                            } else {
+                              value = "0";
+                            }
+
                             amountController.value = TextEditingValue(
                               text: value,
                               selection: TextSelection.collapsed(offset: value.length),
@@ -277,7 +287,8 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                           style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 12.0),
                           minLines: 3,
                           maxLines: 3,
-                          decoration: _inputDecoration.copyWith(hintText: "Keterangan"),
+                          decoration:
+                              sharedFunction.myInputDecoration.copyWith(hintText: "Keterangan"),
                         ),
                         const SizedBox(height: 8.0),
                         Text(
@@ -301,7 +312,9 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                         RadioListTile<StatusPaid>(
                           value: StatusPaid.paidOff,
                           groupValue: _selectedStatus,
-                          onChanged: (value) => setState(() => _selectedStatus = value),
+                          onChanged: (value) => setState(
+                            () => _selectedStatus = value ?? StatusPaid.notPaidOff,
+                          ),
                           title: Text(
                             "Lunas",
                             style: hFont.copyWith(fontWeight: FontWeight.bold),
@@ -310,7 +323,9 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                         RadioListTile<StatusPaid>(
                           value: StatusPaid.notPaidOff,
                           groupValue: _selectedStatus,
-                          onChanged: (value) => setState(() => _selectedStatus = value),
+                          onChanged: (value) => setState(
+                            () => _selectedStatus = value ?? StatusPaid.notPaidOff,
+                          ),
                           title: Text(
                             "Belum lunas",
                             style: hFont.copyWith(fontWeight: FontWeight.bold),
@@ -321,14 +336,14 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                       ElevatedButton(
                         onPressed: () async {
                           final userLogin = ref.read(appConfigNotifer).item.userSession;
-                          final result = await ref.read(duesNotifier.notifier).saveDues(
-                                "0",
+                          final result = await ref.read(duesDetailNotifier.notifier).saveDues(
+                                duesDetail == null ? "new" : duesDetail!.id!,
                                 duesCategoryId: _selectedDuesCategory?.id ?? 0,
                                 usersId: _selectedCitizen?.id ?? 0,
-                                month: _selectedMonth,
-                                year: _selectedYear,
-                                amount: int.tryParse(amountController.text) ?? 0,
-                                status: _selectedStatus ?? StatusPaid.notPaidOff,
+                                month: _selectedMonth ?? 0,
+                                year: _selectedYear ?? 0,
+                                amount: int.parse(amountController.text.replaceAll(".", "")),
+                                status: _selectedStatus,
                                 paidBySomeoneElse: _selectedPaidBySomeoneElse,
                                 createdBy: userLogin?.id ?? 0,
                               );
@@ -342,16 +357,17 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                               ),
                               snackBarType: SnackBarType.error,
                             );
-                          } else {
-                            GlobalFunction.showSnackBar(
-                              context,
-                              content: Text(
-                                result.message ?? '',
-                                style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              snackBarType: SnackBarType.success,
-                            );
+                            return;
                           }
+
+                          GlobalFunction.showSnackBar(
+                            context,
+                            content: Text(
+                              result.message ?? '',
+                              style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
+                            ),
+                            snackBarType: SnackBarType.success,
+                          );
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(16.0),

@@ -82,7 +82,7 @@ class SearchPage extends StatelessWidget {
                     const SizedBox(height: 16.0),
                     Consumer(
                       builder: (context, ref, child) {
-                        final _citizen = ref.watch(getCitizen);
+                        final _citizen = ref.watch(getCitizenGrouping);
                         return _citizen.when(
                           data: (data) => Column(
                             mainAxisSize: MainAxisSize.min,

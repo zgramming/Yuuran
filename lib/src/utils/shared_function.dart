@@ -1,6 +1,5 @@
-import 'dart:collection';
-
 import 'package:flutter/material.dart';
+import 'utils.dart';
 
 class SharedFunction {
   SharedFunction._();
@@ -22,6 +21,27 @@ class SharedFunction {
         minHeight: _minHeightWebsite(context),
       );
 
+  /// [Input Decoration] Section
+  InputDecoration get myInputDecoration {
+    final _outlineInputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10.0),
+      borderSide: const BorderSide(color: grey),
+    );
+
+    final inputDecoration = InputDecoration(
+      filled: true,
+      fillColor: Colors.white,
+      hintText: "0",
+      hintStyle: bFont.copyWith(fontSize: 12.0, color: grey),
+      enabledBorder: _outlineInputBorder,
+      focusedBorder: _outlineInputBorder.copyWith(borderSide: const BorderSide(color: primary)),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
+    );
+
+    return inputDecoration;
+  }
+
+  /// [String] Section
   String monthString(int month) {
     switch (month) {
       case 1:
@@ -51,36 +71,6 @@ class SharedFunction {
       default:
         return '-';
     }
-  }
-
-  Map<String, List> groupByFirstCharacter(List<String> names) {
-    final tempMap = <String, List<String>>{};
-
-    if (names.isEmpty) return tempMap;
-
-    /// Group By List By First Character
-    for (var name in names) {
-      final isExists = tempMap[name[0]];
-
-      if (isExists == null) tempMap[name[0]] = [];
-
-      tempMap[name[0]]!.add(name);
-    }
-
-    /// Sorted Map By Key
-    final sortedByKey = SplayTreeMap<String, List<String>>.from(
-      tempMap,
-      (key1, key2) => key1.compareTo(key2),
-    );
-
-    /// Sorted Map By Values
-    final resultMap = <String, List<String>>{};
-    for (var key in sortedByKey.keys) {
-      sortedByKey[key]?.sort((a, b) => a.compareTo(b));
-      resultMap[key] = sortedByKey[key] ?? [];
-    }
-
-    return sortedByKey;
   }
 }
 
