@@ -134,6 +134,7 @@ class DuesRepositoryImpl implements DuesRepository {
         status: status,
         paidBySomeoneElse: paidBySomeoneElse,
         createdBy: createdBy,
+        description: description,
       );
       return Right(result);
     } on DioError catch (error) {

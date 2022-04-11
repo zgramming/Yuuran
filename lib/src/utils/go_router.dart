@@ -16,7 +16,7 @@ const onboardingRouteName = "onboarding";
 const loginRouteName = "login";
 const welcomeRouteName = "welcome";
 
-const duesRouteName = "dues";
+const duesFormRouteName = "duesForm";
 const duesCategoryRouteName = "duesCategory";
 const duesCategoryFormRouteName = "duesCategoryForm";
 
@@ -56,12 +56,12 @@ final goRouter = Provider<GoRouter>(
       ),
       GoRoute(
         path: "/dues/form/:duesDetailID",
-        name: duesRouteName,
+        name: duesFormRouteName,
         builder: (ctx, state) {
           final params = state.params;
 
           return DuesFormPage(
-            duesDetailID: params['duesDetailID']!,
+            duesDetailID: params['duesDetailID'] ?? "",
           );
         },
       ),

@@ -72,13 +72,6 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
     final response = result.data as Map<String, dynamic>;
     final dues = DuesCitizenModel.fromJson(response['data']);
     return dues;
-    // final list = List.from(response['data']);
-    // final listDuesDetail = list
-    //     .map(
-    //       (e) => DuesDetailModel.fromJson(Map<String, dynamic>.from(e)),
-    //     )
-    //     .toList();
-    // return listDuesDetail;
   }
 
   @override
@@ -163,6 +156,9 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
   Future<DuesDetailModel?> getDetailByID(String duesDetailID) async {
     final result = await dioClient.get("/dues/$duesDetailID");
     final response = result.data as Map<String, dynamic>;
+
+    if (response['data'] == null) return null;
+
     final dues = DuesDetailModel.fromJson(Map<String, dynamic>.from(response['data']));
     return dues;
   }

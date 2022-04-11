@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../utils/utils.dart';
 import '../../riverpod/dues_citizen/dues_citizen_notifier.dart';
@@ -82,9 +81,10 @@ class CitizenDuesPage extends ConsumerWidget {
                     itemBuilder: (ctx, index) {
                       final item = dues[index];
                       return DuesDetailCard(
-                        onTap: () => context.pushNamed(duesRouteName, params: {
-                          "duesDetailID": item.id!,
-                        }),
+                        onTap: () => gotoPage.duesFormUpdate(
+                          context,
+                          duesDetailID: item.id!,
+                        ),
                         item: item,
                       );
                     },

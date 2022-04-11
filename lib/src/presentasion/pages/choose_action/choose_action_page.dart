@@ -19,12 +19,7 @@ class ChooseActionPage extends StatelessWidget {
         children: [
           const SizedBox(height: 16.0),
           ChooseActionMenu(
-            onTap: () => context.pushNamed(
-              duesRouteName,
-              params: {
-                "duesDetailID": "new",
-              },
-            ),
+            onTap: () => gotoPage.duesFormNew(context),
             circleBackgroudColor: secondary,
             iconData: Icons.attach_money_rounded,
             title: "Tambah Iuran",

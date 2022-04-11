@@ -51,6 +51,7 @@ class DuesDetailNotifier extends StateNotifier<DuesDetailState> {
       status: status,
       paidBySomeoneElse: paidBySomeoneElse,
       createdBy: createdBy,
+      description: description,
     );
 
     return result.fold(

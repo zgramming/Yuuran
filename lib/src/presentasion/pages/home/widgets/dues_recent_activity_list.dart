@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../utils/utils.dart';
 import '../../../riverpod/dues_recent_activity/dues_recent_activity_notifier.dart';
 import '../../widgets/dues_detail_card.dart';
 
@@ -22,7 +23,13 @@ class DuesRecentActivityList extends StatelessWidget {
               itemCount: data.items.length,
               itemBuilder: (ctx, index) {
                 final item = data.items[index];
-                return DuesDetailCard(item: item);
+                return DuesDetailCard(
+                  onTap: () => gotoPage.duesFormUpdate(
+                    context,
+                    duesDetailID: item.id!,
+                  ),
+                  item: item,
+                );
               },
             );
           },

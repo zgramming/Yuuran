@@ -25,24 +25,23 @@ class DuesFormPage extends ConsumerStatefulWidget {
 }
 
 class _DuesFormPageState extends ConsumerState<DuesFormPage> {
+  final now = DateTime.now();
   final years = <int>[
     for (final year in GlobalFunction.range(min: 2010, max: DateTime.now().year)) year
   ];
-
   final months = <int>[for (final month in GlobalFunction.range(min: 1, max: 12)) month];
-
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
 
-  final now = DateTime.now();
+  bool disableButtonSubmit = true;
 
+  /// Form Mandatory
   DuesDetailModel? duesDetail;
-
   int? _selectedYear;
   int? _selectedMonth;
+  bool _selectedPaidBySomeoneElse = false;
   UserModel? _selectedCitizen;
   DuesCategoryModel? _selectedDuesCategory;
-  bool _selectedPaidBySomeoneElse = false;
   StatusPaid _selectedStatus = StatusPaid.notPaidOff;
 
   static const _locale = 'id';
@@ -63,11 +62,15 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
       _selectedMonth = duesDetail?.month ?? now.month;
       _selectedCitizen = duesDetail?.user;
       _selectedDuesCategory = duesDetail?.duesCategory;
-      _selectedPaidBySomeoneElse = (duesDetail?.paidBySomeoneElse ?? true) == 1;
+      _selectedPaidBySomeoneElse = duesDetail?.paidBySomeoneElse ?? false;
       _selectedStatus = duesDetail?.status ?? StatusPaid.notPaidOff;
 
       amountController.text = _formatNumber("${duesDetail?.amount ?? 0}");
       descriptionController.text = duesDetail?.description ?? "";
+
+      /// Jika sudah lunas iurannya, disable button submit agar tidak bisa diubah
+      /// Untuk mengubah jika terjadi kesalahan, harus melalui website.
+      disableButtonSubmit = duesDetail?.status == StatusPaid.paidOff;
     });
   }
 
@@ -76,7 +79,7 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          duesDetail == null ? "Tambah Iuran" : "Update Iuran",
+          duesDetail?.id == null ? "Tambah Iuran" : "Update Iuran",
           style: hFontWhite.copyWith(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -334,41 +337,44 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                       ],
                       const SizedBox(height: 16.0),
                       ElevatedButton(
-                        onPressed: () async {
-                          final userLogin = ref.read(appConfigNotifer).item.userSession;
-                          final result = await ref.read(duesDetailNotifier.notifier).saveDues(
-                                duesDetail == null ? "new" : duesDetail!.id!,
-                                duesCategoryId: _selectedDuesCategory?.id ?? 0,
-                                usersId: _selectedCitizen?.id ?? 0,
-                                month: _selectedMonth ?? 0,
-                                year: _selectedYear ?? 0,
-                                amount: int.parse(amountController.text.replaceAll(".", "")),
-                                status: _selectedStatus,
-                                paidBySomeoneElse: _selectedPaidBySomeoneElse,
-                                createdBy: userLogin?.id ?? 0,
-                              );
+                        onPressed: disableButtonSubmit
+                            ? null
+                            : () async {
+                                final userLogin = ref.read(appConfigNotifer).item.userSession;
+                                final result = await ref.read(duesDetailNotifier.notifier).saveDues(
+                                      duesDetail == null ? "new" : duesDetail!.id!,
+                                      duesCategoryId: _selectedDuesCategory?.id ?? 0,
+                                      usersId: _selectedCitizen?.id ?? 0,
+                                      month: _selectedMonth ?? 0,
+                                      year: _selectedYear ?? 0,
+                                      amount: int.parse(amountController.text.replaceAll(".", "")),
+                                      status: _selectedStatus,
+                                      paidBySomeoneElse: _selectedPaidBySomeoneElse,
+                                      description: descriptionController.text,
+                                      createdBy: userLogin?.id ?? 0,
+                                    );
 
-                          if (result.isError) {
-                            GlobalFunction.showSnackBar(
-                              context,
-                              content: Text(
-                                result.message ?? '',
-                                style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                              snackBarType: SnackBarType.error,
-                            );
-                            return;
-                          }
+                                if (result.isError) {
+                                  GlobalFunction.showSnackBar(
+                                    context,
+                                    content: Text(
+                                      result.message ?? '',
+                                      style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
+                                    ),
+                                    snackBarType: SnackBarType.error,
+                                  );
+                                  return;
+                                }
 
-                          GlobalFunction.showSnackBar(
-                            context,
-                            content: Text(
-                              result.message ?? '',
-                              style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            snackBarType: SnackBarType.success,
-                          );
-                        },
+                                GlobalFunction.showSnackBar(
+                                  context,
+                                  content: Text(
+                                    result.message ?? '',
+                                    style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
+                                  ),
+                                  snackBarType: SnackBarType.success,
+                                );
+                              },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(16.0),
                           primary: primary,

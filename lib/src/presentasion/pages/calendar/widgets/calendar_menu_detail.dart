@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../utils/utils.dart';
 import '../../../riverpod/dues_calendar/dues_calendar_notifier.dart';
 import '../../widgets/dues_detail_card.dart';
 
@@ -20,7 +21,13 @@ class CalendarMenuDetail extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (ctx, index) {
             final item = items[index];
-            return DuesDetailCard(item: item);
+            return DuesDetailCard(
+              onTap: () => gotoPage.duesFormUpdate(
+                context,
+                duesDetailID: item.id!,
+              ),
+              item: item,
+            );
           },
         );
       },

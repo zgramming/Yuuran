@@ -8,7 +8,7 @@ class DuesDetailCard extends StatelessWidget {
   const DuesDetailCard({
     Key? key,
     required this.item,
-    this.onTap,
+    required this.onTap,
   }) : super(key: key);
 
   final DuesDetailModel item;
@@ -24,14 +24,34 @@ class DuesDetailCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
               decoration: BoxDecoration(
                 color: item.status == StatusPaid.notPaidOff ? warning : secondary,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)),
               ),
-              child: Text(
-                "${item.duesCategory?.name} (${item.duesCategory?.code})",
-                style: hFontWhite,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "${item.duesCategory?.name} (${item.duesCategory?.code})",
+                    style: hFontWhite.copyWith(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                  if (item.paidBySomeoneElse)
+                    Card(
+                      margin: EdgeInsets.zero,
+                      color: primaryShade,
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Text(
+                          "Diwakilkan",
+                          style: bFontWhite.copyWith(fontSize: 10.0),
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
             ListTile(
@@ -41,20 +61,49 @@ class DuesDetailCard extends StatelessWidget {
               ),
               subtitle: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Text.rich(
-                  TextSpan(
-                    text: "Membayar Iuran untuk bulan ",
-                    children: [
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text.rich(
                       TextSpan(
-                        text: sharedFunction.monthString(item.month) + " " + item.year.toString(),
-                        style: bFont.copyWith(fontWeight: FontWeight.bold),
+                        text: "Membayar Iuran untuk bulan ",
+                        children: [
+                          TextSpan(
+                            text: sharedFunction.monthString(item.month ?? 0) +
+                                " " +
+                                item.year.toString(),
+                            style: bFont.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: secondaryDark,
+                            ),
+                          ),
+                        ],
+                      ),
+                      style: bFont.copyWith(
+                        color: grey,
+                        fontSize: 12.0,
+                      ),
+                    ),
+                    if (item.description.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      Text.rich(
+                        TextSpan(
+                          text: "Deskripsi : ",
+                          children: [
+                            TextSpan(
+                              text: item.description,
+                            ),
+                          ],
+                        ),
+                        // item.description,
+                        style: bFont.copyWith(
+                          color: grey,
+                          fontSize: 10.0,
+                        ),
                       ),
                     ],
-                  ),
-                  style: bFont.copyWith(
-                    color: grey,
-                    fontSize: 12.0,
-                  ),
+                  ],
                 ),
               ),
               trailing: Card(

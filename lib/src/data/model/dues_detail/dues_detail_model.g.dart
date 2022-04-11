@@ -9,15 +9,18 @@ part of 'dues_detail_model.dart';
 DuesDetailModel _$DuesDetailModelFromJson(Map<String, dynamic> json) =>
     DuesDetailModel(
       id: json['id'] as String?,
-      duesCategoryId: json['dues_category_id'] as int? ?? 0,
-      usersId: json['users_id'] as int? ?? 0,
-      month: json['month'] as int? ?? 0,
-      year: json['year'] as int? ?? 0,
+      duesCategoryId: json['dues_category_id'] as int?,
+      usersId: json['users_id'] as int?,
+      month: json['month'] as int?,
+      year: json['year'] as int?,
       amount: json['amount'] as int? ?? 0,
       status: $enumDecodeNullable(_$StatusPaidEnumMap, json['status']) ??
-          StatusPaid.none,
-      paidBySomeoneElse: json['paid_by_someone_else'] as int? ?? 0,
-      description: json['description'] as String? ?? '',
+          StatusPaid.notPaidOff,
+      paidBySomeoneElse: json['paid_by_someone_else'] == null
+          ? false
+          : GlobalFunction.fromJsonIntegerToBoolean(
+              json['paid_by_someone_else'] as int),
+      description: json['description'] as String? ?? "",
       createdBy: json['created_by'] as int?,
       updatedBy: json['updated_by'] as int?,
       createdAt: json['created_at'] == null
@@ -44,7 +47,8 @@ Map<String, dynamic> _$DuesDetailModelToJson(DuesDetailModel instance) =>
       'year': instance.year,
       'amount': instance.amount,
       'status': _$StatusPaidEnumMap[instance.status],
-      'paid_by_someone_else': instance.paidBySomeoneElse,
+      'paid_by_someone_else':
+          GlobalFunction.toJsonIntegerFromBoolean(instance.paidBySomeoneElse),
       'description': instance.description,
       'created_by': instance.createdBy,
       'updated_by': instance.updatedBy,

@@ -36,7 +36,6 @@ class CalendarMenu extends StatelessWidget {
         return _myCalendar.when(
           data: (data) {
             final _calendarParam = ref.watch(duesCalendarParameter);
-
             return Card(
               margin: EdgeInsets.zero,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
@@ -115,7 +114,10 @@ class CalendarMenu extends StatelessWidget {
             );
           },
           error: (error, trace) => Center(child: Text("Error $error")),
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => ConstrainedBox(
+            constraints: BoxConstraints(minHeight: sharedFunction.vh(context) / 2),
+            child: const Center(child: CircularProgressIndicator()),
+          ),
         );
       },
     );

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:global_template/global_template.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../dues_category/dues_category_model.dart';
@@ -33,14 +34,14 @@ String getStatusPaidText(StatusPaid status) {
 class DuesDetailModel extends Equatable {
   const DuesDetailModel({
     this.id,
-    this.duesCategoryId = 0,
-    this.usersId = 0,
-    this.month = 0,
-    this.year = 0,
+    this.duesCategoryId,
+    this.usersId,
+    this.month,
+    this.year,
     this.amount = 0,
-    this.status = StatusPaid.none,
-    this.paidBySomeoneElse = 0,
-    this.description = '',
+    this.status = StatusPaid.notPaidOff,
+    this.paidBySomeoneElse = false,
+    this.description = "",
     this.createdBy,
     this.updatedBy,
     this.createdAt,
@@ -50,13 +51,18 @@ class DuesDetailModel extends Equatable {
   });
 
   final String? id;
-  final int duesCategoryId;
-  final int usersId;
-  final int month;
-  final int year;
+  final int? duesCategoryId;
+  final int? usersId;
+  final int? month;
+  final int? year;
   final int amount;
   final StatusPaid status;
-  final int paidBySomeoneElse;
+
+  @JsonKey(
+    fromJson: GlobalFunction.fromJsonIntegerToBoolean,
+    toJson: GlobalFunction.toJsonIntegerFromBoolean,
+  )
+  final bool paidBySomeoneElse;
   final String description;
   final int? createdBy;
   final int? updatedBy;
@@ -102,7 +108,7 @@ class DuesDetailModel extends Equatable {
     int? year,
     int? amount,
     StatusPaid? status,
-    int? paidBySomeoneElse,
+    bool? paidBySomeoneElse,
     String? description,
     int? createdBy,
     int? updatedBy,

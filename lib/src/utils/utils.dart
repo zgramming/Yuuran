@@ -4,5 +4,6 @@ export './dio_utils.dart';
 export './failure.dart';
 export './fonts.dart';
 export './go_router.dart';
+export './goto_page.dart';
 export './shared_function.dart';
 export './shared_preferences.dart';
