@@ -1,32 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:global_template/global_template.dart';
 
+import '../../../../injection.dart';
+import '../../../data/model/user/user_model.dart';
 import '../../../utils/utils.dart';
 
-class CitizenFormPage extends StatelessWidget {
+class CitizenFormPage extends ConsumerStatefulWidget {
   const CitizenFormPage({
     Key? key,
+    required this.id,
   }) : super(key: key);
+  final int id;
+
+  @override
+  _CitizenFormPageState createState() => _CitizenFormPageState();
+}
+
+class _CitizenFormPageState extends ConsumerState<CitizenFormPage> {
+  UserModel? _user;
+  final usernameController = TextEditingController();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final passwordConfirmationController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() => _getCitizenByID());
+  }
+
+  Future<void> _getCitizenByID() async {
+    final user = (await ref.read(citizenNotifier.notifier).getByID(widget.id)).item;
+    setState(() {
+      _user = user;
+      usernameController.text = _user?.username ?? "";
+      nameController.text = _user?.name ?? "";
+      emailController.text = _user?.email ?? "";
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final outlineInputBorder = OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: const BorderSide(color: grey),
-    );
-    final _inputDecoration = InputDecoration(
-      filled: true,
-      fillColor: Colors.white,
-      hintText: "",
-      hintStyle: bFont.copyWith(fontSize: 12.0, color: grey),
-      enabledBorder: outlineInputBorder,
-      focusedBorder: outlineInputBorder.copyWith(borderSide: const BorderSide(color: primary)),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-    );
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          "Tambah Warga",
+          _user?.id == null ? "Tambah Warga" : "Update ${_user!.name}",
           style: hFontWhite.copyWith(
             // fontSize: 16.0,
             fontWeight: FontWeight.bold,
@@ -52,8 +73,9 @@ class CitizenFormPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   TextFormField(
+                    controller: usernameController,
                     style: bFont.copyWith(fontWeight: FontWeight.bold),
-                    decoration: _inputDecoration.copyWith(hintText: "Username"),
+                    decoration: sharedFunction.myInputDecoration.copyWith(hintText: "Username"),
                   ),
                 ],
                 const SizedBox(height: 16.0),
@@ -67,8 +89,9 @@ class CitizenFormPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   TextFormField(
+                    controller: nameController,
                     style: bFont.copyWith(fontWeight: FontWeight.bold),
-                    decoration: _inputDecoration.copyWith(hintText: "Nama"),
+                    decoration: sharedFunction.myInputDecoration.copyWith(hintText: "Nama"),
                   ),
                 ],
                 const SizedBox(height: 16.0),
@@ -82,46 +105,57 @@ class CitizenFormPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 8.0),
                   TextFormField(
+                    controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     style: bFont.copyWith(fontWeight: FontWeight.bold),
-                    decoration: _inputDecoration.copyWith(hintText: "Email"),
+                    decoration: sharedFunction.myInputDecoration.copyWith(hintText: "Email"),
                   ),
                 ],
-                const SizedBox(height: 16.0),
-                ...[
-                  Text(
-                    'Password',
-                    style: hFont.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
+
+                /// Section Password & Confirmation Password
+                /// When mode update, we should hidden this input
+                /// We let user to update their password individual
+                if (_user?.id == null)
+                  _PasswordSection(
+                    passwordController: passwordController,
+                    passwordConfirmationController: passwordConfirmationController,
                   ),
-                  const SizedBox(height: 8.0),
-                  TextFormField(
-                    obscureText: true,
-                    style: bFont.copyWith(fontWeight: FontWeight.bold),
-                    decoration: _inputDecoration.copyWith(hintText: "Password"),
-                  ),
-                ],
-                const SizedBox(height: 16.0),
-                ...[
-                  Text(
-                    'Konfirmasi Password',
-                    style: hFont.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  TextFormField(
-                    obscureText: true,
-                    style: bFont.copyWith(fontWeight: FontWeight.bold),
-                    decoration: _inputDecoration.copyWith(hintText: "Konfirmasi Password"),
-                  ),
-                ],
+
                 const SizedBox(height: 16.0),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    try {
+                      final result = await ref.read(citizenNotifier.notifier).saveCitizen(
+                            id: _user?.id,
+                            username: usernameController.text,
+                            name: nameController.text,
+                            email: emailController.text,
+                            password: passwordController.text,
+                            passwordConfirmation: passwordController.text,
+                          );
+                      if (result.isError) {
+                        throw Exception(result.message!);
+                      }
+
+                      GlobalFunction.showSnackBar(
+                        context,
+                        snackBarType: SnackBarType.success,
+                        content: Text(
+                          result.message!,
+                          style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    } catch (e) {
+                      GlobalFunction.showSnackBar(
+                        context,
+                        snackBarType: SnackBarType.error,
+                        content: Text(
+                          e.toString(),
+                          style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      );
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.all(16.0),
                     primary: primary,
@@ -140,6 +174,66 @@ class CitizenFormPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class _PasswordSection extends StatelessWidget {
+  const _PasswordSection({
+    Key? key,
+    required this.passwordController,
+    required this.passwordConfirmationController,
+  }) : super(key: key);
+
+  final TextEditingController passwordController;
+  final TextEditingController passwordConfirmationController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        ...[
+          const SizedBox(height: 16.0),
+          ...[
+            Text(
+              'Password',
+              style: hFont.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            TextFormField(
+              controller: passwordController,
+              obscureText: true,
+              style: bFont.copyWith(fontWeight: FontWeight.bold),
+              decoration: sharedFunction.myInputDecoration.copyWith(
+                hintText: "Password",
+              ),
+            ),
+          ],
+          const SizedBox(height: 16.0),
+          ...[
+            Text(
+              'Konfirmasi Password',
+              style: hFont.copyWith(
+                fontWeight: FontWeight.bold,
+                fontSize: 16.0,
+              ),
+            ),
+            const SizedBox(height: 8.0),
+            TextFormField(
+              controller: passwordConfirmationController,
+              obscureText: true,
+              style: bFont.copyWith(fontWeight: FontWeight.bold),
+              decoration: sharedFunction.myInputDecoration.copyWith(
+                hintText: "Konfirmasi Password",
+              ),
+            ),
+          ],
+        ],
+      ],
     );
   }
 }

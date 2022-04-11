@@ -25,6 +25,45 @@ class GoToPage {
     });
     return null;
   }
+
+  void Function()? citizenDues(
+    BuildContext context, {
+    required String username,
+  }) {
+    context.pushNamed(
+      citizenDuesRouteName,
+      params: {
+        "username": username,
+      },
+    );
+
+    return null;
+  }
+
+  void Function()? citizenFormNew(BuildContext context) {
+    context.pushNamed(
+      citizenFormRouteName,
+      params: {
+        "id": "-1",
+      },
+    );
+
+    return null;
+  }
+
+  void Function()? citizenFormUpdate(
+    BuildContext context, {
+    required int id,
+  }) {
+    context.pushNamed(
+      citizenFormRouteName,
+      params: {
+        "id": "$id",
+      },
+    );
+
+    return null;
+  }
 }
 
 final gotoPage = GoToPage.instance;

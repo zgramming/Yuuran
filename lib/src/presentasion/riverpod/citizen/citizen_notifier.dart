@@ -15,19 +15,58 @@ class CitizenNotifier extends StateNotifier<CitizenState> {
   }) : super(const CitizenState());
 
   final CitizenRepository repository;
+
   Future<CitizenState> get() async {
     final result = await repository.get();
     return result.fold(
-      (failure) => state = state.init(
+      (failure) => state = state.copyWith(
         items: [],
         isError: true,
         message: failure.message,
       ),
-      (values) => state = state.init(
+      (values) => state = state.copyWith(
         isError: false,
         message: null,
         items: values,
       ),
+    );
+  }
+
+  Future<CitizenState> getByID(int id) async {
+    final result = await repository.getByID(id);
+    return result.fold(
+      (failure) => state = state.copyWith(
+        isError: true,
+        item: const UserModel(),
+        message: failure.message,
+      ),
+      (value) => state = state.copyWith(
+        isError: false,
+        item: value,
+      ),
+    );
+  }
+
+  Future<CitizenState> saveCitizen({
+    required int? id,
+    required String username,
+    required String name,
+    required String email,
+    required String password,
+    required String passwordConfirmation,
+  }) async {
+    final result = await repository.saveCitizen(
+      id: id,
+      username: username,
+      name: name,
+      email: email,
+      password: password,
+      passwordConfirmation: passwordConfirmation,
+    );
+
+    return result.fold(
+      (failure) => state = state.copyWith(message: failure.message, isError: true),
+      (message) => state = state.copyWith(message: message, isError: false),
     );
   }
 }
@@ -38,8 +77,6 @@ final getCitizen = FutureProvider.autoDispose((ref) async {
   /// Load Citizen from API
   final result = await notifier.get();
 
-  // ref.maintainState = true;
-
   return result;
 });
 
@@ -48,8 +85,6 @@ final getCitizenGrouping = FutureProvider.autoDispose((ref) async {
 
   /// Load Citizen from API
   await notifier.get();
-
-  // ref.maintainState = true;
 
   return ref.read(citizenGrouping);
 });

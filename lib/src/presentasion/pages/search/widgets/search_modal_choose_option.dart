@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../data/model/user/user_model.dart';
 import '../../../../utils/utils.dart';
@@ -26,12 +25,7 @@ class SearchModalChooseOption extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              context.pushNamed(
-                citizenDuesRouteName,
-                params: {
-                  "username": user.username,
-                },
-              );
+              gotoPage.citizenDues(context, username: user.username);
             },
             style: TextButton.styleFrom(
               padding: const EdgeInsets.all(16.0),
@@ -44,11 +38,7 @@ class SearchModalChooseOption extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-
-              context.pushNamed(
-                citizenFormRouteName,
-                params: {"username": user.username},
-              );
+              gotoPage.citizenFormUpdate(context, id: user.id!);
             },
             style: TextButton.styleFrom(
               padding: const EdgeInsets.all(16.0),

@@ -10,8 +10,8 @@ part 'user_model.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 class UserModel extends Equatable {
   const UserModel({
-    this.id = 0,
-    this.appGroupUserId = 0,
+    this.id,
+    this.appGroupUserId,
     this.username = '',
     this.name = '',
     this.email = '',
@@ -25,8 +25,8 @@ class UserModel extends Equatable {
     this.userGroup = const UserGroup(),
   });
 
-  final int id;
-  final int appGroupUserId;
+  final int? id;
+  final int? appGroupUserId;
   final String username;
   final String name;
   final String email;

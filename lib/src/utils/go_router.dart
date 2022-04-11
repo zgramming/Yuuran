@@ -94,9 +94,13 @@ final goRouter = Provider<GoRouter>(
         },
       ),
       GoRoute(
-        path: "/citizen/form/:username",
+        path: "/citizen/form/:id",
         name: citizenFormRouteName,
-        builder: (ctx, state) => const CitizenFormPage(),
+        builder: (ctx, state) {
+          final params = state.params;
+          final id = int.parse(params['id'] ?? "0");
+          return CitizenFormPage(id: id);
+        },
       ),
     ],
   ),
