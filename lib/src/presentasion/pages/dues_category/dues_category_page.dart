@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../utils/utils.dart';
+import '../../riverpod/dues_category/dues_category_notifier.dart';
 
-class DuesCategoryPage extends StatelessWidget {
+class DuesCategoryPage extends ConsumerWidget {
   const DuesCategoryPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -22,58 +24,75 @@ class DuesCategoryPage extends StatelessWidget {
             onPressed: () => context.pushNamed(
               duesCategoryFormRouteName,
               params: {
-                "codeCategory": "0",
+                "duesCategoryID": "-1",
               },
             ),
             icon: const Icon(Icons.add),
           ),
         ],
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemCount: 5,
-        shrinkWrap: true,
-        itemBuilder: (ctx, state) {
-          return Card(
-            margin: const EdgeInsets.symmetric(vertical: 8.0),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: ListTile(
-              leading: CircleAvatar(
-                backgroundColor: primaryShade,
-                child: FittedBox(
-                  child: Text(
-                    "IKB",
-                    style: bFontWhite.copyWith(
-                      fontWeight: FontWeight.bold,
+      body: Consumer(
+        builder: (context, ref, child) {
+          final _getCategory = ref.watch(getDuesCategory);
+          return _getCategory.when(
+            data: (data) => RefreshIndicator(
+              onRefresh: () async {
+                await Future.delayed(const Duration(seconds: 1));
+                ref.refresh(getDuesCategory);
+              },
+              child: ListView.builder(
+                padding: const EdgeInsets.all(16.0),
+                itemCount: data.items.length,
+                shrinkWrap: true,
+                itemBuilder: (ctx, index) {
+                  final item = data.items[index];
+                  return Card(
+                    margin: const EdgeInsets.symmetric(vertical: 8.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
                     ),
-                  ),
-                ),
-              ),
-              title: Text(
-                "Iuran Kebersihan",
-                style: hFont.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              subtitle: Text(
-                "Disini deskripsi iuran kebersihan loh",
-                style: bFont.copyWith(
-                  color: grey,
-                  fontSize: 10.0,
-                ),
-              ),
-              trailing: IconButton(
-                onPressed: () => context.pushNamed(
-                  duesCategoryFormRouteName,
-                  params: {
-                    "codeCategory": "test",
-                  },
-                ),
-                icon: const Icon(Icons.edit, color: info),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: primaryShade,
+                        child: FittedBox(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              item.code ?? "",
+                              style: bFontWhite.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      title: Text(
+                        item.name ?? "",
+                        style: hFont.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        item.description ?? "",
+                        style: bFont.copyWith(
+                          color: grey,
+                          fontSize: 10.0,
+                        ),
+                      ),
+                      trailing: IconButton(
+                        onPressed: () => context.pushNamed(
+                          duesCategoryFormRouteName,
+                          params: {"duesCategoryID": item.id.toString()},
+                        ),
+                        icon: const Icon(Icons.edit, color: info),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
+            error: (error, trace) => Center(child: Text("Error $error")),
+            loading: () => const Center(child: CircularProgressIndicator()),
           );
         },
       ),

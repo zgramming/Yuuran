@@ -6,6 +6,7 @@ import '../../data/model/dues_statistics/dues_statistics_model.dart';
 import '../../utils/utils.dart';
 
 abstract class DuesRepository {
+  /// [GET] Request
   Future<Either<Failure, List<DuesDetailModel>>> getDuesByUsername({
     required String name,
     int? month,
@@ -31,6 +32,9 @@ abstract class DuesRepository {
 
   Future<Either<Failure, List<DuesCategoryModel>>> getDuesCategory();
 
+  Future<Either<Failure, DuesCategoryModel?>> getDuesCategoryByID(int duesCategoryID);
+
+  /// [POST] Request
   Future<Either<Failure, String>> saveDues(
     String duesDetailId, {
     required int duesCategoryId,
@@ -41,6 +45,14 @@ abstract class DuesRepository {
     required StatusPaid status,
     required bool paidBySomeoneElse,
     required int createdBy,
+    String? description,
+  });
+
+  Future<Either<Failure, String>> saveDuesCategory({
+    int? duesCategoryId,
+    required String code,
+    required String name,
+    required int amount,
     String? description,
   });
 }

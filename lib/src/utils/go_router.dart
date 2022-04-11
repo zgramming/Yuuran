@@ -67,9 +67,14 @@ final goRouter = Provider<GoRouter>(
             routes: [
               /// [/dues/category/form/code-category]
               GoRoute(
-                path: "form/:codeCategory",
+                path: "form/:duesCategoryID",
                 name: duesCategoryFormRouteName,
-                builder: (ctx, state) => const DuesCategoryFormPage(),
+                builder: (ctx, state) {
+                  final param = state.params;
+                  return DuesCategoryFormPage(
+                    duesCategoryID: param['duesCategoryID'] ?? "0",
+                  );
+                },
               ),
             ],
           ),

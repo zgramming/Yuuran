@@ -98,6 +98,18 @@ class DuesRepositoryImpl implements DuesRepository {
   }
 
   @override
+  Future<Either<Failure, DuesCategoryModel?>> getDuesCategoryByID(int duesCategoryID) async {
+    try {
+      final result = await remoteDataSource.getDuesCategoryByID(duesCategoryID);
+      return Right(result);
+    } on DioError catch (error) {
+      return Left(dioUtils.onError(error));
+    } catch (e) {
+      return Left(UncaughtFailure(message: e.toString()));
+    }
+  }
+
+  @override
   Future<Either<Failure, String>> saveDues(
     String duesDetailId, {
     required int duesCategoryId,
@@ -122,6 +134,31 @@ class DuesRepositoryImpl implements DuesRepository {
         paidBySomeoneElse: paidBySomeoneElse,
         createdBy: createdBy,
       );
+      return Right(result);
+    } on DioError catch (error) {
+      return Left(dioUtils.onError(error));
+    } catch (e) {
+      return Left(UncaughtFailure(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<Failure, String>> saveDuesCategory({
+    int? duesCategoryId,
+    required String code,
+    required String name,
+    required int amount,
+    String? description,
+  }) async {
+    try {
+      final result = await remoteDataSource.saveDuesCategory(
+        code: code,
+        name: name,
+        amount: amount,
+        description: description,
+        duesCategoryId: duesCategoryId,
+      );
+
       return Right(result);
     } on DioError catch (error) {
       return Left(dioUtils.onError(error));

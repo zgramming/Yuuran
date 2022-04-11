@@ -71,7 +71,7 @@ class _CitizenDuesFilterState extends ConsumerState<CitizenDuesFilter> {
                         (e) => DropdownMenuItem(
                           value: e,
                           child: Text(
-                            e.name,
+                            e.name ?? "",
                             style: bFont.copyWith(
                               fontWeight: FontWeight.bold,
                             ),

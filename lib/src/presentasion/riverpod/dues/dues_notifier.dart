@@ -7,9 +7,12 @@ import '../../../domain/repository/dues_repository.dart';
 part 'dues_state.dart';
 
 class DuesNotifier extends StateNotifier<DuesState> {
-  DuesNotifier({required this.repository}) : super(const DuesState());
+  DuesNotifier({
+    required this.repository,
+  }) : super(const DuesState());
 
   final DuesRepository repository;
+
   Future<DuesState> saveDues(
     String duesDetailId, {
     required int duesCategoryId,

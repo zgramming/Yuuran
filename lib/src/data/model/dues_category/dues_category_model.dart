@@ -10,12 +10,12 @@ part 'dues_category_model.g.dart';
 @JsonSerializable(fieldRename: FieldRename.snake)
 class DuesCategoryModel extends Equatable {
   const DuesCategoryModel({
-    this.id = 0,
-    this.code = '',
-    this.name = '',
-    this.amount = 0,
-    this.description = '',
-    this.status = '',
+    this.id,
+    this.code,
+    this.name,
+    this.amount,
+    this.description,
+    this.status,
     this.createdBy,
     this.updatedBy,
     this.createdAt,
@@ -23,12 +23,12 @@ class DuesCategoryModel extends Equatable {
     this.duesDetail = const [],
   });
 
-  final int id;
-  final String code;
-  final String name;
-  final int amount;
-  final String description;
-  final String status;
+  final int? id;
+  final String? code;
+  final String? name;
+  final int? amount;
+  final String? description;
+  final String? status;
   final int? createdBy;
   final int? updatedBy;
   final DateTime? createdAt;

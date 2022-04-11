@@ -12,7 +12,7 @@ class DioUtils {
     switch (error.type) {
       case DioErrorType.response:
         log("Error DioResponse $data");
-        return ResponseFailure(message: data['message']);
+        return ResponseFailure(message: data is Map ? data['message'] : data);
       case DioErrorType.connectTimeout:
         log("Error DioConnectionTimeOut");
         return const ConnectionTimeoutFailure();

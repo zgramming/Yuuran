@@ -89,7 +89,7 @@ class DuesStatisticsList extends StatelessWidget {
                                       Text(
                                         "Rp." +
                                             GlobalFunction.formatNumber(
-                                              data.sumDuesByCategories(_duesCategory!.id),
+                                              data.sumDuesByCategories(_duesCategory?.id ?? 0),
                                             ),
                                         style: hFontWhite.copyWith(
                                           fontWeight: FontWeight.bold,

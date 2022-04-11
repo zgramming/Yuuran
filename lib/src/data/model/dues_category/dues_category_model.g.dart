@@ -8,12 +8,12 @@ part of 'dues_category_model.dart';
 
 DuesCategoryModel _$DuesCategoryModelFromJson(Map<String, dynamic> json) =>
     DuesCategoryModel(
-      id: json['id'] as int? ?? 0,
-      code: json['code'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      amount: json['amount'] as int? ?? 0,
-      description: json['description'] as String? ?? '',
-      status: json['status'] as String? ?? '',
+      id: json['id'] as int?,
+      code: json['code'] as String?,
+      name: json['name'] as String?,
+      amount: json['amount'] as int?,
+      description: json['description'] as String?,
+      status: json['status'] as String?,
       createdBy: json['created_by'] as int?,
       updatedBy: json['updated_by'] as int?,
       createdAt: json['created_at'] == null

@@ -199,7 +199,8 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                                 ),
                                 value: _selectedDuesCategory,
                                 items: data.items
-                                    .map((e) => DropdownMenuItem(child: Text(e.name), value: e))
+                                    .map((e) =>
+                                        DropdownMenuItem(child: Text(e.name ?? ""), value: e))
                                     .toList(),
                                 onChanged: (value) => setState(() => _selectedDuesCategory = value),
                               ),

@@ -5,6 +5,7 @@ import '../../model/dues_detail/dues_detail_model.dart';
 import '../../model/dues_statistics/dues_statistics_model.dart';
 
 abstract class DuesRemoteDataSource {
+  /// [GET] Request
   Future<List<DuesDetailModel>> getDuesByUsername({
     required String name,
     int? month,
@@ -20,6 +21,9 @@ abstract class DuesRemoteDataSource {
 
   Future<List<DuesCategoryModel>> getDuesCategory();
 
+  Future<DuesCategoryModel?> getDuesCategoryByID(int duesCategoryID);
+
+  /// [POST] Request
   Future<String> saveDues(
     String duesDetailId, {
     required int duesCategoryId,
@@ -31,6 +35,14 @@ abstract class DuesRemoteDataSource {
     required bool paidBySomeoneElse,
     required int createdBy,
     String? description,
+  });
+
+  Future<String> saveDuesCategory({
+    required String code,
+    required String name,
+    required int amount,
+    String? description,
+    int? duesCategoryId,
   });
 }
 
@@ -130,6 +142,20 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
   }
 
   @override
+  Future<DuesCategoryModel?> getDuesCategoryByID(int duesCategoryID) async {
+    final result = await dioClient.get("/duesCategory/$duesCategoryID");
+    final response = result.data as Map<String, dynamic>;
+
+    if (response['data'] == null) return null;
+    final category = DuesCategoryModel.fromJson(
+      Map<String, dynamic>.from(response['data']),
+    );
+
+    return category;
+  }
+
+  /// [POST] Request
+  @override
   Future<String> saveDues(
     String duesDetailId, {
     required int duesCategoryId,
@@ -158,6 +184,27 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
       "/dues/save/$duesDetailId",
       data: formData,
     );
+    final response = result.data as Map<String, dynamic>;
+    final message = response['message'];
+    return message;
+  }
+
+  @override
+  Future<String> saveDuesCategory({
+    int? duesCategoryId,
+    required String code,
+    required String name,
+    required int amount,
+    String? description,
+  }) async {
+    final formData = FormData.fromMap({
+      "code": code,
+      "name": name,
+      "amount": "$amount",
+      "description": description,
+    });
+    final url = "/duesCategory/save/${duesCategoryId ?? 0}";
+    final result = await dioClient.post(url, data: formData);
     final response = result.data as Map<String, dynamic>;
     final message = response['message'];
     return message;
