@@ -31,7 +31,7 @@ class SharedFunction {
     final inputDecoration = InputDecoration(
       filled: true,
       fillColor: Colors.white,
-      hintText: "0",
+      hintText: "Default Hint Text",
       hintStyle: bFont.copyWith(fontSize: 12.0, color: grey),
       enabledBorder: _outlineInputBorder,
       focusedBorder: _outlineInputBorder.copyWith(borderSide: const BorderSide(color: primary)),

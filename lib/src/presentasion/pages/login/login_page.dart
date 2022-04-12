@@ -18,20 +18,9 @@ class LoginPage extends ConsumerStatefulWidget {
 class _LoginPageState extends ConsumerState<LoginPage> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-  final _inputDecoration = InputDecoration(
-    filled: true,
-    fillColor: Colors.white,
-    hintText: "Username",
-    hintStyle: bFont.copyWith(fontSize: 12.0),
-    enabledBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: const BorderSide(color: Colors.white),
-    ),
-    focusedBorder: OutlineInputBorder(
-      borderRadius: BorderRadius.circular(10.0),
-      borderSide: const BorderSide(color: secondary, width: 1),
-    ),
-  );
+
+  bool isShowPassword = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,15 +75,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     TextFormField(
                       controller: usernameController,
                       style: bFont.copyWith(color: black, fontSize: 16.0),
-                      decoration: _inputDecoration,
+                      decoration: sharedFunction.myInputDecoration.copyWith(hintText: "Username"),
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
                       controller: passwordController,
                       style: bFont.copyWith(color: black, fontSize: 16.0),
-                      obscureText: true,
+                      obscureText: isShowPassword ? false : true,
                       obscuringCharacter: "⁂",
-                      decoration: _inputDecoration.copyWith(hintText: "Password"),
+                      decoration: sharedFunction.myInputDecoration.copyWith(
+                        hintText: "Password",
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            setState(() => isShowPassword = !isShowPassword);
+                          },
+                          icon: Icon(isShowPassword ? Icons.visibility : Icons.visibility_off),
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
