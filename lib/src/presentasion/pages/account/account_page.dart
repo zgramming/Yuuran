@@ -64,14 +64,6 @@ class AccountPage extends ConsumerWidget {
               children: [
                 AccountMenu(
                   onTap: () {},
-                  icon: Icons.edit,
-                  circleBackgroundColor: info,
-                  circleForegroundColor: Colors.white,
-                  title: "Profile",
-                  subtitle: "Mengatur profile kamu",
-                ),
-                AccountMenu(
-                  onTap: () {},
                   icon: Icons.settings_applications_outlined,
                   circleBackgroundColor: Colors.lightBlue,
                   circleForegroundColor: Colors.white,
