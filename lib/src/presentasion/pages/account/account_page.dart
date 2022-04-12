@@ -13,6 +13,7 @@ class AccountPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(appConfigNotifer).item.userSession;
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -32,7 +33,7 @@ class AccountPage extends ConsumerWidget {
                         text: "Hello ",
                         children: [
                           TextSpan(
-                            text: "Zeffry Reynando",
+                            text: "${user?.name}",
                             style: hFontWhite.copyWith(
                               fontWeight: FontWeight.bold,
                               fontSize: 20.0,

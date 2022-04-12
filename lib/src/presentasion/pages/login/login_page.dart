@@ -47,7 +47,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         ),
       );
 
-      /// Navigate to Welcome Route Name
+      /// Set Session User &  Navigate to Welcome Route Name
+      await ref.read(appConfigNotifer.notifier).setSessionUser(result.item);
+
       context.goNamed(welcomeRouteName);
     } catch (e) {
       GlobalFunction.showSnackBar(
