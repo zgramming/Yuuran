@@ -7,10 +7,11 @@ part of 'user_group_model.dart';
 // **************************************************************************
 
 UserGroup _$UserGroupFromJson(Map<String, dynamic> json) => UserGroup(
-      id: json['id'] as int? ?? 0,
-      code: json['code'] as String? ?? '',
-      name: json['name'] as String? ?? '',
-      status: json['status'] as String? ?? '',
+      id: json['id'] as int?,
+      code: $enumDecodeNullable(_$UserGroupCodeEnumMap, json['code']) ??
+          UserGroupCode.superadmin,
+      name: json['name'] as String?,
+      status: json['status'] as String?,
       createdBy: json['created_by'] as int?,
       updatedBy: json['updated_by'] as int?,
       createdAt: json['created_at'] == null
@@ -23,7 +24,7 @@ UserGroup _$UserGroupFromJson(Map<String, dynamic> json) => UserGroup(
 
 Map<String, dynamic> _$UserGroupToJson(UserGroup instance) => <String, dynamic>{
       'id': instance.id,
-      'code': instance.code,
+      'code': _$UserGroupCodeEnumMap[instance.code],
       'name': instance.name,
       'status': instance.status,
       'created_by': instance.createdBy,
@@ -31,3 +32,9 @@ Map<String, dynamic> _$UserGroupToJson(UserGroup instance) => <String, dynamic>{
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
     };
+
+const _$UserGroupCodeEnumMap = {
+  UserGroupCode.superadmin: 'superadmin',
+  UserGroupCode.warga: 'warga',
+  UserGroupCode.bendahara: 'bendahara',
+};

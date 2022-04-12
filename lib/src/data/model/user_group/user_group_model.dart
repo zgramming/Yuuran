@@ -1,26 +1,50 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 part 'user_group_model.g.dart';
+
+@JsonEnum(fieldRename: FieldRename.snake)
+enum UserGroupCode {
+  @JsonValue("superadmin")
+  superadmin,
+  @JsonValue("warga")
+  warga,
+  @JsonValue("bendahara")
+  bendahara
+}
+
+String getUserGroupCodeText(UserGroupCode type) {
+  switch (type) {
+    case UserGroupCode.bendahara:
+      return "bendahara";
+    case UserGroupCode.warga:
+      return "warga";
+    case UserGroupCode.superadmin:
+      return "superadmin";
+    default:
+      return "";
+  }
+}
 
 @immutable
 @JsonSerializable(fieldRename: FieldRename.snake)
 class UserGroup extends Equatable {
   const UserGroup({
-    this.id = 0,
-    this.code = '',
-    this.name = '',
-    this.status = '',
+    this.id,
+    this.code = UserGroupCode.superadmin,
+    this.name,
+    this.status,
     this.createdBy,
     this.updatedBy,
     this.createdAt,
     this.updatedAt,
   });
 
-  final int id;
-  final String code;
-  final String name;
-  final String status;
+  final int? id;
+  final UserGroupCode code;
+  final String? name;
+  final String? status;
   final int? createdBy;
   final int? updatedBy;
   final DateTime? createdAt;
@@ -50,7 +74,7 @@ class UserGroup extends Equatable {
 
   UserGroup copyWith({
     int? id,
-    String? code,
+    UserGroupCode? code,
     String? name,
     String? status,
     int? createdBy,
