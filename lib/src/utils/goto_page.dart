@@ -4,6 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'go_router.dart';
 import 'utils.dart';
 
+/// Class ini digunakan untuk menempatkan semua navigasi yang mempunyai parameter
+/// Karena akan sedikit menyusahkan jika aplikasi sudah besar, dan navigasi bertebaran dimana-mana
+/// Kita hanya perlu mengedit Class ini untuk mengubah isi parameter atau lokasi tujuan navigasi yang dibutuhkan
+/// 🥰🥰😘
 class GoToPage {
   GoToPage._();
   static final instance = GoToPage._();
