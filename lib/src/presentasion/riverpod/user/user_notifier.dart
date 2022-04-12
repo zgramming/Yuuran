@@ -13,7 +13,7 @@ class UserNotifier extends StateNotifier<UserState> {
 
   final UserRepository userRepository;
 
-  Future<void> login({
+  Future<UserState> login({
     required String username,
     required String password,
   }) async {
@@ -22,7 +22,7 @@ class UserNotifier extends StateNotifier<UserState> {
       password: password,
     );
 
-    result.fold(
+    return result.fold(
       (failure) => state = state.setUser(
         user: null,
         message: failure.message,
