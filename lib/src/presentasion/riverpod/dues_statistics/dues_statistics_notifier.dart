@@ -21,7 +21,7 @@ class DuesStatisticsNotifier extends StateNotifier<DuesStatisticsState> {
   }) async {
     final result = await repository.getStatistics(month: month, year: year);
     return result.fold(
-      (failure) => state = state.init(
+      (failure) => throw state = state.init(
         value: null,
         isError: true,
         message: failure.message,

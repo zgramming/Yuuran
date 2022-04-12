@@ -56,6 +56,7 @@ class SearchPage extends ConsumerWidget {
                 ref.refresh(getCitizenGrouping);
               },
               child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -139,7 +140,10 @@ class SearchPage extends ConsumerWidget {
                                 ],
                               ],
                             ),
-                            error: (error, trace) => Center(child: Text("Error $error")),
+                            error: (error, trace) {
+                              final message = (error as CitizenState).message;
+                              return Center(child: Text("Error $message"));
+                            },
                             loading: () => const Center(child: CircularProgressIndicator()),
                           );
                         },

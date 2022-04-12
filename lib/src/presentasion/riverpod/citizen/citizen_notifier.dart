@@ -19,7 +19,7 @@ class CitizenNotifier extends StateNotifier<CitizenState> {
   Future<CitizenState> get() async {
     final result = await repository.get();
     return result.fold(
-      (failure) => state = state.copyWith(
+      (failure) => throw state = state.copyWith(
         items: [],
         isError: true,
         message: failure.message,

@@ -140,7 +140,10 @@ class DuesStatisticsList extends StatelessWidget {
                 },
               );
             },
-            error: (error, trace) => Center(child: Text("Error $error")),
+            error: (error, trace) {
+              final message = (error as DuesStatisticsState).message;
+              return Center(child: Text("Error $message"));
+            },
             loading: () => const Center(child: CircularProgressIndicator()),
           );
         },

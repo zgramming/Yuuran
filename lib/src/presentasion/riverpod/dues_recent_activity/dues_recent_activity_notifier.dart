@@ -25,7 +25,7 @@ class DuesRecentActivityNotifier extends StateNotifier<DuesRecentActivityState> 
     );
 
     return result.fold(
-      (failure) => state = state.init(
+      (failure) => throw state = state.init(
         isError: true,
         items: [],
         message: failure.message,

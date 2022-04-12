@@ -70,7 +70,8 @@ final duesCitizenNotifier = StateNotifierProvider<DuesCitizenNotifier, DuesCitiz
 });
 
 ///* [Dues Statistics]
-final duesStatisticsNotifier = StateNotifierProvider((ref) {
+final duesStatisticsNotifier =
+    StateNotifierProvider<DuesStatisticsNotifier, DuesStatisticsState>((ref) {
   return DuesStatisticsNotifier(repository: ref.watch(_duesRepository));
 });
 
@@ -110,8 +111,8 @@ final _dio = Provider<Dio>(
     final opt = BaseOptions(
         baseUrl: kBaseUrl,
         receiveDataWhenStatusError: true,
-        connectTimeout: 30000, // 30 seconds
-        receiveTimeout: 30000 // 30 seconds
+        connectTimeout: 10000, // 10 seconds
+        receiveTimeout: 10000 // 10 seconds
         );
     return Dio(opt);
   },

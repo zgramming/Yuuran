@@ -28,7 +28,11 @@ class DuesCalendarNotifier extends StateNotifier<DuesCalendarState> {
     );
 
     return result.fold(
-      (failure) => state = state.init(isError: true, items: [], message: failure.message),
+      (failure) => throw state = state.init(
+        isError: true,
+        items: [],
+        message: failure.message,
+      ),
       (items) => state = state.init(
         isError: false,
         items: items,

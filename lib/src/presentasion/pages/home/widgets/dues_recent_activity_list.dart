@@ -33,7 +33,10 @@ class DuesRecentActivityList extends StatelessWidget {
               },
             );
           },
-          error: (error, trace) => Center(child: Text("Error $error")),
+          error: (error, trace) {
+            final message = (error as DuesRecentActivityState).message;
+            return Center(child: Text("Error $message"));
+          },
           loading: () => const Center(child: CircularProgressIndicator()),
         );
       },
