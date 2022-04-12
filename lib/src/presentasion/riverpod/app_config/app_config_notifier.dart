@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../injection.dart';
 import '../../../data/model/app_config/app_config_model.dart';
 import '../../../data/model/user/user_model.dart';
 import '../../../utils/utils.dart';
@@ -50,3 +51,13 @@ class AppConfigNotifier extends StateNotifier<AppConfigState> {
     state = state.deleteUserSession();
   }
 }
+
+final appConfigInitialize = FutureProvider.autoDispose((ref) async {
+  final appNotifier = ref.watch(appConfigNotifer.notifier);
+
+  await appNotifier.getOnboarding();
+
+  await appNotifier.getSessionUser();
+
+  return ref.read(appConfigNotifer).item;
+});

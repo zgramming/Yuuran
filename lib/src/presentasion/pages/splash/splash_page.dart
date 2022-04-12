@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../injection.dart';
-import '../login/login_page.dart';
-import '../onboarding/onboarding_page.dart';
 
 import '../../../utils/utils.dart';
+import '../../riverpod/app_config/app_config_notifier.dart';
+import '../login/login_page.dart';
+import '../onboarding/onboarding_page.dart';
 import '../welcome/welcome_page.dart';
 
 class SplashPage extends StatelessWidget {

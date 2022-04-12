@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:global_template/functions/global_function.dart';
 
+import './widgets/dues_recent_activity_list.dart';
+import './widgets/dues_statistics_list.dart';
+import './widgets/home_monthyear_picker.dart';
 import '../../../../injection.dart';
 import '../../../utils/utils.dart';
 import '../../riverpod/dues_recent_activity/dues_recent_activity_notifier.dart';
 import '../../riverpod/dues_statistics/dues_statistics_notifier.dart';
 import '../../riverpod/global/global_notifier.dart';
-import './widgets/dues_recent_activity_list.dart';
-import './widgets/dues_statistics_list.dart';
-import './widgets/home_monthyear_picker.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({

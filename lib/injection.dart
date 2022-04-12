@@ -9,10 +9,10 @@ import 'src/data/repository/dues_repository_impl.dart';
 import 'src/data/repository/user_repository_impl.dart';
 import 'src/presentasion/riverpod/app_config/app_config_notifier.dart';
 import 'src/presentasion/riverpod/citizen/citizen_notifier.dart';
-import 'src/presentasion/riverpod/dues_detail/dues_detail_notifier.dart';
 import 'src/presentasion/riverpod/dues_calendar/dues_calendar_notifier.dart';
 import 'src/presentasion/riverpod/dues_category/dues_category_notifier.dart';
 import 'src/presentasion/riverpod/dues_citizen/dues_citizen_notifier.dart';
+import 'src/presentasion/riverpod/dues_detail/dues_detail_notifier.dart';
 import 'src/presentasion/riverpod/dues_recent_activity/dues_recent_activity_notifier.dart';
 import 'src/presentasion/riverpod/dues_statistics/dues_statistics_notifier.dart';
 import 'src/presentasion/riverpod/user/user_notifier.dart';
@@ -22,16 +22,6 @@ import 'src/utils/constant.dart';
 
 final appConfigNotifer =
     StateNotifierProvider<AppConfigNotifier, AppConfigState>((ref) => AppConfigNotifier());
-
-final appConfigInitialize = FutureProvider.autoDispose((ref) async {
-  final appNotifier = ref.watch(appConfigNotifer.notifier);
-
-  await appNotifier.getOnboarding();
-
-  await appNotifier.getSessionUser();
-
-  return ref.read(appConfigNotifer).item;
-});
 
 ///* [User]
 
