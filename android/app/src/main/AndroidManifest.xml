@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="zeffry.reynando.yuuran">
+	<uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="yuuran"
+        android:label="Yuuran"
         android:name="${applicationName}"
         android:icon="@mipmap/launcher_icon">
         <activity
