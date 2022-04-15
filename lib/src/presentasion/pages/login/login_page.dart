@@ -48,8 +48,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
       /// Set Session User &  Navigate to Welcome Route Name
       await ref.read(appConfigNotifer.notifier).setSessionUser(result.item);
-
-      // context.goNamed(welcomeRouteName);
     } catch (e) {
       GlobalFunction.showSnackBar(
         context,

@@ -73,7 +73,6 @@ class AccountPage extends ConsumerWidget {
                 AccountMenu(
                   onTap: () async {
                     await ref.read(appConfigNotifer.notifier).deleteUserSession();
-                    // context.goNamed(loginRouteName);
                   },
                   icon: Icons.logout,
                   circleBackgroundColor: danger,
