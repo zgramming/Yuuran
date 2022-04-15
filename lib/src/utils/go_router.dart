@@ -32,17 +32,21 @@ final goRouter = Provider<GoRouter>(
   (ref) {
     return GoRouter(
       debugLogDiagnostics: true,
-      // initialLocation: "/",
       refreshListenable: GoRouterNotifier(ref: ref),
       redirect: (state) {
         final appConfig = ref.read(appConfigNotifer).item;
         final alreadyOnboarding = appConfig.alreadyOnboarding;
         final user = appConfig.userSession;
         final isAtLoginPage = state.location == '/login';
+        final isAtOnboardingPage = state.location == "/onboarding";
 
-        /// Jika belum pernah masuk onboarding
-        /// Kita lempar kehalaman onboarding
-        if (!alreadyOnboarding) return "/onboarding";
+        /// Check apakah sudah pernah masuk ke halaman onboarding / belum
+        /// Jika belum, check kembali apakah [current location == "/onboarding"]
+        /// Jika Iya return null
+        /// Jika iya return [/onboarding]
+        if (!alreadyOnboarding) {
+          return isAtOnboardingPage ? null : "/onboarding";
+        }
 
         /// Check apakah user == null
         /// Jika Null check kembali, apakah dihalaman login / tidak
@@ -52,9 +56,9 @@ final goRouter = Provider<GoRouter>(
           return isAtLoginPage ? null : "/login";
         }
 
-        /// Jika kita sudah login tetapi kita di halaman login
+        /// Jika kita sudah login tetapi kita di halaman [login / onboarding]
         /// Kita lempar ke halaman welcome
-        if (isAtLoginPage) return "/";
+        if (isAtLoginPage || isAtOnboardingPage) return "/";
 
         return null;
       },
