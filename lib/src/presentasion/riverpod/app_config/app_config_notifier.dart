@@ -20,7 +20,7 @@ class AppConfigNotifier extends StateNotifier<AppConfigState> {
     return state;
   }
 
-  Future<bool> getOnboarding() async {
+  Future<bool> _getOnboarding() async {
     final sp = SharedPreferencesUtils.instance;
     return sp.getBool(kOnboardingKey) ?? false;
   }
@@ -32,7 +32,7 @@ class AppConfigNotifier extends StateNotifier<AppConfigState> {
     return state;
   }
 
-  Future<UserModel?> getSessionUser() async {
+  Future<UserModel?> _getSessionUser() async {
     final sp = SharedPreferencesUtils.instance;
 
     /// JsonEncode
@@ -55,8 +55,8 @@ class AppConfigNotifier extends StateNotifier<AppConfigState> {
 
   /// Merge initialize Application into 1 function
   Future<AppConfigState> init() async {
-    final onboardingSession = await getOnboarding();
-    final userSession = await getSessionUser();
+    final onboardingSession = await _getOnboarding();
+    final userSession = await _getSessionUser();
 
     state = state.copyWith(
       item: state.item.copyWith(
