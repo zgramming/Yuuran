@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:global_template/global_template.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../injection.dart';
 import '../../../utils/utils.dart';
@@ -50,7 +49,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       /// Set Session User &  Navigate to Welcome Route Name
       await ref.read(appConfigNotifer.notifier).setSessionUser(result.item);
 
-      context.goNamed(welcomeRouteName);
+      // context.goNamed(welcomeRouteName);
     } catch (e) {
       GlobalFunction.showSnackBar(
         context,

@@ -28,7 +28,7 @@ class AppConfigState extends Equatable {
   }
 
   AppConfigState deleteUserSession() {
-    return copyWith(item: item.copyWith(userSession: null));
+    return copyWith(item: item.copyWith(userSession: const UserModel()));
   }
 
   @override

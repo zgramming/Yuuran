@@ -14,7 +14,7 @@ class DuesStatisticsList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: sharedFunction.vh(context) / 4,
+      height: 200,
       child: Consumer(
         builder: (context, ref, child) {
           final _getDuesStatistics = ref.watch(getDuesStatistics);

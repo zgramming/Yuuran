@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../injection.dart';
 import '../../../utils/utils.dart';
@@ -74,7 +73,7 @@ class AccountPage extends ConsumerWidget {
                 AccountMenu(
                   onTap: () async {
                     await ref.read(appConfigNotifer.notifier).deleteUserSession();
-                    context.goNamed(loginRouteName);
+                    // context.goNamed(loginRouteName);
                   },
                   icon: Icons.logout,
                   circleBackgroundColor: danger,

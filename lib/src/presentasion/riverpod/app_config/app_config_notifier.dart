@@ -13,51 +13,63 @@ part 'app_config_state.dart';
 class AppConfigNotifier extends StateNotifier<AppConfigState> {
   AppConfigNotifier() : super(const AppConfigState());
 
-  Future<void> setOnboarding(bool value) async {
+  Future<AppConfigState> setOnboarding(bool value) async {
     final sp = SharedPreferencesUtils.instance;
     await sp.setBool(kOnboardingKey, value);
     state = state.setOnboarding(value);
+    return state;
   }
 
-  Future<void> getOnboarding() async {
+  Future<bool> getOnboarding() async {
     final sp = SharedPreferencesUtils.instance;
-    state = state.setOnboarding((sp.getBool(kOnboardingKey)) ?? false);
+    return sp.getBool(kOnboardingKey) ?? false;
   }
 
-  Future<void> setSessionUser(UserModel? user) async {
+  Future<AppConfigState> setSessionUser(UserModel? user) async {
     final sp = SharedPreferencesUtils.instance;
     await sp.setString(kUserKey, jsonEncode(user?.toJson()));
     state = state.setUserSession(user);
+    return state;
   }
 
-  Future<void> getSessionUser() async {
+  Future<UserModel?> getSessionUser() async {
     final sp = SharedPreferencesUtils.instance;
 
     /// JsonEncode
     final encodedUser = sp.getString(kUserKey);
     if (encodedUser == null) {
-      state = state.setUserSession(null);
-      return;
+      return null;
     }
 
     final decoded = jsonDecode(encodedUser);
     final user = UserModel.fromJson(decoded as Map<String, dynamic>);
-    state = state.setUserSession(user);
+    return user;
   }
 
-  Future<void> deleteUserSession() async {
+  Future<AppConfigState> deleteUserSession() async {
     final sp = SharedPreferencesUtils.instance;
     await sp.remove(kUserKey);
     state = state.deleteUserSession();
+    return state;
+  }
+
+  /// Merge initialize Application into 1 function
+  Future<AppConfigState> init() async {
+    final onboardingSession = await getOnboarding();
+    final userSession = await getSessionUser();
+
+    state = state.copyWith(
+      item: state.item.copyWith(
+        alreadyOnboarding: onboardingSession,
+        userSession: userSession,
+      ),
+    );
+    return state;
   }
 }
 
 final appConfigInitialize = FutureProvider.autoDispose((ref) async {
   final appNotifier = ref.watch(appConfigNotifer.notifier);
-
-  await appNotifier.getOnboarding();
-
-  await appNotifier.getSessionUser();
-
-  return ref.read(appConfigNotifer).item;
+  final result = await appNotifier.init();
+  return result;
 });
