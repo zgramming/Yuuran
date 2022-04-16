@@ -28,6 +28,12 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  # Package Application [citizen & treasure]
+  citizen:
+    path: packages/citizen
+  treasurer:
+    path: packages/treasurer
+
   collection: null
   convex_bottom_bar: ^3.0.0
   cupertino_icons: ^1.0.2
