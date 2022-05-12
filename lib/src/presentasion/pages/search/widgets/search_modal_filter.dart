@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../utils/utils.dart';
-import '../../../riverpod/citizen/citizen_notifier.dart';
+import '../../../riverpod/citizen/citizens_notifier.dart';
 import 'search_modal_choose_option.dart';
 
 class SearchModalFilter extends ConsumerStatefulWidget {
@@ -45,7 +45,7 @@ class _SearchModalFilterState extends ConsumerState<SearchModalFilter> {
           Expanded(
             child: Consumer(
               builder: (context, ref, child) {
-                final itemsFiltered = ref.watch(citizenGroupingFiltered);
+                final itemsFiltered = ref.watch(citizenGroupingFiltered).value ?? [];
                 return ListView.builder(
                   itemCount: itemsFiltered.length,
                   shrinkWrap: true,

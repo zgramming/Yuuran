@@ -8,7 +8,7 @@ import '../../../data/model/dues_category/dues_category_model.dart';
 import '../../../data/model/dues_detail/dues_detail_model.dart';
 import '../../../data/model/user/user_model.dart';
 import '../../../utils/utils.dart';
-import '../../riverpod/citizen/citizen_notifier.dart';
+import '../../riverpod/citizen/citizens_notifier.dart';
 import '../../riverpod/dues_category/dues_category_notifier.dart';
 
 class DuesFormPage extends ConsumerStatefulWidget {
@@ -152,7 +152,7 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                         const SizedBox(height: 8.0),
                         Consumer(
                           builder: (context, ref, child) {
-                            final future = ref.watch(getCitizen);
+                            final future = ref.watch(getCitizens);
                             return future.when(
                               data: (data) {
                                 return DropdownButton<UserModel>(
@@ -162,7 +162,7 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                                     "Pilih warga yang ingin dibuatkan iuran",
                                     style: bFont.copyWith(fontSize: 12.0, color: grey),
                                   ),
-                                  items: data.items
+                                  items: data
                                       .map(
                                         (e) => DropdownMenuItem(value: e, child: Text(e.name)),
                                       )

@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../injection.dart';
 import '../../../data/model/user/user_model.dart';
 import '../../../utils/utils.dart';
+import '../../riverpod/citizen/citizen_action_notifier.dart';
+import '../../riverpod/citizen/citizen_notifier.dart';
+import '../widgets/modal_loading.dart';
 
 class CitizenFormPage extends ConsumerStatefulWidget {
   const CitizenFormPage({
     Key? key,
     required this.id,
   }) : super(key: key);
+
   final int id;
 
   @override
@@ -17,7 +20,6 @@ class CitizenFormPage extends ConsumerStatefulWidget {
 }
 
 class _CitizenFormPageState extends ConsumerState<CitizenFormPage> {
-  UserModel? _user;
   final usernameController = TextEditingController();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
@@ -25,148 +27,169 @@ class _CitizenFormPageState extends ConsumerState<CitizenFormPage> {
   final passwordConfirmationController = TextEditingController();
 
   @override
-  void initState() {
-    super.initState();
-    Future.microtask(() => _getCitizenByID());
-  }
-
-  Future<void> _getCitizenByID() async {
-    final user = (await ref.read(citizenNotifier.notifier).getByID(widget.id)).item;
-    setState(() {
-      _user = user;
-      usernameController.text = _user?.username ?? "";
-      nameController.text = _user?.name ?? "";
-      emailController.text = _user?.email ?? "";
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
+    /// Listen [citizenById]
+    ref.listen<AsyncValue<UserModel>>(getCitizenById(widget.id), (_, state) {
+      state.whenData((value) {
+        setState(() {
+          usernameController.text = value.username;
+          nameController.text = value.name;
+          emailController.text = value.email;
+        });
+      });
+    });
+
+    /// Listen [save] citizen notifier
+    ref.listen<AsyncValue<String>>(
+      citizenActionNotifier.select((value) => value.saveAsync),
+      (_, state) {
+        if (state is AsyncLoading) {
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => const ModalLoadingWidget(),
+          );
+        } else {
+          /// Close modal loading
+          Navigator.pop(context);
+
+          state.whenOrNull(
+            data: (message) => sharedFunction.showSnackbar(
+              context,
+              color: Colors.green,
+              title: message,
+            ),
+            error: (error, trace) => sharedFunction.showSnackbar(
+              context,
+              color: Colors.red,
+              title: "$error",
+            ),
+          );
+        }
+      },
+    );
+
+    final future = ref.watch(getCitizenById(widget.id));
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          _user?.id == null ? "Tambah Warga" : "Update ${_user!.name}",
+          future.value?.id == null ? "Tambah Warga" : "Update ${future.value?.name ?? ""}",
           style: hFontWhite.copyWith(
             // fontSize: 16.0,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Card(
-          margin: const EdgeInsets.all(16.0),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const SizedBox(height: 16.0),
-                ...[
-                  Text(
-                    'Username',
-                    style: hFont.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  TextFormField(
-                    controller: usernameController,
-                    style: bFont.copyWith(fontWeight: FontWeight.bold),
-                    decoration: sharedFunction.myInputDecoration.copyWith(hintText: "Username"),
-                  ),
-                ],
-                const SizedBox(height: 16.0),
-                ...[
-                  Text(
-                    'Nama',
-                    style: hFont.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  TextFormField(
-                    controller: nameController,
-                    style: bFont.copyWith(fontWeight: FontWeight.bold),
-                    decoration: sharedFunction.myInputDecoration.copyWith(hintText: "Nama"),
-                  ),
-                ],
-                const SizedBox(height: 16.0),
-                ...[
-                  Text(
-                    'Email',
-                    style: hFont.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  TextFormField(
-                    controller: emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    style: bFont.copyWith(fontWeight: FontWeight.bold),
-                    decoration: sharedFunction.myInputDecoration.copyWith(hintText: "Email"),
-                  ),
-                ],
+      body: Builder(
+        builder: (context) {
+          if (future is AsyncLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-                /// Section Password & Confirmation Password
-                /// When mode update, we should hidden this input
-                /// We let user to update their password individual
-                if (_user?.id == null)
-                  _PasswordSection(
-                    passwordController: passwordController,
-                    passwordConfirmationController: passwordConfirmationController,
-                  ),
+          if (future is AsyncError) {
+            return Center(child: Text("${future.error}"));
+          }
 
-                const SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      final result = await ref.read(citizenNotifier.notifier).saveCitizen(
-                            id: _user?.id,
-                            username: usernameController.text,
-                            name: nameController.text,
-                            email: emailController.text,
-                            password: passwordController.text,
-                            passwordConfirmation: passwordController.text,
-                          );
+          return SingleChildScrollView(
+            child: Card(
+              margin: const EdgeInsets.all(16.0),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const SizedBox(height: 16.0),
+                    ...[
+                      Text(
+                        'Username',
+                        style: hFont.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      const SizedBox(height: 8.0),
+                      TextFormField(
+                        controller: usernameController,
+                        style: bFont.copyWith(fontWeight: FontWeight.bold),
+                        decoration: sharedFunction.myInputDecoration.copyWith(hintText: "Username"),
+                      ),
+                    ],
+                    const SizedBox(height: 16.0),
+                    ...[
+                      Text(
+                        'Nama',
+                        style: hFont.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      const SizedBox(height: 8.0),
+                      TextFormField(
+                        controller: nameController,
+                        style: bFont.copyWith(fontWeight: FontWeight.bold),
+                        decoration: sharedFunction.myInputDecoration.copyWith(hintText: "Nama"),
+                      ),
+                    ],
+                    const SizedBox(height: 16.0),
+                    ...[
+                      Text(
+                        'Email',
+                        style: hFont.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                      const SizedBox(height: 8.0),
+                      TextFormField(
+                        controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        style: bFont.copyWith(fontWeight: FontWeight.bold),
+                        decoration: sharedFunction.myInputDecoration.copyWith(hintText: "Email"),
+                      ),
+                    ],
 
-                      if (result.isError) {
-                        throw Exception(result.message!);
-                      }
+                    /// Section Password & Confirmation Password
+                    /// When mode update, we should hidden this input
+                    /// We let user to update their password individual
+                    if (widget.id == 0)
+                      _PasswordSection(
+                        passwordController: passwordController,
+                        passwordConfirmationController: passwordConfirmationController,
+                      ),
 
-                      sharedFunction.showSnackbar(
-                        context,
-                        color: Colors.green,
-                        title: result.message!,
-                      );
-                    } catch (e) {
-                      sharedFunction.showSnackbar(
-                        context,
-                        color: Colors.red,
-                        title: "$e",
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(16.0),
-                    primary: primary,
-                  ),
-                  child: Text(
-                    "Submit",
-                    style: bFont.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
+                    const SizedBox(height: 16.0),
+                    ElevatedButton(
+                      onPressed: () async {
+                        await ref.read(citizenActionNotifier.notifier).save(
+                              id: widget.id,
+                              username: usernameController.text,
+                              name: nameController.text,
+                              email: emailController.text,
+                              password: passwordController.text,
+                              passwordConfirmation: passwordController.text,
+                            );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(16.0),
+                        primary: primary,
+                      ),
+                      child: Text(
+                        "Submit",
+                        style: bFont.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16.0,
+                        ),
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 16.0),
+                  ],
                 ),
-                const SizedBox(height: 16.0),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

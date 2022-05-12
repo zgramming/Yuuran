@@ -8,7 +8,6 @@ import 'src/data/repository/citizen_repository_impl.dart';
 import 'src/data/repository/dues_repository_impl.dart';
 import 'src/data/repository/user_repository_impl.dart';
 import 'src/presentasion/riverpod/app_config/app_config_notifier.dart';
-import 'src/presentasion/riverpod/citizen/citizen_notifier.dart';
 import 'src/presentasion/riverpod/dues_calendar/dues_calendar_notifier.dart';
 import 'src/presentasion/riverpod/dues_category/dues_category_notifier.dart';
 import 'src/presentasion/riverpod/dues_citizen/dues_citizen_notifier.dart';
@@ -44,10 +43,6 @@ final userRemoteDataSource = Provider(
 );
 
 ///* [Citizen]
-
-final citizenNotifier = StateNotifierProvider<CitizenNotifier, CitizenState>((ref) {
-  return CitizenNotifier(repository: ref.watch(citizenRepository));
-});
 
 final citizenRepository = Provider((ref) {
   return CitizenRepositoryImpl(remoteDataSource: ref.watch(citizenRemoteDataSource));

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../utils/utils.dart';
-import '../../riverpod/citizen/citizen_notifier.dart';
+import '../../riverpod/citizen/citizens_notifier.dart';
 import 'widgets/search_modal_choose_option.dart';
 import 'widgets/search_modal_filter.dart';
 
@@ -53,7 +53,7 @@ class SearchPage extends ConsumerWidget {
             child: RefreshIndicator(
               onRefresh: () async {
                 await Future.delayed(const Duration(seconds: 1));
-                ref.refresh(getCitizenGrouping);
+                ref.refresh(citizenGrouping);
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -82,69 +82,61 @@ class SearchPage extends ConsumerWidget {
                       const SizedBox(height: 16.0),
                       Consumer(
                         builder: (context, ref, child) {
-                          final future = ref.watch(getCitizenGrouping);
-                          return future.when(
-                            data: (data) => Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                for (final entry in data.entries) ...[
-                                  Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Card(
-                                      color: primary,
-                                      margin: EdgeInsets.zero,
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Text(
-                                          entry.key,
-                                          style: hFontWhite.copyWith(
-                                              fontWeight: FontWeight.bold, fontSize: 20.0),
-                                        ),
+                          final grouping = ref.watch(citizenGrouping).value ?? {};
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              for (final entry in grouping.entries) ...[
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Card(
+                                    color: primary,
+                                    margin: EdgeInsets.zero,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Text(
+                                        entry.key,
+                                        style: hFontWhite.copyWith(
+                                            fontWeight: FontWeight.bold, fontSize: 20.0),
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 16.0),
-                                  ListView.separated(
-                                    separatorBuilder: (context, index) => const Divider(height: 1),
-                                    itemCount: entry.value.length,
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemBuilder: (ctx, index) {
-                                      final user = entry.value[index];
-                                      return ListTile(
-                                        onTap: () async {
-                                          await showDialog(
-                                            context: context,
-                                            builder: (ctx) => SearchModalChooseOption(user: user),
-                                          );
-                                        },
-                                        leading: CircleAvatar(
-                                          backgroundColor: primaryShade2,
-                                          child: FittedBox(
-                                            child: Text(
-                                              user.name[0],
-                                              style:
-                                                  hFontWhite.copyWith(fontWeight: FontWeight.bold),
-                                            ),
+                                ),
+                                const SizedBox(height: 16.0),
+                                ListView.separated(
+                                  separatorBuilder: (context, index) => const Divider(height: 1),
+                                  itemCount: entry.value.length,
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemBuilder: (ctx, index) {
+                                    final user = entry.value[index];
+                                    return ListTile(
+                                      onTap: () async {
+                                        await showDialog(
+                                          context: context,
+                                          builder: (ctx) => SearchModalChooseOption(user: user),
+                                        );
+                                      },
+                                      leading: CircleAvatar(
+                                        backgroundColor: primaryShade2,
+                                        child: FittedBox(
+                                          child: Text(
+                                            user.name[0],
+                                            style: hFontWhite.copyWith(fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                        title: Text(
-                                          user.name,
-                                          style: hFont.copyWith(fontWeight: FontWeight.bold),
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  const SizedBox(height: 16.0),
-                                ],
+                                      ),
+                                      title: Text(
+                                        user.name,
+                                        style: hFont.copyWith(fontWeight: FontWeight.bold),
+                                      ),
+                                    );
+                                  },
+                                ),
+                                const SizedBox(height: 16.0),
                               ],
-                            ),
-                            error: (error, trace) {
-                              final message = (error as CitizenState).message;
-                              return Center(child: Text("Error $message"));
-                            },
-                            loading: () => const Center(child: CircularProgressIndicator()),
+                            ],
                           );
                         },
                       ),
