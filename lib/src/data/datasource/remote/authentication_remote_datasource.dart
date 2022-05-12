@@ -1,23 +1,24 @@
 import 'package:dio/dio.dart';
 
+import '../../model/authentication/authentication_response.dart';
 import '../../model/user/user_model.dart';
 
-abstract class UserRemoteDataSource {
-  Future<UserModel> login({
+abstract class AuthenticationRemoteDataSource {
+  Future<AuthenticationResponse> login({
     required String username,
     required String password,
   });
 }
 
-class UserRemoteDataSourceImpl implements UserRemoteDataSource {
-  const UserRemoteDataSourceImpl({
+class AuthenticationRemoteDataSourceImpl implements AuthenticationRemoteDataSource {
+  const AuthenticationRemoteDataSourceImpl({
     required this.dioClient,
   });
 
   final Dio dioClient;
 
   @override
-  Future<UserModel> login({
+  Future<AuthenticationResponse> login({
     required String username,
     required String password,
   }) async {
@@ -29,6 +30,12 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     final result = await dioClient.post("/login", data: formData);
     final response = result.data as Map<String, dynamic>;
     final user = UserModel.fromJson(response['data']);
-    return user;
+    final token = response['token'];
+    final message = response['message'];
+    return AuthenticationResponse(
+      token: token,
+      user: user,
+      message: message,
+    );
   }
 }

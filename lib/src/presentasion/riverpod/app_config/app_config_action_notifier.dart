@@ -14,7 +14,7 @@ class AppConfigActionNotifier extends StateNotifier<AppConfigActionState> {
 
   final Reader read;
 
-  Future setOnboarding(bool value) async {
+  Future<void> setOnboarding(bool value) async {
     final sp = SharedPreferencesUtils.instance;
 
     state = state.copyWith(setOnboardingState: const AsyncLoading());
@@ -22,11 +22,12 @@ class AppConfigActionNotifier extends StateNotifier<AppConfigActionState> {
     state = state.copyWith(setOnboardingState: AsyncData(value));
 
     /// Update state [app config notifier]
-    read(appConfigNotifer.notifier)
-        .setState((oldValue) => oldValue.copyWith(alreadyOnboarding: value));
+    read(appConfigNotifer.notifier).setState(
+      (oldValue) => oldValue.copyWith(alreadyOnboarding: value),
+    );
   }
 
-  Future setSessionUser(UserModel? user) async {
+  Future<void> setSessionUser(UserModel? user) async {
     final sp = SharedPreferencesUtils.instance;
 
     state = state.copyWith(setSessionUserState: const AsyncLoading());
@@ -34,18 +35,21 @@ class AppConfigActionNotifier extends StateNotifier<AppConfigActionState> {
     state = state.copyWith(setSessionUserState: AsyncData(user));
 
     /// Update state [app config notifier]
-    read(appConfigNotifer.notifier).setState((oldValue) => oldValue.copyWith(userSession: user));
+    read(appConfigNotifer.notifier).setState(
+      (oldValue) => oldValue.copyWith(userSession: user),
+    );
   }
 
-  Future deleteSessionUser() async {
+  Future<void> deleteSessionUser() async {
     final sp = SharedPreferencesUtils.instance;
     state = state.copyWith(deleteSessionUserState: const AsyncLoading());
     await sp.remove(kUserKey);
     state = state.copyWith(deleteSessionUserState: const AsyncData(true));
 
     /// Update state [app config notifier]
-    read(appConfigNotifer.notifier)
-        .setState((oldValue) => oldValue.copyWith(userSession: const UserModel()));
+    read(appConfigNotifer.notifier).setState(
+      (oldValue) => oldValue.copyWith(userSession: const UserModel()),
+    );
   }
 }
 

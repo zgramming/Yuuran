@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'src/data/datasource/remote/authentication_remote_datasource.dart';
 import 'src/data/datasource/remote/citizen_remote_datasource.dart';
 import 'src/data/datasource/remote/dues_remote_datasource.dart';
-import 'src/data/datasource/remote/user_remote_datasource.dart';
+import 'src/data/repository/authentication_repository_impl.dart';
 import 'src/data/repository/citizen_repository_impl.dart';
 import 'src/data/repository/dues_repository_impl.dart';
-import 'src/data/repository/user_repository_impl.dart';
 import 'src/presentasion/riverpod/app_config/app_config_notifier.dart';
 import 'src/presentasion/riverpod/dues_calendar/dues_calendar_notifier.dart';
 import 'src/presentasion/riverpod/dues_category/dues_category_notifier.dart';
@@ -14,7 +14,7 @@ import 'src/presentasion/riverpod/dues_citizen/dues_citizen_notifier.dart';
 import 'src/presentasion/riverpod/dues_detail/dues_detail_notifier.dart';
 import 'src/presentasion/riverpod/dues_recent_activity/dues_recent_activity_notifier.dart';
 import 'src/presentasion/riverpod/dues_statistics/dues_statistics_notifier.dart';
-import 'src/presentasion/riverpod/user/user_notifier.dart';
+import 'src/presentasion/riverpod/user/authentication_notifier.dart';
 import 'src/utils/constant.dart';
 
 ///* [App Config]
@@ -24,20 +24,21 @@ final appConfigNotifer =
 
 ///* [User]
 
-final userNotifier = StateNotifierProvider<UserNotifier, UserState>(
-  (ref) => UserNotifier(
-    userRepository: ref.watch(userRepository),
+final authenticationNotifier = StateNotifierProvider<AuthenticationNotifier, AuthenticationState>(
+  (ref) => AuthenticationNotifier(
+    repository: ref.watch(userRepository),
+    read: ref.read,
   ),
 );
 
 final userRepository = Provider(
-  (ref) => UserRepositoryImpl(
-    remoteDataSource: ref.watch(userRemoteDataSource),
+  (ref) => AuthenticationRepositoryImpl(
+    remoteDataSource: ref.watch(authenticationRemoteDataSource),
   ),
 );
 
-final userRemoteDataSource = Provider(
-  (ref) => UserRemoteDataSourceImpl(
+final authenticationRemoteDataSource = Provider(
+  (ref) => AuthenticationRemoteDataSourceImpl(
     dioClient: ref.watch(_dio),
   ),
 );
