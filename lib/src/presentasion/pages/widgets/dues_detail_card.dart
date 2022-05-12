@@ -29,29 +29,12 @@ class DuesDetailCard extends StatelessWidget {
                 color: item.status == StatusPaid.notPaidOff ? warning : secondary,
                 borderRadius: const BorderRadius.vertical(top: Radius.circular(10.0)),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "${item.duesCategory?.name} (${item.duesCategory?.code})",
-                    style: hFontWhite.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-                  ),
-                  if (item.paidBySomeoneElse)
-                    Card(
-                      margin: EdgeInsets.zero,
-                      color: primaryShade,
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Text(
-                          "Diwakilkan",
-                          style: bFontWhite.copyWith(fontSize: 10.0),
-                        ),
-                      ),
-                    ),
-                ],
+              child: Text(
+                "${item.duesCategory?.name} (${item.duesCategory?.code})",
+                style: hFontWhite.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16.0,
+                ),
               ),
             ),
             ListTile(

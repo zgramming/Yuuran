@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../injection.dart';
 import '../../../utils/utils.dart';
+import '../../riverpod/app_config/app_config_action_notifier.dart';
 import 'widgets/account_menu.dart';
 
 class AccountPage extends ConsumerWidget {
@@ -12,7 +13,8 @@ class AccountPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(appConfigNotifer).item.userSession;
+    final user =
+        ref.watch(appConfigNotifer.select((appConfig) => appConfig.itemAsync.value?.userSession));
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(32.0),
@@ -72,7 +74,7 @@ class AccountPage extends ConsumerWidget {
                 ),
                 AccountMenu(
                   onTap: () async {
-                    await ref.read(appConfigNotifer.notifier).deleteUserSession();
+                    await ref.read(appConfigActionNotifier.notifier).deleteSessionUser();
                   },
                   icon: Icons.logout,
                   circleBackgroundColor: danger,

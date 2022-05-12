@@ -16,10 +16,6 @@ DuesDetailModel _$DuesDetailModelFromJson(Map<String, dynamic> json) =>
       amount: json['amount'] as int? ?? 0,
       status: $enumDecodeNullable(_$StatusPaidEnumMap, json['status']) ??
           StatusPaid.notPaidOff,
-      paidBySomeoneElse: json['paid_by_someone_else'] == null
-          ? false
-          : GlobalFunction.fromJsonIntegerToBoolean(
-              json['paid_by_someone_else'] as int),
       description: json['description'] as String? ?? "",
       createdBy: json['created_by'] as int?,
       updatedBy: json['updated_by'] as int?,
@@ -47,8 +43,6 @@ Map<String, dynamic> _$DuesDetailModelToJson(DuesDetailModel instance) =>
       'year': instance.year,
       'amount': instance.amount,
       'status': _$StatusPaidEnumMap[instance.status],
-      'paid_by_someone_else':
-          GlobalFunction.toJsonIntegerFromBoolean(instance.paidBySomeoneElse),
       'description': instance.description,
       'created_by': instance.createdBy,
       'updated_by': instance.updatedBy,

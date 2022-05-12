@@ -38,7 +38,6 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
   DuesDetailModel? duesDetail;
   int? _selectedYear;
   int? _selectedMonth;
-  bool _selectedPaidBySomeoneElse = false;
   UserModel? _selectedCitizen;
   DuesCategoryModel? _selectedDuesCategory;
   StatusPaid _selectedStatus = StatusPaid.notPaidOff;
@@ -61,7 +60,6 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
       _selectedMonth = duesDetail?.month ?? now.month;
       _selectedCitizen = duesDetail?.user;
       _selectedDuesCategory = duesDetail?.duesCategory;
-      _selectedPaidBySomeoneElse = duesDetail?.paidBySomeoneElse ?? false;
       _selectedStatus = duesDetail?.status ?? StatusPaid.notPaidOff;
 
       amountController.text = _formatNumber("${duesDetail?.amount ?? 0}");
@@ -253,29 +251,6 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                       ],
                       const SizedBox(height: 16.0),
                       ...[
-                        CheckboxListTile(
-                          value: _selectedPaidBySomeoneElse,
-                          controlAffinity: ListTileControlAffinity.leading,
-                          contentPadding: const EdgeInsets.only(),
-                          activeColor: primary,
-                          title: Text(
-                            "Dibayarkan orang lain ?",
-                            style: hFont.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: Text(
-                            "Memberitahukan bahwa iuran ini dibayarkan oleh orang lain, bukan dengan warga yang bersangkutan.",
-                            style: bFont.copyWith(
-                              fontSize: 10.0,
-                              color: grey,
-                            ),
-                          ),
-                          onChanged: (value) {
-                            setState(() => _selectedPaidBySomeoneElse = value ?? false);
-                          },
-                        ),
-                      ],
-                      const SizedBox(height: 16.0),
-                      ...[
                         Text(
                           'Keterangan',
                           style: hFont.copyWith(
@@ -339,7 +314,8 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                         onPressed: disableButtonSubmit
                             ? null
                             : () async {
-                                final userLogin = ref.read(appConfigNotifer).item.userSession;
+                                final userLogin =
+                                    ref.read(appConfigNotifer).itemAsync.value?.userSession;
                                 final result = await ref.read(duesDetailNotifier.notifier).saveDues(
                                       duesDetail == null ? "new" : duesDetail!.id!,
                                       duesCategoryId: _selectedDuesCategory?.id ?? 0,
@@ -348,7 +324,6 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                                       year: _selectedYear ?? 0,
                                       amount: int.parse(amountController.text.replaceAll(".", "")),
                                       status: _selectedStatus,
-                                      paidBySomeoneElse: _selectedPaidBySomeoneElse,
                                       description: descriptionController.text,
                                       createdBy: userLogin?.id ?? 0,
                                     );

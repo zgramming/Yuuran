@@ -2,46 +2,46 @@ part of 'app_config_notifier.dart';
 
 class AppConfigState extends Equatable {
   const AppConfigState({
-    this.item = const AppConfigModel(),
+    this.itemAsync = const AsyncData(AppConfigModel()),
   });
 
-  final AppConfigModel item;
+  final AsyncValue<AppConfigModel> itemAsync;
 
-  AppConfigState setOnboarding(bool alreadyOnboarding) {
-    return copyWith(
-      item: item.copyWith(alreadyOnboarding: alreadyOnboarding),
-    );
-  }
+  // AppConfigState setOnboarding(bool alreadyOnboarding) {
+  //   return copyWith(
+  //     item: item.copyWith(alreadyOnboarding: alreadyOnboarding),
+  //   );
+  // }
 
-  AppConfigState getOnboarding(bool alreadyOnboarding) {
-    return copyWith(
-      item: item.copyWith(alreadyOnboarding: alreadyOnboarding),
-    );
-  }
+  // AppConfigState getOnboarding(bool alreadyOnboarding) {
+  //   return copyWith(
+  //     item: item.copyWith(alreadyOnboarding: alreadyOnboarding),
+  //   );
+  // }
 
-  AppConfigState setUserSession(UserModel? user) {
-    return copyWith(item: item.copyWith(userSession: user));
-  }
+  // AppConfigState setUserSession(UserModel? user) {
+  //   return copyWith(item: item.copyWith(userSession: user));
+  // }
 
-  AppConfigState getUserSession(UserModel? user) {
-    return copyWith(item: item.copyWith(userSession: user));
-  }
+  // AppConfigState getUserSession(UserModel? user) {
+  //   return copyWith(item: item.copyWith(userSession: user));
+  // }
 
-  AppConfigState deleteUserSession() {
-    return copyWith(item: item.copyWith(userSession: const UserModel()));
-  }
-
-  @override
-  List<Object> get props => [item];
+  // AppConfigState deleteUserSession() {
+  //   return copyWith(item: item.copyWith(userSession: const UserModel()));
+  // }
 
   @override
-  String toString() => 'AppConfigState(item: $item)';
+  List<Object> get props => [itemAsync];
+
+  @override
+  String toString() => 'AppConfigState(itemAsync: $itemAsync)';
 
   AppConfigState copyWith({
-    AppConfigModel? item,
+    AsyncValue<AppConfigModel>? itemAsync,
   }) {
     return AppConfigState(
-      item: item ?? this.item,
+      itemAsync: itemAsync ?? this.itemAsync,
     );
   }
 }

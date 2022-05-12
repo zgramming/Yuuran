@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
-import 'package:global_template/global_template.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../dues_category/dues_category_model.dart';
@@ -40,7 +39,6 @@ class DuesDetailModel extends Equatable {
     this.year,
     this.amount = 0,
     this.status = StatusPaid.notPaidOff,
-    this.paidBySomeoneElse = false,
     this.description = "",
     this.createdBy,
     this.updatedBy,
@@ -57,12 +55,6 @@ class DuesDetailModel extends Equatable {
   final int? year;
   final int amount;
   final StatusPaid status;
-
-  @JsonKey(
-    fromJson: GlobalFunction.fromJsonIntegerToBoolean,
-    toJson: GlobalFunction.toJsonIntegerFromBoolean,
-  )
-  final bool paidBySomeoneElse;
   final String description;
   final int? createdBy;
   final int? updatedBy;
@@ -84,7 +76,6 @@ class DuesDetailModel extends Equatable {
       year,
       amount,
       status,
-      paidBySomeoneElse,
       description,
       createdBy,
       updatedBy,
@@ -97,7 +88,7 @@ class DuesDetailModel extends Equatable {
 
   @override
   String toString() {
-    return 'DuesDetailModel(id: $id, duesCategoryId: $duesCategoryId, usersId: $usersId, month: $month, year: $year, amount: $amount, status: $status, paidBySomeoneElse: $paidBySomeoneElse, description: $description, createdBy: $createdBy, updatedBy: $updatedBy, createdAt: $createdAt, updatedAt: $updatedAt, user: $user, duesCategory: $duesCategory)';
+    return 'DuesDetailModel(id: $id, duesCategoryId: $duesCategoryId, usersId: $usersId, month: $month, year: $year, amount: $amount, status: $status, description: $description, createdBy: $createdBy, updatedBy: $updatedBy, createdAt: $createdAt, updatedAt: $updatedAt, user: $user, duesCategory: $duesCategory)';
   }
 
   DuesDetailModel copyWith({
@@ -108,7 +99,6 @@ class DuesDetailModel extends Equatable {
     int? year,
     int? amount,
     StatusPaid? status,
-    bool? paidBySomeoneElse,
     String? description,
     int? createdBy,
     int? updatedBy,
@@ -125,7 +115,6 @@ class DuesDetailModel extends Equatable {
       year: year ?? this.year,
       amount: amount ?? this.amount,
       status: status ?? this.status,
-      paidBySomeoneElse: paidBySomeoneElse ?? this.paidBySomeoneElse,
       description: description ?? this.description,
       createdBy: createdBy ?? this.createdBy,
       updatedBy: updatedBy ?? this.updatedBy,

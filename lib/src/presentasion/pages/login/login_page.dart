@@ -4,6 +4,7 @@ import 'package:global_template/global_template.dart';
 
 import '../../../../injection.dart';
 import '../../../utils/utils.dart';
+import '../../riverpod/app_config/app_config_action_notifier.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({
@@ -47,7 +48,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       );
 
       /// Set Session User &  Navigate to Welcome Route Name
-      await ref.read(appConfigNotifer.notifier).setSessionUser(result.item);
+      await ref.read(appConfigActionNotifier.notifier).setSessionUser(result.item);
     } catch (e) {
       GlobalFunction.showSnackBar(
         context,

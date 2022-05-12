@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../injection.dart';
-import '../data/model/user/user_model.dart';
+import '../data/model/app_config/app_config_model.dart';
 import '../presentasion/pages/citizen_dues/citizen_dues_page.dart';
 import '../presentasion/pages/citizen_form/citizen_form_page.dart';
 import '../presentasion/pages/dues_category/dues_category_page.dart';
@@ -35,7 +35,7 @@ final goRouter = Provider<GoRouter>(
       initialLocation: "/onboarding",
       refreshListenable: GoRouterNotifier(ref: ref),
       redirect: (state) {
-        final appConfig = ref.read(appConfigNotifer).item;
+        final appConfig = ref.read(appConfigNotifer).itemAsync.value!;
         final alreadyOnboarding = appConfig.alreadyOnboarding;
         final user = appConfig.userSession;
 
@@ -157,8 +157,8 @@ final goRouter = Provider<GoRouter>(
 class GoRouterNotifier extends ChangeNotifier {
   final Ref ref;
   GoRouterNotifier({required this.ref}) {
-    ref.listen<UserModel?>(
-      appConfigNotifer.select((value) => value.item.userSession),
+    ref.listen<AppConfigModel>(
+      appConfigNotifer.select((value) => value.itemAsync.value!),
       (_, __) => notifyListeners(),
     );
   }

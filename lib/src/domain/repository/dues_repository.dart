@@ -46,7 +46,6 @@ abstract class DuesRepository {
     required int year,
     required int amount,
     required StatusPaid status,
-    required bool paidBySomeoneElse,
     required int createdBy,
     String? description,
   });

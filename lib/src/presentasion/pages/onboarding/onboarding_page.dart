@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import '../../../../injection.dart';
 
 import '../../../utils/utils.dart';
+import '../../riverpod/app_config/app_config_action_notifier.dart';
 
 class OnboardingPage extends ConsumerStatefulWidget {
   const OnboardingPage({
@@ -83,7 +83,7 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
       done: Text("Selesai", style: bFontWhite.copyWith(fontWeight: FontWeight.bold)),
       next: Text("Lanjut", style: bFontWhite),
       onDone: () async {
-        await ref.read(appConfigNotifer.notifier).setOnboarding(true);
+        await ref.read(appConfigActionNotifier.notifier).setOnboarding(true);
         context.goNamed(loginRouteName);
       },
     );

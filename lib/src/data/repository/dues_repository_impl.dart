@@ -119,7 +119,6 @@ class DuesRepositoryImpl implements DuesRepository {
     required int year,
     required int amount,
     required StatusPaid status,
-    required bool paidBySomeoneElse,
     required int createdBy,
     String? description,
   }) async {
@@ -132,7 +131,6 @@ class DuesRepositoryImpl implements DuesRepository {
         year: year,
         amount: amount,
         status: status,
-        paidBySomeoneElse: paidBySomeoneElse,
         createdBy: createdBy,
         description: description,
       );

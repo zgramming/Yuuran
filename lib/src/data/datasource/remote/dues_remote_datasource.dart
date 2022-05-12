@@ -35,7 +35,6 @@ abstract class DuesRemoteDataSource {
     required int year,
     required int amount,
     required StatusPaid status,
-    required bool paidBySomeoneElse,
     required int createdBy,
     String? description,
   });
@@ -173,7 +172,6 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
     required int year,
     required int amount,
     required StatusPaid status,
-    required bool paidBySomeoneElse,
     required int createdBy,
     String? description,
   }) async {
@@ -184,7 +182,6 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
       "year": year,
       "amount": amount,
       "status": getStatusPaidText(status),
-      "paid_by_someone_else": paidBySomeoneElse ? 1 : 0,
       "description": description,
       "created_by": createdBy,
     });

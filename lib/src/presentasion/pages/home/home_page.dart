@@ -50,7 +50,8 @@ class HomePage extends ConsumerWidget {
                       children: [
                         Consumer(
                           builder: (context, ref, child) {
-                            final userSession = ref.watch(appConfigNotifer).item.userSession;
+                            final userSession =
+                                ref.watch(appConfigNotifer).itemAsync.value?.userSession;
                             return Text.rich(
                               TextSpan(
                                 text: "Hello ",

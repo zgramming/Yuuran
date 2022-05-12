@@ -18,6 +18,8 @@ class UserModel extends Equatable {
     this.emailVerifiedAt,
     this.status = '',
     this.profileImage,
+    this.gender = '',
+    this.noTelepon,
     this.createdAt,
     this.updatedAt,
     this.createdBy,
@@ -33,6 +35,8 @@ class UserModel extends Equatable {
   final DateTime? emailVerifiedAt;
   final String status;
   final String? profileImage;
+  final String gender;
+  final String? noTelepon;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final int? createdBy;
@@ -53,6 +57,8 @@ class UserModel extends Equatable {
       emailVerifiedAt,
       status,
       profileImage,
+      gender,
+      noTelepon,
       createdAt,
       updatedAt,
       createdBy,
@@ -63,7 +69,7 @@ class UserModel extends Equatable {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, appGroupUserId: $appGroupUserId, username: $username, name: $name, email: $email, emailVerifiedAt: $emailVerifiedAt, status: $status, profileImage: $profileImage, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy, updatedBy: $updatedBy, userGroup: $userGroup)';
+    return 'UserModel(id: $id, appGroupUserId: $appGroupUserId, username: $username, name: $name, email: $email, emailVerifiedAt: $emailVerifiedAt, status: $status, profileImage: $profileImage, gender: $gender, noTelepon: $noTelepon, createdAt: $createdAt, updatedAt: $updatedAt, createdBy: $createdBy, updatedBy: $updatedBy, userGroup: $userGroup)';
   }
 
   UserModel copyWith({
@@ -75,6 +81,8 @@ class UserModel extends Equatable {
     DateTime? emailVerifiedAt,
     String? status,
     String? profileImage,
+    String? gender,
+    String? noTelepon,
     DateTime? createdAt,
     DateTime? updatedAt,
     int? createdBy,
@@ -90,6 +98,8 @@ class UserModel extends Equatable {
       emailVerifiedAt: emailVerifiedAt ?? this.emailVerifiedAt,
       status: status ?? this.status,
       profileImage: profileImage ?? this.profileImage,
+      gender: gender ?? this.gender,
+      noTelepon: noTelepon ?? this.noTelepon,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       createdBy: createdBy ?? this.createdBy,

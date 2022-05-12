@@ -11,25 +11,21 @@ import '../../../utils/utils.dart';
 part 'app_config_state.dart';
 
 class AppConfigNotifier extends StateNotifier<AppConfigState> {
-  AppConfigNotifier() : super(const AppConfigState());
+  AppConfigNotifier() : super(const AppConfigState()) {
+    _init();
+  }
 
-  Future<AppConfigState> setOnboarding(bool value) async {
-    final sp = SharedPreferencesUtils.instance;
-    await sp.setBool(kOnboardingKey, value);
-    state = state.setOnboarding(value);
-    return state;
+  void setState(AppConfigModel Function(AppConfigModel oldValue) value) {
+    state = state.copyWith(
+      itemAsync: AsyncData(
+        value(state.itemAsync.value ?? const AppConfigModel()),
+      ),
+    );
   }
 
   Future<bool> _getOnboarding() async {
     final sp = SharedPreferencesUtils.instance;
     return sp.getBool(kOnboardingKey) ?? false;
-  }
-
-  Future<AppConfigState> setSessionUser(UserModel? user) async {
-    final sp = SharedPreferencesUtils.instance;
-    await sp.setString(kUserKey, jsonEncode(user?.toJson()));
-    state = state.setUserSession(user);
-    return state;
   }
 
   Future<UserModel?> _getSessionUser() async {
@@ -46,30 +42,27 @@ class AppConfigNotifier extends StateNotifier<AppConfigState> {
     return user;
   }
 
-  Future<AppConfigState> deleteUserSession() async {
-    final sp = SharedPreferencesUtils.instance;
-    await sp.remove(kUserKey);
-    state = state.deleteUserSession();
-    return state;
-  }
-
   /// Merge initialize Application into 1 function
-  Future<AppConfigState> init() async {
+  Future<AppConfigState> _init() async {
+    state = state.copyWith(itemAsync: const AsyncLoading());
     final onboardingSession = await _getOnboarding();
     final userSession = await _getSessionUser();
-
     state = state.copyWith(
-      item: state.item.copyWith(
-        alreadyOnboarding: onboardingSession,
-        userSession: userSession,
+      itemAsync: AsyncData(
+        AppConfigModel(
+          alreadyOnboarding: onboardingSession,
+          userSession: userSession,
+        ),
       ),
     );
+
     return state;
   }
 }
 
 final appConfigInitialize = FutureProvider.autoDispose((ref) async {
-  final appNotifier = ref.watch(appConfigNotifer.notifier);
-  final result = await appNotifier.init();
-  return result;
+  /// Calling [AppConfigNotifier] class
+  /// It will automatic calling function in constructor
+  ref.watch(appConfigNotifer.notifier);
+  return true;
 });
