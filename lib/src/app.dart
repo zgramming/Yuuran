@@ -9,26 +9,26 @@ class App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _initializeApplication = ref.watch(appConfigInitialize);
+    final initializeApplication = ref.watch(appConfigInitialize);
 
-    return _initializeApplication.when(
+    return initializeApplication.when(
       data: (_) {
-        final _goRouter = ref.watch(goRouter);
-        final _theme = ThemeData();
+        final route = ref.watch(goRouter);
+        final theme = ThemeData();
         return MaterialApp.router(
           title: "Yuuran",
           color: primary,
           debugShowCheckedModeBanner: false,
-          theme: _theme.copyWith(
+          theme: theme.copyWith(
             textTheme: bFontTextTheme(context),
             scaffoldBackgroundColor: scaffoldColor,
-            colorScheme: _theme.colorScheme.copyWith(
+            colorScheme: theme.colorScheme.copyWith(
               primary: primary,
               secondary: secondary,
             ),
           ),
-          routeInformationParser: _goRouter.routeInformationParser,
-          routerDelegate: _goRouter.routerDelegate,
+          routeInformationParser: route.routeInformationParser,
+          routerDelegate: route.routerDelegate,
         );
       },
       error: (error, trace) => ErrorMaterialApp(message: "$error"),

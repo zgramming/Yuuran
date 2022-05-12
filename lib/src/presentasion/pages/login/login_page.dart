@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:global_template/global_template.dart';
 
 import '../../../../injection.dart';
 import '../../../utils/utils.dart';
@@ -12,7 +11,7 @@ class LoginPage extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  createState() => _LoginPageState();
 }
 
 class _LoginPageState extends ConsumerState<LoginPage> {
@@ -35,30 +34,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if (result.isError) {
         throw result.message;
       }
-
-      GlobalFunction.showSnackBar(
+      sharedFunction.showSnackbar(
         context,
-        snackBarType: SnackBarType.success,
-        content: Text(
-          "Berhasil login",
-          style: hFontWhite.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        color: Colors.green,
+        title: "Berhasil login",
       );
 
       /// Set Session User &  Navigate to Welcome Route Name
       await ref.read(appConfigActionNotifier.notifier).setSessionUser(result.item);
     } catch (e) {
-      GlobalFunction.showSnackBar(
+      sharedFunction.showSnackbar(
         context,
-        snackBarType: SnackBarType.error,
-        content: Text(
-          e.toString(),
-          style: hFontWhite.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        color: Colors.red,
+        title: "$e",
       );
     } finally {
       setState(() => isLoading = false);

@@ -11,7 +11,7 @@ class CalendarPage extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  _CalendarPageState createState() => _CalendarPageState();
+  createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends ConsumerState<CalendarPage> {

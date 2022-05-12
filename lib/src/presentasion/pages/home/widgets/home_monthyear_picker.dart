@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:global_template/global_template.dart';
 
 import '../../../../utils/utils.dart';
 import '../../../riverpod/global/global_notifier.dart';
@@ -11,15 +10,12 @@ class MonthYearPicker extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  _MonthYearPickerState createState() => _MonthYearPickerState();
+  createState() => _MonthYearPickerState();
 }
 
 class _MonthYearPickerState extends ConsumerState<MonthYearPicker> {
-  final years = <int>[
-    for (final year in GlobalFunction.range(min: 2010, max: DateTime.now().year)) year
-  ];
-
-  final months = <int>[for (final month in GlobalFunction.range(min: 1, max: 12)) month];
+  final years = <int>[for (int year = 2010; year <= DateTime.now().year; year++) year];
+  final months = <int>[for (int month = 1; month <= 12; month++) month];
 
   late int _selectedYear;
   late int _selectedMonth;
@@ -27,9 +23,9 @@ class _MonthYearPickerState extends ConsumerState<MonthYearPicker> {
   @override
   void initState() {
     super.initState();
-    final _duesParameter = ref.read(duesParameter);
-    _selectedYear = _duesParameter.year;
-    _selectedMonth = _duesParameter.month;
+    final param = ref.read(duesParameter);
+    _selectedYear = param.year;
+    _selectedMonth = param.month;
   }
 
   @override
@@ -52,11 +48,11 @@ class _MonthYearPickerState extends ConsumerState<MonthYearPicker> {
             items: years
                 .map<DropdownMenuItem<int>>(
                   (year) => DropdownMenuItem<int>(
+                    value: year,
                     child: Text(
                       '$year',
                       style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
                     ),
-                    value: year,
                   ),
                 )
                 .toList(),
@@ -71,11 +67,11 @@ class _MonthYearPickerState extends ConsumerState<MonthYearPicker> {
             items: months
                 .map<DropdownMenuItem<int>>(
                   (month) => DropdownMenuItem<int>(
+                    value: month,
                     child: Text(
                       sharedFunction.monthString(month),
                       style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
                     ),
-                    value: month,
                   ),
                 )
                 .toList(),

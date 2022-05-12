@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:global_template/functions/global_function.dart';
 
 import './widgets/dues_recent_activity_list.dart';
 import './widgets/dues_statistics_list.dart';
@@ -27,10 +26,10 @@ class HomePage extends ConsumerWidget {
         ref.refresh(getDuesStatistics);
         ref.refresh(getDuesRecentActivity);
 
-        GlobalFunction.showSnackBar(
+        sharedFunction.showSnackbar(
           context,
-          content: const Text("Refresh Iuran"),
-          snackBarType: SnackBarType.success,
+          color: Colors.green,
+          title: "Refresh iuran",
         );
       },
       child: SingleChildScrollView(
@@ -114,9 +113,9 @@ class HomePage extends ConsumerWidget {
               const SizedBox(height: 40.0),
               Consumer(
                 builder: (context, ref, child) {
-                  final _duesParameter = ref.watch(duesParameter);
+                  final param = ref.watch(duesParameter);
                   return Text(
-                    "Statistik Iuran ${sharedFunction.monthString(_duesParameter.month)} ${_duesParameter.year}",
+                    "Statistik Iuran ${sharedFunction.monthString(param.month)} ${param.year}",
                     style: hFont.copyWith(
                       fontWeight: FontWeight.w900,
                       fontSize: 20.0,
@@ -133,9 +132,9 @@ class HomePage extends ConsumerWidget {
                 children: [
                   Consumer(
                     builder: (context, ref, child) {
-                      final _duesParameter = ref.watch(duesParameter);
+                      final param = ref.watch(duesParameter);
                       return Text(
-                        "Aktifitas Terbaru ${sharedFunction.monthString(_duesParameter.month)} ${_duesParameter.year}",
+                        "Aktifitas Terbaru ${sharedFunction.monthString(param.month)} ${param.year}",
                         style: bFont.copyWith(
                           fontWeight: FontWeight.bold,
                           fontSize: 16,

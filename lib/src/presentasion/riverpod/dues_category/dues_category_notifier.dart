@@ -76,7 +76,6 @@ class DuesCategoryNotifier extends StateNotifier<DuesCategoryState> {
 final getDuesCategory = FutureProvider.autoDispose((ref) async {
   final notifier = ref.watch(duesCategoryNotifier.notifier);
   final result = await notifier.get();
-  ref.maintainState = true;
   return result;
 });
 

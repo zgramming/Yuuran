@@ -33,8 +33,8 @@ class DuesCategoryPage extends ConsumerWidget {
       ),
       body: Consumer(
         builder: (context, ref, child) {
-          final _getCategory = ref.watch(getDuesCategory);
-          return _getCategory.when(
+          final future = ref.watch(getDuesCategory);
+          return future.when(
             data: (data) => RefreshIndicator(
               onRefresh: () async {
                 await Future.delayed(const Duration(seconds: 1));

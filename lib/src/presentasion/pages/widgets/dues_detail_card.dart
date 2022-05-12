@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:global_template/global_template.dart';
+import 'package:intl/intl.dart';
 
 import '../../../data/model/dues_detail/dues_detail_model.dart';
 import '../../../utils/utils.dart';
@@ -53,9 +53,7 @@ class DuesDetailCard extends StatelessWidget {
                         text: "Membayar Iuran untuk bulan ",
                         children: [
                           TextSpan(
-                            text: sharedFunction.monthString(item.month ?? 0) +
-                                " " +
-                                item.year.toString(),
+                            text: "${sharedFunction.monthString(item.month ?? 0)} ${item.year}",
                             style: bFont.copyWith(
                               fontWeight: FontWeight.bold,
                               color: secondaryDark,
@@ -93,7 +91,7 @@ class DuesDetailCard extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    GlobalFunction.formatNumber(item.amount),
+                    NumberFormat().format(item.amount),
                     style: bFont.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),

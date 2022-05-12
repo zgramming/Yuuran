@@ -15,7 +15,7 @@ class WelcomePage extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  _WelcomePageState createState() => _WelcomePageState();
+  createState() => _WelcomePageState();
 }
 
 class _WelcomePageState extends ConsumerState<WelcomePage> {

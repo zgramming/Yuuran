@@ -17,8 +17,8 @@ class CitizenDuesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final _citizenDues = ref.watch(getCitizenDues(username));
-    return _citizenDues.when(
+    final citizenDues = ref.watch(getCitizenDues(username));
+    return citizenDues.when(
       data: (data) {
         final user = data.item.citizen;
         final dues = data.item.dues;

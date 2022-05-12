@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:global_template/global_template.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../injection.dart';
@@ -18,7 +17,7 @@ class DuesCategoryFormPage extends ConsumerStatefulWidget {
   final String duesCategoryID;
 
   @override
-  _DuesCategoryFormPageState createState() => _DuesCategoryFormPageState();
+  createState() => _DuesCategoryFormPageState();
 }
 
 class _DuesCategoryFormPageState extends ConsumerState<DuesCategoryFormPage> {
@@ -186,17 +185,16 @@ class _DuesCategoryFormPageState extends ConsumerState<DuesCategoryFormPage> {
                       if (result.isError) {
                         throw Exception(result.message);
                       }
-
-                      GlobalFunction.showSnackBar(
+                      sharedFunction.showSnackbar(
                         context,
-                        snackBarType: SnackBarType.success,
-                        content: Text(result.message ?? ""),
+                        color: Colors.green,
+                        title: result.message ?? "",
                       );
                     } catch (e) {
-                      GlobalFunction.showSnackBar(
+                      sharedFunction.showSnackbar(
                         context,
-                        snackBarType: SnackBarType.error,
-                        content: Text(e.toString()),
+                        color: Colors.red,
+                        title: "$e",
                       );
                     }
                   },

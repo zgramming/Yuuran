@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:global_template/global_template.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../utils/utils.dart';
 import '../../../riverpod/dues_statistics/dues_statistics_notifier.dart';
@@ -17,8 +17,8 @@ class DuesStatisticsList extends StatelessWidget {
       height: 200,
       child: Consumer(
         builder: (context, ref, child) {
-          final _getDuesStatistics = ref.watch(getDuesStatistics);
-          return _getDuesStatistics.when(
+          final future = ref.watch(getDuesStatistics);
+          return future.when(
             data: (data) {
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -98,10 +98,7 @@ class DuesStatisticsList extends StatelessWidget {
                                           style: bFontWhite.copyWith(fontSize: 10.0),
                                         ),
                                         Text(
-                                          "Rp." +
-                                              GlobalFunction.formatNumber(
-                                                data.sumDuesByCategories(item.id ?? 0),
-                                              ),
+                                          "Rp.${NumberFormat().format(data.sumDuesByCategories(item.id ?? 0))}",
                                           style: hFontWhite.copyWith(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 20.0,

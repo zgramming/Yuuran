@@ -12,7 +12,7 @@ class OnboardingPage extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  _OnboardingPageState createState() => _OnboardingPageState();
+  createState() => _OnboardingPageState();
 }
 
 class _OnboardingPageState extends ConsumerState<OnboardingPage> {

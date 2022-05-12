@@ -34,16 +34,16 @@ class CalendarMenu extends StatelessWidget {
       constraints: BoxConstraints(minHeight: sharedFunction.vh(context) / 2),
       child: Consumer(
         builder: (context, ref, child) {
-          final _myCalendar = ref.watch(getDuesCalendar);
-          return _myCalendar.when(
+          final myCalendar = ref.watch(getDuesCalendar);
+          return myCalendar.when(
             data: (data) {
-              final _calendarParam = ref.watch(duesCalendarParameter);
+              final calendarParam = ref.watch(duesCalendarParameter);
               return Card(
                 margin: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                 child: TableCalendar(
                   headerStyle: calendarHeaderStyle,
-                  focusedDay: _calendarParam.focusedDay,
+                  focusedDay: calendarParam.focusedDay,
                   daysOfWeekStyle: daysOfWeekStyle,
                   locale: 'id_ID',
                   firstDay: DateTime.utc(DateTime.now().year - 10),
@@ -97,10 +97,10 @@ class CalendarMenu extends StatelessWidget {
 
                     // Using `isSameDay` is recommended to disregard
                     // the time-part of compared DateTime objects.
-                    return isSameDay(_calendarParam.selectedDay, day);
+                    return isSameDay(calendarParam.selectedDay, day);
                   },
                   onDaySelected: (selectedDay, focusedDay) {
-                    if (!isSameDay(_calendarParam.selectedDay, selectedDay)) {
+                    if (!isSameDay(calendarParam.selectedDay, selectedDay)) {
                       // Call `setState()` when updating the selected day
                       ref
                           .read(duesCalendarParameter.notifier)

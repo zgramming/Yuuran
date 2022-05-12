@@ -23,7 +23,7 @@ class SharedFunction {
 
   /// [Input Decoration] Section
   InputDecoration get myInputDecoration {
-    final _outlineInputBorder = OutlineInputBorder(
+    final outlineInputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(10.0),
       borderSide: const BorderSide(color: grey),
     );
@@ -33,8 +33,8 @@ class SharedFunction {
       fillColor: Colors.white,
       hintText: "Default Hint Text",
       hintStyle: bFont.copyWith(fontSize: 12.0, color: grey),
-      enabledBorder: _outlineInputBorder,
-      focusedBorder: _outlineInputBorder.copyWith(borderSide: const BorderSide(color: primary)),
+      enabledBorder: outlineInputBorder,
+      focusedBorder: outlineInputBorder.copyWith(borderSide: const BorderSide(color: primary)),
       contentPadding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
     );
 
@@ -71,6 +71,25 @@ class SharedFunction {
       default:
         return '-';
     }
+  }
+
+  void showSnackbar(
+    BuildContext context, {
+    required String title,
+    Color? color,
+  }) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          title,
+          style: bFontWhite.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: color,
+      ),
+    );
   }
 }
 

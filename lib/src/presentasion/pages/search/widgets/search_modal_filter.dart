@@ -11,7 +11,7 @@ class SearchModalFilter extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  _SearchModalFilterState createState() => _SearchModalFilterState();
+  createState() => _SearchModalFilterState();
 }
 
 class _SearchModalFilterState extends ConsumerState<SearchModalFilter> {
@@ -45,13 +45,13 @@ class _SearchModalFilterState extends ConsumerState<SearchModalFilter> {
           Expanded(
             child: Consumer(
               builder: (context, ref, child) {
-                final _citizenFiltered = ref.watch(citizenGroupingFiltered);
+                final itemsFiltered = ref.watch(citizenGroupingFiltered);
                 return ListView.builder(
-                  itemCount: _citizenFiltered.length,
+                  itemCount: itemsFiltered.length,
                   shrinkWrap: true,
                   padding: const EdgeInsets.all(16.0),
                   itemBuilder: (ctx, index) {
-                    final user = _citizenFiltered[index];
+                    final user = itemsFiltered[index];
                     return Card(
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       child: ListTile(

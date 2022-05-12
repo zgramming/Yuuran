@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:global_template/global_template.dart';
 
 import '../../../../data/model/dues_category/dues_category_model.dart';
 import '../../../../utils/utils.dart';
@@ -13,15 +12,13 @@ class CitizenDuesFilter extends ConsumerStatefulWidget {
   }) : super(key: key);
 
   @override
-  _CitizenDuesFilterState createState() => _CitizenDuesFilterState();
+  createState() => _CitizenDuesFilterState();
 }
 
 class _CitizenDuesFilterState extends ConsumerState<CitizenDuesFilter> {
-  final years = <int>[
-    for (final year in GlobalFunction.range(min: 2010, max: DateTime.now().year)) year
-  ];
+  final years = <int>[for (int year = 2010; year <= 2020; year++) year];
 
-  final months = <int>[for (final month in GlobalFunction.range(min: 1, max: 12)) month];
+  final months = <int>[for (int month = 1; month <= 12; month++) month];
 
   late int _selectedYear;
   late int _selectedMonth;
@@ -53,8 +50,8 @@ class _CitizenDuesFilterState extends ConsumerState<CitizenDuesFilter> {
           const SizedBox(height: 16.0),
           Consumer(
             builder: (context, ref, child) {
-              final _categories = ref.watch(getDuesCategory);
-              return _categories.when(
+              final categories = ref.watch(getDuesCategory);
+              return categories.when(
                 data: (data) => DropdownButton<DuesCategoryModel>(
                   value: _selectedDuesCategory,
                   isExpanded: true,
@@ -91,11 +88,11 @@ class _CitizenDuesFilterState extends ConsumerState<CitizenDuesFilter> {
             items: years
                 .map<DropdownMenuItem<int>>(
                   (year) => DropdownMenuItem<int>(
+                    value: year,
                     child: Text(
                       '$year',
                       style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
                     ),
-                    value: year,
                   ),
                 )
                 .toList(),
@@ -108,11 +105,11 @@ class _CitizenDuesFilterState extends ConsumerState<CitizenDuesFilter> {
             items: months
                 .map<DropdownMenuItem<int>>(
                   (month) => DropdownMenuItem<int>(
+                    value: month,
                     child: Text(
                       sharedFunction.monthString(month),
                       style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
                     ),
-                    value: month,
                   ),
                 )
                 .toList(),

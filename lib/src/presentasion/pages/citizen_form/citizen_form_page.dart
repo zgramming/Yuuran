@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:global_template/global_template.dart';
 
 import '../../../../injection.dart';
 import '../../../data/model/user/user_model.dart';
@@ -14,7 +13,7 @@ class CitizenFormPage extends ConsumerStatefulWidget {
   final int id;
 
   @override
-  _CitizenFormPageState createState() => _CitizenFormPageState();
+  createState() => _CitizenFormPageState();
 }
 
 class _CitizenFormPageState extends ConsumerState<CitizenFormPage> {
@@ -133,26 +132,21 @@ class _CitizenFormPageState extends ConsumerState<CitizenFormPage> {
                             password: passwordController.text,
                             passwordConfirmation: passwordController.text,
                           );
+
                       if (result.isError) {
                         throw Exception(result.message!);
                       }
 
-                      GlobalFunction.showSnackBar(
+                      sharedFunction.showSnackbar(
                         context,
-                        snackBarType: SnackBarType.success,
-                        content: Text(
-                          result.message!,
-                          style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
-                        ),
+                        color: Colors.green,
+                        title: result.message!,
                       );
                     } catch (e) {
-                      GlobalFunction.showSnackBar(
+                      sharedFunction.showSnackbar(
                         context,
-                        snackBarType: SnackBarType.error,
-                        content: Text(
-                          e.toString(),
-                          style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
-                        ),
+                        color: Colors.red,
+                        title: "$e",
                       );
                     }
                   },

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:global_template/global_template.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../injection.dart';
@@ -20,15 +19,14 @@ class DuesFormPage extends ConsumerStatefulWidget {
 
   final String duesDetailID;
   @override
-  _DuesFormPageState createState() => _DuesFormPageState();
+  createState() => _DuesFormPageState();
 }
 
 class _DuesFormPageState extends ConsumerState<DuesFormPage> {
   final now = DateTime.now();
-  final years = <int>[
-    for (final year in GlobalFunction.range(min: 2010, max: DateTime.now().year)) year
-  ];
-  final months = <int>[for (final month in GlobalFunction.range(min: 1, max: 12)) month];
+  final years = <int>[for (int year = 2010; year <= DateTime.now().year; year++) year];
+  final months = <int>[for (int month = 1; month <= 12; month++) month];
+
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
 
@@ -107,12 +105,12 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                                 items: months
                                     .map<DropdownMenuItem<int>>(
                                       (month) => DropdownMenuItem<int>(
+                                        value: month,
                                         child: Text(
                                           sharedFunction.monthString(month),
                                           style: bFont.copyWith(
                                               fontWeight: FontWeight.bold, fontSize: 16.0),
                                         ),
-                                        value: month,
                                       ),
                                     )
                                     .toList(),
@@ -127,12 +125,12 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                                 items: years
                                     .map<DropdownMenuItem<int>>(
                                       (year) => DropdownMenuItem<int>(
+                                        value: year,
                                         child: Text(
                                           '$year',
                                           style: bFont.copyWith(
                                               fontWeight: FontWeight.bold, fontSize: 16.0),
                                         ),
-                                        value: year,
                                       ),
                                     )
                                     .toList(),
@@ -154,8 +152,8 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                         const SizedBox(height: 8.0),
                         Consumer(
                           builder: (context, ref, child) {
-                            final _getCitizen = ref.watch(getCitizen);
-                            return _getCitizen.when(
+                            final future = ref.watch(getCitizen);
+                            return future.when(
                               data: (data) {
                                 return DropdownButton<UserModel>(
                                   isExpanded: true,
@@ -166,7 +164,7 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                                   ),
                                   items: data.items
                                       .map(
-                                        (e) => DropdownMenuItem(child: Text(e.name), value: e),
+                                        (e) => DropdownMenuItem(value: e, child: Text(e.name)),
                                       )
                                       .toList(),
                                   onChanged: (value) {
@@ -193,8 +191,8 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                         const SizedBox(height: 8.0),
                         Consumer(
                           builder: (context, ref, child) {
-                            final _getCategories = ref.watch(getDuesCategory);
-                            return _getCategories.when(
+                            final future = ref.watch(getDuesCategory);
+                            return future.when(
                               data: (data) => DropdownButton<DuesCategoryModel>(
                                 isExpanded: true,
                                 value: _selectedDuesCategory,
@@ -204,7 +202,7 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                                 ),
                                 items: data.items
                                     .map((e) =>
-                                        DropdownMenuItem(child: Text(e.name ?? ""), value: e))
+                                        DropdownMenuItem(value: e, child: Text(e.name ?? "")))
                                     .toList(),
                                 onChanged: (value) => setState(() => _selectedDuesCategory = value),
                               ),
@@ -329,24 +327,17 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                                     );
 
                                 if (result.isError) {
-                                  GlobalFunction.showSnackBar(
+                                  sharedFunction.showSnackbar(
                                     context,
-                                    content: Text(
-                                      result.message ?? '',
-                                      style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
-                                    ),
-                                    snackBarType: SnackBarType.error,
+                                    color: Colors.red,
+                                    title: result.message ?? "",
                                   );
                                   return;
                                 }
-
-                                GlobalFunction.showSnackBar(
+                                sharedFunction.showSnackbar(
                                   context,
-                                  content: Text(
-                                    result.message ?? '',
-                                    style: bFontWhite.copyWith(fontWeight: FontWeight.bold),
-                                  ),
-                                  snackBarType: SnackBarType.success,
+                                  color: Colors.green,
+                                  title: result.message ?? "",
                                 );
                               },
                         style: ElevatedButton.styleFrom(

@@ -14,8 +14,8 @@ class DuesRecentActivityList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer(
       builder: (context, ref, child) {
-        final _getRecentActivity = ref.watch(getDuesRecentActivity);
-        return _getRecentActivity.when(
+        final future = ref.watch(getDuesRecentActivity);
+        return future.when(
           data: (data) {
             return ListView.builder(
               shrinkWrap: true,

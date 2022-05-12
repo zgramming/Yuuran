@@ -82,8 +82,8 @@ class SearchPage extends ConsumerWidget {
                       const SizedBox(height: 16.0),
                       Consumer(
                         builder: (context, ref, child) {
-                          final _citizen = ref.watch(getCitizenGrouping);
-                          return _citizen.when(
+                          final future = ref.watch(getCitizenGrouping);
+                          return future.when(
                             data: (data) => Column(
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.stretch,
