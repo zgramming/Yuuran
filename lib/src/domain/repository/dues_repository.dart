@@ -26,7 +26,7 @@ abstract class DuesRepository {
     int? limit,
   });
 
-  Future<Either<Failure, List<DuesDetailModel>>> getCalendarActivity({
+  Future<Either<Failure, Map<DateTime, List<DuesDetailModel>>>> getCalendarActivity({
     int? month,
     int? year,
   });
@@ -50,7 +50,7 @@ abstract class DuesRepository {
     String? description,
   });
 
-  Future<Either<Failure, String>> saveCategory({
+  Future<Either<Failure, List<DuesCategoryModel>>> saveCategory({
     int? duesCategoryId,
     required String code,
     required String name,

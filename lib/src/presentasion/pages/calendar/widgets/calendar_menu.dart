@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../utils/utils.dart';
-import '../../../riverpod/dues_calendar/dues_calendar_notifier.dart';
-import '../../../riverpod/global/global_notifier.dart';
+import '../../../riverpod/dues/dues_calendar_notifier.dart';
+import '../../../riverpod/parameter/parameter_notifier.dart';
 
 class CalendarMenu extends StatelessWidget {
   const CalendarMenu({Key? key}) : super(key: key);
@@ -34,9 +34,9 @@ class CalendarMenu extends StatelessWidget {
       constraints: BoxConstraints(minHeight: sharedFunction.vh(context) / 2),
       child: Consumer(
         builder: (context, ref, child) {
-          final myCalendar = ref.watch(getDuesCalendar);
-          return myCalendar.when(
-            data: (data) {
+          final future = ref.watch(getDuesCalendarActivity);
+          return future.when(
+            data: (activity) {
               final calendarParam = ref.watch(duesCalendarParameter);
               return Card(
                 margin: EdgeInsets.zero,
@@ -50,7 +50,7 @@ class CalendarMenu extends StatelessWidget {
                   lastDay: DateTime.utc(DateTime.now().year + 10),
                   availableGestures: AvailableGestures.horizontalSwipe,
                   eventLoader: (date) {
-                    return data.maps[date] ?? [];
+                    return activity[date] ?? [];
                   },
                   calendarStyle: const CalendarStyle(
                     /// Hidden Day when not current month
@@ -103,22 +103,19 @@ class CalendarMenu extends StatelessWidget {
                     if (!isSameDay(calendarParam.selectedDay, selectedDay)) {
                       // Call `setState()` when updating the selected day
                       ref
-                          .read(duesCalendarParameter.notifier)
+                          .watch(duesCalendarParameter.notifier)
                           .update((state) => state.copyWith(selectedDay: selectedDay));
                     }
                   },
                   onPageChanged: (focusedDay) {
                     ref
-                        .read(duesCalendarParameter.notifier)
+                        .watch(duesCalendarParameter.notifier)
                         .update((state) => state.copyWith(focusedDay: focusedDay));
                   },
                 ),
               );
             },
-            error: (error, trace) {
-              final message = (error as DuesCalendarState).message;
-              return Center(child: Text("Error $message"));
-            },
+            error: (error, trace) => Center(child: Text("Error $error")),
             loading: () => const Center(child: CircularProgressIndicator()),
           );
         },

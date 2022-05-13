@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../data/model/dues_category/dues_category_model.dart';
 import '../../../../utils/utils.dart';
-import '../../../riverpod/dues_category/dues_category_notifier.dart';
-import '../../../riverpod/dues_citizen/dues_citizen_notifier.dart';
+import '../../../riverpod/dues_category/dues_categories_notifier.dart';
+import '../../../riverpod/parameter/parameter_notifier.dart';
 
 class CitizenDuesFilter extends ConsumerStatefulWidget {
   const CitizenDuesFilter({
@@ -16,7 +16,7 @@ class CitizenDuesFilter extends ConsumerStatefulWidget {
 }
 
 class _CitizenDuesFilterState extends ConsumerState<CitizenDuesFilter> {
-  final years = <int>[for (int year = 2010; year <= 2020; year++) year];
+  final years = <int>[for (int year = 2010; year <= DateTime.now().year; year++) year];
 
   final months = <int>[for (int month = 1; month <= 12; month++) month];
 
@@ -50,9 +50,9 @@ class _CitizenDuesFilterState extends ConsumerState<CitizenDuesFilter> {
           const SizedBox(height: 16.0),
           Consumer(
             builder: (context, ref, child) {
-              final categories = ref.watch(getDuesCategory);
+              final categories = ref.watch(getDuesCategories);
               return categories.when(
-                data: (data) => DropdownButton<DuesCategoryModel>(
+                data: (items) => DropdownButton<DuesCategoryModel>(
                   value: _selectedDuesCategory,
                   isExpanded: true,
                   hint: Text(
@@ -63,7 +63,7 @@ class _CitizenDuesFilterState extends ConsumerState<CitizenDuesFilter> {
                     ),
                   ),
                   onChanged: (value) => setState(() => _selectedDuesCategory = value),
-                  items: [...data.items]
+                  items: [...items]
                       .map(
                         (e) => DropdownMenuItem(
                           value: e,

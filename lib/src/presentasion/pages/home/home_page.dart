@@ -4,11 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import './widgets/dues_recent_activity_list.dart';
 import './widgets/dues_statistics_list.dart';
 import './widgets/home_monthyear_picker.dart';
-import '../../../../injection.dart';
 import '../../../utils/utils.dart';
-import '../../riverpod/dues_recent_activity/dues_recent_activity_notifier.dart';
-import '../../riverpod/dues_statistics/dues_statistics_notifier.dart';
-import '../../riverpod/global/global_notifier.dart';
+import '../../riverpod/app_config/app_config_notifier.dart';
+import '../../riverpod/dues/dues_recent_activity_notifier.dart';
+import '../../riverpod/dues/dues_statistics_notifier.dart';
+import '../../riverpod/parameter/parameter_notifier.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({
@@ -23,8 +23,8 @@ class HomePage extends ConsumerWidget {
         await Future.delayed(const Duration(seconds: 1));
 
         /// Refresh Statistics & Recent Activity
-        ref.refresh(getDuesStatistics);
-        ref.refresh(getDuesRecentActivity);
+        ref.invalidate(getDuesStatistics);
+        ref.invalidate(getDuesRecentActivity);
 
         sharedFunction.showSnackbar(
           context,
@@ -113,7 +113,7 @@ class HomePage extends ConsumerWidget {
               const SizedBox(height: 40.0),
               Consumer(
                 builder: (context, ref, child) {
-                  final param = ref.watch(duesParameter);
+                  final param = ref.watch(selectedYearMonthParameter);
                   return Text(
                     "Statistik Iuran ${sharedFunction.monthString(param.month)} ${param.year}",
                     style: hFont.copyWith(
@@ -132,13 +132,10 @@ class HomePage extends ConsumerWidget {
                 children: [
                   Consumer(
                     builder: (context, ref, child) {
-                      final param = ref.watch(duesParameter);
+                      final param = ref.watch(selectedYearMonthParameter);
                       return Text(
                         "Aktifitas Terbaru ${sharedFunction.monthString(param.month)} ${param.year}",
-                        style: bFont.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
+                        style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
                       );
                     },
                   ),

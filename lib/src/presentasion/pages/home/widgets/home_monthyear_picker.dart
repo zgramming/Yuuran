@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../utils/utils.dart';
-import '../../../riverpod/global/global_notifier.dart';
+import '../../../riverpod/parameter/parameter_notifier.dart';
 
 class MonthYearPicker extends ConsumerStatefulWidget {
   const MonthYearPicker({
@@ -23,7 +23,7 @@ class _MonthYearPickerState extends ConsumerState<MonthYearPicker> {
   @override
   void initState() {
     super.initState();
-    final param = ref.read(duesParameter);
+    final param = ref.read(selectedYearMonthParameter);
     _selectedYear = param.year;
     _selectedMonth = param.month;
   }
@@ -84,12 +84,9 @@ class _MonthYearPickerState extends ConsumerState<MonthYearPicker> {
           ElevatedButton(
             onPressed: () {
               /// Initialize dues parameter
-              ref.read(duesParameter.notifier).update(
-                    (state) => state.copyWith(
-                      month: _selectedMonth,
-                      year: _selectedYear,
-                    ),
-                  );
+              ref
+                  .watch(selectedYearMonthParameter.notifier)
+                  .update((state) => state.copyWith(month: _selectedMonth, year: _selectedYear));
 
               Navigator.pop(context);
             },

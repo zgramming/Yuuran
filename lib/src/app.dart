@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'presentasion/riverpod/app_config/app_config_notifier.dart';
+import 'presentasion/riverpod/app_config/app_initialize_notifier.dart';
 import 'utils/utils.dart';
 
 class App extends ConsumerWidget {
@@ -9,7 +9,7 @@ class App extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final initializeApplication = ref.watch(appConfigInitialize);
+    final initializeApplication = ref.watch(appInitialize);
 
     return initializeApplication.when(
       data: (_) {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../utils/utils.dart';
-import '../../../riverpod/dues_calendar/dues_calendar_notifier.dart';
+import '../../../riverpod/dues/dues_calendar_notifier.dart';
 import '../../widgets/dues_detail_card.dart';
 
 class CalendarMenuDetail extends StatelessWidget {

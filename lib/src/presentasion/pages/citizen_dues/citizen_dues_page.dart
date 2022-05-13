@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../utils/utils.dart';
-import '../../riverpod/dues_citizen/dues_citizen_notifier.dart';
+import '../../riverpod/dues/dues_citizen_notifier.dart';
+import '../../riverpod/parameter/parameter_notifier.dart';
 import '../widgets/dues_detail_card.dart';
 
 import 'widgets/citizen_dues_filter.dart';
@@ -20,8 +21,8 @@ class CitizenDuesPage extends ConsumerWidget {
     final citizenDues = ref.watch(getCitizenDues(username));
     return citizenDues.when(
       data: (data) {
-        final user = data.item.citizen;
-        final dues = data.item.dues;
+        final user = data.citizen;
+        final dues = data.dues;
         return Scaffold(
           appBar: AppBar(
             centerTitle: true,

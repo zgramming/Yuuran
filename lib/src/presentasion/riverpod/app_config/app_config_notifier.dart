@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../injection.dart';
 import '../../../data/model/app_config/app_config_model.dart';
 import '../../../data/model/user/user_model.dart';
 import '../../../utils/utils.dart';
@@ -60,9 +59,5 @@ class AppConfigNotifier extends StateNotifier<AppConfigState> {
   }
 }
 
-final appConfigInitialize = FutureProvider.autoDispose((ref) async {
-  /// Calling [AppConfigNotifier] class
-  /// It will automatic calling function in constructor
-  ref.watch(appConfigNotifer.notifier);
-  return true;
-});
+final appConfigNotifer =
+    StateNotifierProvider<AppConfigNotifier, AppConfigState>((ref) => AppConfigNotifier());

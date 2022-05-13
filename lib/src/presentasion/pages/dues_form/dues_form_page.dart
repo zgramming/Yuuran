@@ -8,8 +8,9 @@ import '../../../data/model/dues_category/dues_category_model.dart';
 import '../../../data/model/dues_detail/dues_detail_model.dart';
 import '../../../data/model/user/user_model.dart';
 import '../../../utils/utils.dart';
+import '../../riverpod/app_config/app_config_notifier.dart';
 import '../../riverpod/citizen/citizens_notifier.dart';
-import '../../riverpod/dues_category/dues_category_notifier.dart';
+import '../../riverpod/dues_category/dues_categories_notifier.dart';
 
 class DuesFormPage extends ConsumerStatefulWidget {
   const DuesFormPage({
@@ -191,16 +192,16 @@ class _DuesFormPageState extends ConsumerState<DuesFormPage> {
                         const SizedBox(height: 8.0),
                         Consumer(
                           builder: (context, ref, child) {
-                            final future = ref.watch(getDuesCategory);
+                            final future = ref.watch(getDuesCategories);
                             return future.when(
-                              data: (data) => DropdownButton<DuesCategoryModel>(
+                              data: (items) => DropdownButton<DuesCategoryModel>(
                                 isExpanded: true,
                                 value: _selectedDuesCategory,
                                 hint: Text(
                                   "Pilih kategori iuran",
                                   style: bFont.copyWith(fontSize: 12.0, color: grey),
                                 ),
-                                items: data.items
+                                items: items
                                     .map((e) =>
                                         DropdownMenuItem(value: e, child: Text(e.name ?? "")))
                                     .toList(),

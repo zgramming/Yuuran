@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../injection.dart';
 import '../data/model/app_config/app_config_model.dart';
 import '../presentasion/pages/citizen_dues/citizen_dues_page.dart';
 import '../presentasion/pages/citizen_form/citizen_form_page.dart';
@@ -12,6 +11,7 @@ import '../presentasion/pages/dues_form/dues_form_page.dart';
 import '../presentasion/pages/login/login_page.dart';
 import '../presentasion/pages/onboarding/onboarding_page.dart';
 import '../presentasion/pages/welcome/welcome_page.dart';
+import '../presentasion/riverpod/app_config/app_config_notifier.dart';
 
 const splashRouteName = "splash";
 const onboardingRouteName = "onboarding";
@@ -119,9 +119,8 @@ final goRouter = Provider<GoRouter>(
               name: duesCategoryFormRouteName,
               builder: (ctx, state) {
                 final param = state.params;
-                return DuesCategoryFormPage(
-                  duesCategoryID: param['duesCategoryID'] ?? "0",
-                );
+                final duesCategoryId = param['duesCategoryID'];
+                return DuesCategoryFormPage(duesCategoryID: int.parse(duesCategoryId ?? "0"));
               },
             ),
           ],

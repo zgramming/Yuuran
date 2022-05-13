@@ -1,4 +1,7 @@
+import 'dart:collection';
+
 import 'package:dio/dio.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 import '../../model/dues_category/dues_category_model.dart';
 import '../../model/dues_citizen/dues_citizen_model.dart';
@@ -18,7 +21,7 @@ abstract class DuesRemoteDataSource {
 
   Future<List<DuesDetailModel>> getRecentActivity({int? month, int? year, int? limit});
 
-  Future<List<DuesDetailModel>> getCalendarActivity({int? month, int? year});
+  Future<Map<DateTime, List<DuesDetailModel>>> getCalendarActivity({int? month, int? year});
 
   Future<DuesDetailModel?> getDetailByID(String duesDetailID);
 
@@ -39,7 +42,7 @@ abstract class DuesRemoteDataSource {
     String? description,
   });
 
-  Future<String> saveCategory({
+  Future<List<DuesCategoryModel>> saveCategory({
     required String code,
     required String name,
     required int amount,
@@ -105,7 +108,7 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
   }
 
   @override
-  Future<List<DuesDetailModel>> getCalendarActivity({int? month, int? year}) async {
+  Future<Map<DateTime, List<DuesDetailModel>>> getCalendarActivity({int? month, int? year}) async {
     final result = await dioClient.get(
       "/dues/calendar",
       queryParameters: {
@@ -121,7 +124,26 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
           (e) => DuesDetailModel.fromJson(Map<String, dynamic>.from(e)),
         )
         .toList();
-    return listCalendar;
+
+    /// Convert List<T> => Map<DateTime,List<T>>
+    final myCalendar = LinkedHashMap<DateTime, List<DuesDetailModel>>(
+      equals: isSameDay,
+      hashCode: (date) => date.day * 1000000 + date.month * 10000 + date.year,
+    );
+
+    for (var item in listCalendar) {
+      final date = DateTime.utc(
+        item.createdAt!.year,
+        item.createdAt!.month,
+        item.createdAt!.day,
+      );
+      final isExist = myCalendar[date];
+      if (isExist == null) myCalendar[date] = [];
+
+      myCalendar[date]?.add(item);
+    }
+
+    return myCalendar;
   }
 
   @override
@@ -142,11 +164,8 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
   Future<DuesCategoryModel?> getCategoryByID(int duesCategoryID) async {
     final result = await dioClient.get("/duesCategory/$duesCategoryID");
     final response = result.data as Map<String, dynamic>;
-
     if (response['data'] == null) return null;
-    final category = DuesCategoryModel.fromJson(
-      Map<String, dynamic>.from(response['data']),
-    );
+    final category = DuesCategoryModel.fromJson(Map<String, dynamic>.from(response['data']));
 
     return category;
   }
@@ -196,7 +215,7 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
   }
 
   @override
-  Future<String> saveCategory({
+  Future<List<DuesCategoryModel>> saveCategory({
     int? duesCategoryId,
     required String code,
     required String name,
@@ -210,9 +229,10 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
       "description": description,
     });
     final url = "/duesCategory/save/${duesCategoryId ?? 0}";
-    final result = await dioClient.post(url, data: formData);
-    final response = result.data as Map<String, dynamic>;
-    final message = response['message'];
-    return message;
+    await dioClient.post(url, data: formData);
+
+    /// When success create data, call api to get all category
+    final categories = await getCategory();
+    return categories;
   }
 }

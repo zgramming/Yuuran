@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../utils/utils.dart';
-import '../../../riverpod/dues_statistics/dues_statistics_notifier.dart';
+import '../../../riverpod/dues/dues_statistics_notifier.dart';
 import 'dues_statistics_modal_detail.dart';
 
 class DuesStatisticsList extends StatelessWidget {
@@ -19,14 +19,14 @@ class DuesStatisticsList extends StatelessWidget {
         builder: (context, ref, child) {
           final future = ref.watch(getDuesStatistics);
           return future.when(
-            data: (data) {
+            data: (items) {
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
-                itemCount: data.item.duesCategory.length,
+                itemCount: items.duesCategory.length,
                 itemExtent: sharedFunction.vw(context) / 1.25,
                 itemBuilder: (ctx, index) {
-                  final item = data.item.duesCategory[index];
+                  final item = items.duesCategory[index];
                   return InkWell(
                     onTap: () async {
                       if (item.duesDetail.isEmpty) return;
@@ -73,8 +73,7 @@ class DuesStatisticsList extends StatelessWidget {
                                   children: [
                                     Text.rich(
                                       TextSpan(
-                                        text:
-                                            "${item.duesDetail.length}/${data.item.totalCitizen} ",
+                                        text: "${item.duesDetail.length}/${items.totalCitizen} ",
                                         children: [
                                           TextSpan(
                                             text: "Orang",
@@ -97,12 +96,18 @@ class DuesStatisticsList extends StatelessWidget {
                                           "Dana terkumpul",
                                           style: bFontWhite.copyWith(fontSize: 10.0),
                                         ),
-                                        Text(
-                                          "Rp.${NumberFormat().format(data.sumDuesByCategories(item.id ?? 0))}",
-                                          style: hFontWhite.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20.0,
-                                          ),
+                                        Consumer(
+                                          builder: (context, ref, child) {
+                                            final totalSummary =
+                                                ref.watch(duesStatisticsSummary(item.id ?? 0));
+                                            return Text(
+                                              "Rp.${NumberFormat().format(totalSummary)}",
+                                              style: hFontWhite.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 20.0,
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ],
                                     )
@@ -117,7 +122,7 @@ class DuesStatisticsList extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10.0),
                                   ),
                                   child: FractionallySizedBox(
-                                    widthFactor: (item.duesDetail.length / data.item.totalCitizen),
+                                    widthFactor: (item.duesDetail.length / items.totalCitizen),
                                     child: Container(
                                       height: double.infinity,
                                       decoration: BoxDecoration(
@@ -137,10 +142,7 @@ class DuesStatisticsList extends StatelessWidget {
                 },
               );
             },
-            error: (error, trace) {
-              final message = (error as DuesStatisticsState).message;
-              return Center(child: Text("Error $message"));
-            },
+            error: (error, trace) => Center(child: Text("Error $error")),
             loading: () => const Center(child: CircularProgressIndicator()),
           );
         },

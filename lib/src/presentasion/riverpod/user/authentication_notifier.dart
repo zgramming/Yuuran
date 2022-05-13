@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../injection.dart';
 import '../../../data/model/authentication/authentication_response.dart';
 import '../../../domain/repository/authentication_repository.dart';
 import '../app_config/app_config_action_notifier.dart';
@@ -33,3 +34,10 @@ class AuthenticationNotifier extends StateNotifier<AuthenticationState> {
     );
   }
 }
+
+final authenticationNotifier = StateNotifierProvider<AuthenticationNotifier, AuthenticationState>(
+  (ref) => AuthenticationNotifier(
+    repository: ref.watch(authenticationRepository),
+    read: ref.read,
+  ),
+);

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../injection.dart';
 import '../../../data/model/authentication/authentication_response.dart';
 import '../../../utils/utils.dart';
+import '../../riverpod/user/authentication_notifier.dart';
 import '../widgets/modal_loading.dart';
 
 class LoginPage extends ConsumerStatefulWidget {

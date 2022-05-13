@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../injection.dart';
 import '../../../data/model/user/user_model.dart';
 import '../../../utils/utils.dart';
+import 'app_config_notifier.dart';
 
 part 'app_config_action_state.dart';
 

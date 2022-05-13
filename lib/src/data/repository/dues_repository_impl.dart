@@ -69,7 +69,7 @@ class DuesRepositoryImpl implements DuesRepository {
   }
 
   @override
-  Future<Either<Failure, List<DuesDetailModel>>> getCalendarActivity({
+  Future<Either<Failure, Map<DateTime, List<DuesDetailModel>>>> getCalendarActivity({
     int? month,
     int? year,
   }) async {
@@ -143,7 +143,7 @@ class DuesRepositoryImpl implements DuesRepository {
   }
 
   @override
-  Future<Either<Failure, String>> saveCategory({
+  Future<Either<Failure, List<DuesCategoryModel>>> saveCategory({
     int? duesCategoryId,
     required String code,
     required String name,

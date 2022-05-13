@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../riverpod/dues_calendar/dues_calendar_notifier.dart';
+import '../../riverpod/dues/dues_calendar_notifier.dart';
 import 'widgets/calendar_menu.dart';
 import 'widgets/calendar_menu_detail.dart';
 
@@ -20,7 +20,7 @@ class _CalendarPageState extends ConsumerState<CalendarPage> {
     return RefreshIndicator(
       onRefresh: () async {
         await Future.delayed(const Duration(seconds: 1));
-        ref.refresh(getDuesCalendar);
+        ref.invalidate(getDuesCalendarActivity);
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),

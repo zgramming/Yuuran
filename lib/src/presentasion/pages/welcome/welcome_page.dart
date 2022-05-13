@@ -21,9 +21,7 @@ class WelcomePage extends ConsumerStatefulWidget {
 class _WelcomePageState extends ConsumerState<WelcomePage> {
   int _currentIndex = 0;
 
-  _setIndex(int index) {
-    setState(() => _currentIndex = index);
-  }
+  _setIndex(int index) => setState(() => _currentIndex = index);
 
   final _items = const <TabItem>[
     TabItem(

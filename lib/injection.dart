@@ -7,31 +7,12 @@ import 'src/data/datasource/remote/dues_remote_datasource.dart';
 import 'src/data/repository/authentication_repository_impl.dart';
 import 'src/data/repository/citizen_repository_impl.dart';
 import 'src/data/repository/dues_repository_impl.dart';
-import 'src/presentasion/riverpod/app_config/app_config_notifier.dart';
-import 'src/presentasion/riverpod/dues_calendar/dues_calendar_notifier.dart';
-import 'src/presentasion/riverpod/dues_category/dues_category_notifier.dart';
-import 'src/presentasion/riverpod/dues_citizen/dues_citizen_notifier.dart';
 import 'src/presentasion/riverpod/dues_detail/dues_detail_notifier.dart';
-import 'src/presentasion/riverpod/dues_recent_activity/dues_recent_activity_notifier.dart';
-import 'src/presentasion/riverpod/dues_statistics/dues_statistics_notifier.dart';
-import 'src/presentasion/riverpod/user/authentication_notifier.dart';
-import 'src/utils/constant.dart';
+import 'src/utils/utils.dart';
 
-///* [App Config]
+///* [Authentication]
 
-final appConfigNotifer =
-    StateNotifierProvider<AppConfigNotifier, AppConfigState>((ref) => AppConfigNotifier());
-
-///* [User]
-
-final authenticationNotifier = StateNotifierProvider<AuthenticationNotifier, AuthenticationState>(
-  (ref) => AuthenticationNotifier(
-    repository: ref.watch(userRepository),
-    read: ref.read,
-  ),
-);
-
-final userRepository = Provider(
+final authenticationRepository = Provider(
   (ref) => AuthenticationRepositoryImpl(
     remoteDataSource: ref.watch(authenticationRemoteDataSource),
   ),
@@ -55,42 +36,13 @@ final citizenRemoteDataSource = Provider(
   ),
 );
 
-///* [Dues Calendar]
-final duesCalendarNotifier = StateNotifierProvider<DuesCalendarNotifier, DuesCalendarState>((ref) {
-  return DuesCalendarNotifier(repository: ref.watch(_duesRepository));
-});
-
-///* [Dues Citizen]
-final duesCitizenNotifier = StateNotifierProvider<DuesCitizenNotifier, DuesCitizenState>((ref) {
-  return DuesCitizenNotifier(repository: ref.watch(_duesRepository));
-});
-
-///* [Dues Statistics]
-final duesStatisticsNotifier =
-    StateNotifierProvider<DuesStatisticsNotifier, DuesStatisticsState>((ref) {
-  return DuesStatisticsNotifier(repository: ref.watch(_duesRepository));
-});
-
-///* [Dues Recent Activity]
-final duesRecentActivityNotifier =
-    StateNotifierProvider<DuesRecentActivityNotifier, DuesRecentActivityState>((ref) {
-  return DuesRecentActivityNotifier(repository: ref.watch(_duesRepository));
-});
-
-///* [Dues Category]
-final duesCategoryNotifier = StateNotifierProvider<DuesCategoryNotifier, DuesCategoryState>(
-  (ref) => DuesCategoryNotifier(
-    repository: ref.watch(_duesRepository),
-  ),
-);
-
 ///* [Dues Detail Notifier]
 
 final duesDetailNotifier = StateNotifierProvider<DuesDetailNotifier, DuesDetailState>((ref) {
-  return DuesDetailNotifier(repository: ref.watch(_duesRepository));
+  return DuesDetailNotifier(repository: ref.watch(duesRepository));
 });
 
-final _duesRepository = Provider(
+final duesRepository = Provider(
   (ref) => DuesRepositoryImpl(
     remoteDataSource: ref.watch(_duesRemoteDataSource),
   ),

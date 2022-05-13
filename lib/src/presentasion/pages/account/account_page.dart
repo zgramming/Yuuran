@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../injection.dart';
 import '../../../utils/utils.dart';
 import '../../riverpod/app_config/app_config_action_notifier.dart';
+import '../../riverpod/app_config/app_config_notifier.dart';
 import 'widgets/account_menu.dart';
 
 class AccountPage extends ConsumerWidget {

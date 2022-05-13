@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../utils/utils.dart';
-import '../../riverpod/dues_category/dues_category_notifier.dart';
+import '../../riverpod/dues_category/dues_categories_notifier.dart';
 
 class DuesCategoryPage extends ConsumerWidget {
   const DuesCategoryPage({
@@ -24,7 +24,7 @@ class DuesCategoryPage extends ConsumerWidget {
             onPressed: () => context.pushNamed(
               duesCategoryFormRouteName,
               params: {
-                "duesCategoryID": "-1",
+                "duesCategoryID": "0",
               },
             ),
             icon: const Icon(Icons.add),
@@ -33,19 +33,19 @@ class DuesCategoryPage extends ConsumerWidget {
       ),
       body: Consumer(
         builder: (context, ref, child) {
-          final future = ref.watch(getDuesCategory);
+          final future = ref.watch(getDuesCategories);
           return future.when(
-            data: (data) => RefreshIndicator(
+            data: (items) => RefreshIndicator(
               onRefresh: () async {
                 await Future.delayed(const Duration(seconds: 1));
-                ref.refresh(getDuesCategory);
+                ref.refresh(getDuesCategories);
               },
               child: ListView.builder(
                 padding: const EdgeInsets.all(16.0),
-                itemCount: data.items.length,
+                itemCount: items.length,
                 shrinkWrap: true,
                 itemBuilder: (ctx, index) {
-                  final item = data.items[index];
+                  final item = items[index];
                   return Card(
                     margin: const EdgeInsets.symmetric(vertical: 8.0),
                     shape: RoundedRectangleBorder(
@@ -58,7 +58,7 @@ class DuesCategoryPage extends ConsumerWidget {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Text(
-                              item.code ?? "",
+                              "${item.code}",
                               style: bFontWhite.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
@@ -82,7 +82,9 @@ class DuesCategoryPage extends ConsumerWidget {
                       trailing: IconButton(
                         onPressed: () => context.pushNamed(
                           duesCategoryFormRouteName,
-                          params: {"duesCategoryID": item.id.toString()},
+                          params: {
+                            "duesCategoryID": "${item.id}",
+                          },
                         ),
                         icon: const Icon(Icons.edit, color: info),
                       ),
