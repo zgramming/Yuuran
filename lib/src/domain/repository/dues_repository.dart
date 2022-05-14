@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import '../../data/model/dues_category/dues_category_model.dart';
 import '../../data/model/dues_citizen/dues_citizen_model.dart';
 import '../../data/model/dues_detail/dues_detail_model.dart';
+import '../../data/model/dues_response/dues_response_model.dart';
 import '../../data/model/dues_statistics/dues_statistics_model.dart';
 import '../../utils/utils.dart';
 
@@ -38,7 +39,7 @@ abstract class DuesRepository {
   Future<Either<Failure, DuesDetailModel?>> getDetailByID(String duesDetailID);
 
   /// [POST] Request
-  Future<Either<Failure, String>> saveDues(
+  Future<Either<Failure, DuesResponse>> saveDues(
     String duesDetailId, {
     required int duesCategoryId,
     required int usersId,

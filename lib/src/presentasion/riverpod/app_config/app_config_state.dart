@@ -7,30 +7,6 @@ class AppConfigState extends Equatable {
 
   final AsyncValue<AppConfigModel> itemAsync;
 
-  // AppConfigState setOnboarding(bool alreadyOnboarding) {
-  //   return copyWith(
-  //     item: item.copyWith(alreadyOnboarding: alreadyOnboarding),
-  //   );
-  // }
-
-  // AppConfigState getOnboarding(bool alreadyOnboarding) {
-  //   return copyWith(
-  //     item: item.copyWith(alreadyOnboarding: alreadyOnboarding),
-  //   );
-  // }
-
-  // AppConfigState setUserSession(UserModel? user) {
-  //   return copyWith(item: item.copyWith(userSession: user));
-  // }
-
-  // AppConfigState getUserSession(UserModel? user) {
-  //   return copyWith(item: item.copyWith(userSession: user));
-  // }
-
-  // AppConfigState deleteUserSession() {
-  //   return copyWith(item: item.copyWith(userSession: const UserModel()));
-  // }
-
   @override
   List<Object> get props => [itemAsync];
 

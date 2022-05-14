@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -6,6 +7,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../model/dues_category/dues_category_model.dart';
 import '../../model/dues_citizen/dues_citizen_model.dart';
 import '../../model/dues_detail/dues_detail_model.dart';
+import '../../model/dues_response/dues_response_model.dart';
 import '../../model/dues_statistics/dues_statistics_model.dart';
 
 abstract class DuesRemoteDataSource {
@@ -30,7 +32,7 @@ abstract class DuesRemoteDataSource {
   Future<DuesCategoryModel?> getCategoryByID(int duesCategoryID);
 
   /// [POST] Request
-  Future<String> save(
+  Future<DuesResponse> save(
     String duesDetailId, {
     required int duesCategoryId,
     required int usersId,
@@ -183,7 +185,7 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
 
   /// [POST] Request
   @override
-  Future<String> save(
+  Future<DuesResponse> save(
     String duesDetailId, {
     required int duesCategoryId,
     required int usersId,
@@ -209,9 +211,10 @@ class DuesRemoteDataSourceImpl implements DuesRemoteDataSource {
       "/dues/save/$duesDetailId",
       data: formData,
     );
+    log('result save dues dues_remote_datasource.dart $result');
     final response = result.data as Map<String, dynamic>;
-    final message = response['message'];
-    return message;
+    final message = response['message'] as String;
+    return DuesResponse(message: message);
   }
 
   @override

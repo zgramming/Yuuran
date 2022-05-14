@@ -7,7 +7,6 @@ import 'src/data/datasource/remote/dues_remote_datasource.dart';
 import 'src/data/repository/authentication_repository_impl.dart';
 import 'src/data/repository/citizen_repository_impl.dart';
 import 'src/data/repository/dues_repository_impl.dart';
-import 'src/presentasion/riverpod/dues_detail/dues_detail_notifier.dart';
 import 'src/utils/utils.dart';
 
 ///* [Authentication]
@@ -36,12 +35,6 @@ final citizenRemoteDataSource = Provider(
   ),
 );
 
-///* [Dues Detail Notifier]
-
-final duesDetailNotifier = StateNotifierProvider<DuesDetailNotifier, DuesDetailState>((ref) {
-  return DuesDetailNotifier(repository: ref.watch(duesRepository));
-});
-
 final duesRepository = Provider(
   (ref) => DuesRepositoryImpl(
     remoteDataSource: ref.watch(_duesRemoteDataSource),
@@ -54,14 +47,12 @@ final _duesRemoteDataSource = Provider(
   ),
 );
 
-final _dio = Provider<Dio>(
-  (ref) {
-    final opt = BaseOptions(
-        baseUrl: kBaseUrl,
-        receiveDataWhenStatusError: true,
-        connectTimeout: 10000, // 10 seconds
-        receiveTimeout: 10000 // 10 seconds
-        );
-    return Dio(opt);
-  },
-);
+final _dio = Provider<Dio>((ref) {
+  final opt = BaseOptions(
+    baseUrl: kBaseUrl,
+    receiveDataWhenStatusError: true,
+    connectTimeout: 10000, // 10 seconds
+    receiveTimeout: 10000, // 10 seconds
+  );
+  return Dio(opt);
+});

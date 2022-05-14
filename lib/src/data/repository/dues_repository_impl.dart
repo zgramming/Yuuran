@@ -7,6 +7,7 @@ import '../datasource/remote/dues_remote_datasource.dart';
 import '../model/dues_category/dues_category_model.dart';
 import '../model/dues_citizen/dues_citizen_model.dart';
 import '../model/dues_detail/dues_detail_model.dart';
+import '../model/dues_response/dues_response_model.dart';
 import '../model/dues_statistics/dues_statistics_model.dart';
 
 class DuesRepositoryImpl implements DuesRepository {
@@ -111,7 +112,7 @@ class DuesRepositoryImpl implements DuesRepository {
   }
 
   @override
-  Future<Either<Failure, String>> saveDues(
+  Future<Either<Failure, DuesResponse>> saveDues(
     String duesDetailId, {
     required int duesCategoryId,
     required int usersId,

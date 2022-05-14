@@ -8,6 +8,7 @@ class AuthenticationResponse extends Equatable {
     required this.user,
     required this.message,
   });
+
   final String token;
   final UserModel user;
   final String message;
