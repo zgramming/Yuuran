@@ -35,86 +35,89 @@ class CalendarMenu extends StatelessWidget {
       child: Consumer(
         builder: (context, ref, child) {
           final future = ref.watch(getDuesCalendarActivity);
-          return future.when(
-            data: (activity) {
-              final calendarParam = ref.watch(duesCalendarParameter);
-              return Card(
-                margin: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                child: TableCalendar(
-                  headerStyle: calendarHeaderStyle,
-                  focusedDay: calendarParam.focusedDate,
-                  daysOfWeekStyle: daysOfWeekStyle,
-                  locale: 'id_ID',
-                  firstDay: DateTime.utc(DateTime.now().year - 10),
-                  lastDay: DateTime.utc(DateTime.now().year + 10),
-                  availableGestures: AvailableGestures.horizontalSwipe,
-                  eventLoader: (date) {
-                    return activity[date] ?? [];
-                  },
-                  calendarStyle: const CalendarStyle(
-                    /// Hidden Day when not current month
-                    outsideDaysVisible: false,
-                    todayDecoration: BoxDecoration(
-                      color: primaryShade4,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  calendarBuilders: CalendarBuilders(
-                    markerBuilder: (context, day, events) {
-                      if (events.isEmpty) return null;
-                      return Card(
-                        color: secondary,
-                        margin: EdgeInsets.zero,
-                        child: Padding(
-                          padding: const EdgeInsets.all(2.0),
-                          child: Text.rich(
-                            TextSpan(
-                              text: "${events.length} ",
-                              children: [
-                                TextSpan(
-                                  text: "Aktifitas",
-                                  style: bFontWhite.copyWith(
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 8.0,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            style: bFontWhite.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12.0,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  availableCalendarFormats: availableCalendarFormats,
-                  selectedDayPredicate: (day) {
-                    // Use `selectedDayPredicate` to determine which day is currently selected.
-                    // If this returns true, then `day` will be marked as selected.
+          if (future.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-                    // Using `isSameDay` is recommended to disregard
-                    // the time-part of compared DateTime objects.
-                    return isSameDay(calendarParam.selectedDate, day);
-                  },
-                  onDaySelected: (selectedDate, focusedDay) {
-                    if (!isSameDay(calendarParam.selectedDate, selectedDate)) {
-                      // Call `setState()` when updating the selected day
-                      ref
-                          .watch(duesCalendarParameter.notifier)
-                          .update((state) => state.copyWith(selectedDate: selectedDate));
-                    }
-                  },
-                  onPageChanged: (focusedDate) => ref
-                      .watch(duesCalendarParameter.notifier)
-                      .update((state) => state.copyWith(focusedDate: focusedDate)),
+          if (future.hasError) {
+            return Center(child: Text("Error ${future.error}"));
+          }
+
+          final activity = future.value ?? {};
+          final calendarParam = ref.watch(duesCalendarParameter);
+          return Card(
+            margin: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+            child: TableCalendar(
+              headerStyle: calendarHeaderStyle,
+              focusedDay: calendarParam.focusedDate,
+              daysOfWeekStyle: daysOfWeekStyle,
+              locale: 'id_ID',
+              firstDay: DateTime.utc(DateTime.now().year - 10),
+              lastDay: DateTime.utc(DateTime.now().year + 10),
+              availableGestures: AvailableGestures.horizontalSwipe,
+              eventLoader: (date) {
+                return activity[date] ?? [];
+              },
+              calendarStyle: const CalendarStyle(
+                /// Hidden Day when not current month
+                outsideDaysVisible: false,
+                todayDecoration: BoxDecoration(
+                  color: primaryShade4,
+                  shape: BoxShape.circle,
                 ),
-              );
-            },
-            error: (error, trace) => Center(child: Text("Error $error")),
-            loading: () => const Center(child: CircularProgressIndicator()),
+              ),
+              calendarBuilders: CalendarBuilders(
+                markerBuilder: (context, day, events) {
+                  if (events.isEmpty) return null;
+                  return Card(
+                    color: secondary,
+                    margin: EdgeInsets.zero,
+                    child: Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Text.rich(
+                        TextSpan(
+                          text: "${events.length} ",
+                          children: [
+                            TextSpan(
+                              text: "Aktifitas",
+                              style: bFontWhite.copyWith(
+                                fontWeight: FontWeight.normal,
+                                fontSize: 8.0,
+                              ),
+                            ),
+                          ],
+                        ),
+                        style: bFontWhite.copyWith(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12.0,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+              availableCalendarFormats: availableCalendarFormats,
+              selectedDayPredicate: (day) {
+                // Use `selectedDayPredicate` to determine which day is currently selected.
+                // If this returns true, then `day` will be marked as selected.
+
+                // Using `isSameDay` is recommended to disregard
+                // the time-part of compared DateTime objects.
+                return isSameDay(calendarParam.selectedDate, day);
+              },
+              onDaySelected: (selectedDate, focusedDay) {
+                if (!isSameDay(calendarParam.selectedDate, selectedDate)) {
+                  // Call `setState()` when updating the selected day
+                  ref
+                      .watch(duesCalendarParameter.notifier)
+                      .update((state) => state.copyWith(selectedDate: selectedDate));
+                }
+              },
+              onPageChanged: (focusedDate) => ref
+                  .watch(duesCalendarParameter.notifier)
+                  .update((state) => state.copyWith(focusedDate: focusedDate)),
+            ),
           );
         },
       ),
