@@ -57,10 +57,7 @@ class CitizenDuesPage extends ConsumerWidget {
                   color: secondary,
                   borderRadius: BorderRadius.circular(10.0),
                   boxShadow: [
-                    BoxShadow(
-                      blurRadius: 2.0,
-                      color: black.withOpacity(.25),
-                    ),
+                    BoxShadow(blurRadius: 2.0, color: black.withOpacity(.25)),
                   ],
                 ),
                 child: Consumer(
@@ -90,10 +87,7 @@ class CitizenDuesPage extends ConsumerWidget {
                     itemBuilder: (ctx, index) {
                       final item = dues[index];
                       return DuesDetailCard(
-                        onTap: () => gotoPage.duesFormUpdate(
-                          context,
-                          duesDetailID: item.id!,
-                        ),
+                        onTap: () => gotoPage.duesFormUpdate(context, duesDetailID: item.id!),
                         item: item,
                       );
                     },
