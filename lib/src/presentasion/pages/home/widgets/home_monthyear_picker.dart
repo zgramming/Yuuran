@@ -17,17 +17,15 @@ class _MonthYearPickerState extends ConsumerState<MonthYearPicker> {
   final years = <int>[for (int year = 2010; year <= DateTime.now().year; year++) year];
   final months = <int>[for (int month = 1; month <= 12; month++) month];
 
-  late int _selectedYear;
-  late int _selectedMonth;
+  int? _selectedYear;
+  int? _selectedMonth;
 
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      final param = ref.read(selectedYearMonthParameter);
-      _selectedYear = param.year;
-      _selectedMonth = param.month;
-    });
+    final param = ref.read(selectedYearMonthParameter);
+    _selectedYear = param.year;
+    _selectedMonth = param.month;
   }
 
   @override
