@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../data/model/dues_citizen/dues_citizen_model.dart';
 import '../../../utils/utils.dart';
 import '../../riverpod/dues/dues_citizen_notifier.dart';
 import '../../riverpod/parameter/dues_citizen_parameter.dart';
@@ -18,30 +19,37 @@ class CitizenDuesPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final citizenDues = ref.watch(getCitizenDues(username));
-    return citizenDues.when(
-      data: (data) {
-        final user = data.citizen;
-        final dues = data.dues;
-        return Scaffold(
-          appBar: AppBar(
-            centerTitle: true,
-            title: Text("Iuran ${user.name}"),
-            actions: [
-              IconButton(
-                onPressed: () async {
-                  await showDialog(
-                    context: context,
-                    builder: (ctx) => const CitizenDuesFilter(),
-                  );
-                },
-                icon: const Icon(Icons.filter_alt),
-              )
-            ],
-          ),
-          body: Column(
+    return Scaffold(
+      body: Builder(
+        builder: (context) {
+          final future = ref.watch(getCitizenDues(username));
+          if (future.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (future.hasError) {
+            return Center(child: Text("Error ${future.error}"));
+          }
+
+          final value = future.value ?? const DuesCitizenModel();
+
+          final user = value.citizen;
+          final dues = value.dues;
+
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              AppBar(
+                centerTitle: true,
+                title: Text("Iuran ${user.name}"),
+                actions: [
+                  IconButton(
+                    onPressed: () async => await showDialog(
+                        context: context, builder: (ctx) => const CitizenDuesFilter()),
+                    icon: const Icon(Icons.filter_alt),
+                  )
+                ],
+              ),
               Container(
                 margin: const EdgeInsets.all(16.0),
                 padding: const EdgeInsets.all(16.0),
@@ -93,11 +101,9 @@ class CitizenDuesPage extends ConsumerWidget {
                 ),
               ),
             ],
-          ),
-        );
-      },
-      error: (error, trace) => Scaffold(body: Center(child: Text("Error $error"))),
-      loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
+          );
+        },
+      ),
     );
   }
 }
