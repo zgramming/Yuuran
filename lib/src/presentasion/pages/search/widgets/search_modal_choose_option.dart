@@ -14,10 +14,7 @@ class SearchModalChooseOption extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(
-        "Pilih aksi",
-        style: hFont.copyWith(fontWeight: FontWeight.bold),
-      ),
+      title: Text("Pilih aksi", style: hFont.copyWith(fontWeight: FontWeight.bold)),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
@@ -27,26 +24,16 @@ class SearchModalChooseOption extends StatelessWidget {
               Navigator.of(context).pop();
               gotoPage.citizenDues(context, username: user.username);
             },
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.all(16.0),
-            ),
-            child: Text(
-              "Lihat Iuran",
-              style: bFont.copyWith(fontWeight: FontWeight.bold),
-            ),
+            style: TextButton.styleFrom(padding: const EdgeInsets.all(16.0)),
+            child: Text("Lihat Iuran", style: bFont.copyWith(fontWeight: FontWeight.bold)),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
               gotoPage.citizenFormUpdate(context, id: user.id!);
             },
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.all(16.0),
-            ),
-            child: Text(
-              "Update Profile",
-              style: bFont.copyWith(fontWeight: FontWeight.bold),
-            ),
+            style: TextButton.styleFrom(padding: const EdgeInsets.all(16.0)),
+            child: Text("Update Profile", style: bFont.copyWith(fontWeight: FontWeight.bold)),
           ),
         ],
       ),

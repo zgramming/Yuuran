@@ -13,44 +13,27 @@ class GoToPage {
   static final instance = GoToPage._();
 
   void Function()? duesFormNew(BuildContext context) {
-    context.pushNamed(
-      duesFormRouteName,
-      params: {"duesDetailID": "new"},
-    );
+    context.pushNamed(duesFormRouteName, params: {"duesDetailID": "new"});
     return null;
   }
 
-  void Function()? duesFormUpdate(
-    BuildContext context, {
-    required String duesDetailID,
-  }) {
+  void Function()? duesFormUpdate(BuildContext context, {required String duesDetailID}) {
     context.pushNamed(duesFormRouteName, params: {
       "duesDetailID": duesDetailID,
     });
     return null;
   }
 
-  void Function()? citizenDues(
-    BuildContext context, {
-    required String username,
-  }) {
-    context.pushNamed(
-      citizenDuesRouteName,
-      params: {
-        "username": username,
-      },
-    );
+  void Function()? citizenDues(BuildContext context, {required String username}) {
+    final params = {"username": username};
+    context.pushNamed(citizenDuesRouteName, params: params);
 
     return null;
   }
 
   void Function()? citizenFormNew(BuildContext context) {
-    context.pushNamed(
-      citizenFormRouteName,
-      params: {
-        "id": "-1",
-      },
-    );
+    final params = {"id": "-1"};
+    context.pushNamed(citizenFormRouteName, params: params);
 
     return null;
   }
@@ -59,12 +42,8 @@ class GoToPage {
     BuildContext context, {
     required int id,
   }) {
-    context.pushNamed(
-      citizenFormRouteName,
-      params: {
-        "id": "$id",
-      },
-    );
+    final params = {"id": "$id"};
+    context.pushNamed(citizenFormRouteName, params: params);
 
     return null;
   }
