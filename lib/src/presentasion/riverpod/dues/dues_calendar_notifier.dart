@@ -1,18 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../injection.dart';
-import '../parameter/parameter_notifier.dart';
+import '../parameter/dues_calendar_parameter.dart';
 
 final getDuesCalendarActivity = FutureProvider.autoDispose((ref) async {
   final repository = ref.watch(duesRepository);
-  final month = ref.watch(duesCalendarParameter.select((value) => value.focusedDay.month));
-  final year = ref.watch(duesCalendarParameter.select((value) => value.focusedDay.year));
-  final result = await repository.getCalendarActivity(month: month, year: year);
+  final focusedDate = ref.watch(duesCalendarParameter.select((value) => value.focusedDate));
+  final result =
+      await repository.getCalendarActivity(month: focusedDate.month, year: focusedDate.year);
   return result.fold((failure) => throw Exception(failure.message), (items) => items);
 });
 
 final duesCalendarByDate = Provider.autoDispose((ref) {
-  final selectedDay = ref.watch(duesCalendarParameter.select((value) => value.selectedDay));
+  final selectedDate = ref.watch(duesCalendarParameter.select((value) => value.selectedDate));
   final calendarActivity = ref.watch(getDuesCalendarActivity).value ?? {};
-  return calendarActivity[selectedDay] ?? [];
+  return calendarActivity[selectedDate] ?? [];
 });

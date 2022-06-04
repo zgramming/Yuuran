@@ -8,7 +8,7 @@ import '../../../utils/utils.dart';
 import '../../riverpod/app_config/app_config_notifier.dart';
 import '../../riverpod/dues/dues_recent_activity_notifier.dart';
 import '../../riverpod/dues/dues_statistics_notifier.dart';
-import '../../riverpod/parameter/parameter_notifier.dart';
+import '../../riverpod/parameter/selected_year_month_parameter.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({
@@ -26,11 +26,7 @@ class HomePage extends ConsumerWidget {
         ref.invalidate(getDuesStatistics);
         ref.invalidate(getDuesRecentActivity);
 
-        sharedFunction.showSnackbar(
-          context,
-          color: Colors.green,
-          title: "Refresh iuran",
-        );
+        sharedFunction.showSnackbar(context, color: Colors.green, title: "Refresh iuran");
       },
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -53,6 +49,7 @@ class HomePage extends ConsumerWidget {
                                 ref.watch(appConfigNotifer).itemAsync.value?.userSession;
                             return Text.rich(
                               TextSpan(
+                                style: hFont.copyWith(fontSize: 14.0),
                                 text: "Hello ",
                                 children: [
                                   TextSpan(
@@ -61,9 +58,6 @@ class HomePage extends ConsumerWidget {
                                   ),
                                 ],
                               ),
-                              style: hFont.copyWith(
-                                fontSize: 14.0,
-                              ),
                             );
                           },
                         ),
@@ -71,14 +65,13 @@ class HomePage extends ConsumerWidget {
                         Align(
                           alignment: Alignment.centerLeft,
                           child: OutlinedButton(
-                            onPressed: () async {
-                              await showDialog(
-                                context: context,
-                                builder: (ctx) => const MonthYearPicker(),
-                              );
-                            },
+                            onPressed: () async => await showDialog(
+                              context: context,
+                              builder: (ctx) => const MonthYearPicker(),
+                            ),
                             style: OutlinedButton.styleFrom(
-                                side: const BorderSide(color: secondaryDark)),
+                              side: const BorderSide(color: secondaryDark),
+                            ),
                             child: Text(
                               "Ubah Bulan & Tahun",
                               style: bFont.copyWith(color: secondaryDark),
@@ -94,18 +87,12 @@ class HomePage extends ConsumerWidget {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(10.0),
                       boxShadow: [
-                        BoxShadow(
-                          blurRadius: 2.0,
-                          color: black.withOpacity(.25),
-                        ),
+                        BoxShadow(blurRadius: 2.0, color: black.withOpacity(.25)),
                       ],
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
-                      child: Image.asset(
-                        pathLogo,
-                        fit: BoxFit.cover,
-                      ),
+                      child: Image.asset(pathLogo, fit: BoxFit.cover),
                     ),
                   ),
                 ],

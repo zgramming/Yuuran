@@ -32,10 +32,6 @@ class AuthenticationRemoteDataSourceImpl implements AuthenticationRemoteDataSour
     final user = UserModel.fromJson(response['data']);
     final token = response['token'];
     final message = response['message'];
-    return AuthenticationResponse(
-      token: token,
-      user: user,
-      message: message,
-    );
+    return AuthenticationResponse(token: token, user: user, message: message);
   }
 }

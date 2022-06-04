@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../utils/utils.dart';
-import '../../../riverpod/parameter/parameter_notifier.dart';
+import '../../../riverpod/parameter/selected_year_month_parameter.dart';
 
 class MonthYearPicker extends ConsumerStatefulWidget {
   const MonthYearPicker({
@@ -23,21 +23,18 @@ class _MonthYearPickerState extends ConsumerState<MonthYearPicker> {
   @override
   void initState() {
     super.initState();
-    final param = ref.read(selectedYearMonthParameter);
-    _selectedYear = param.year;
-    _selectedMonth = param.month;
+    Future.microtask(() {
+      final param = ref.read(selectedYearMonthParameter);
+      _selectedYear = param.year;
+      _selectedMonth = param.month;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      title: Text(
-        "Pilih Bulan dan Tahun",
-        style: hFont.copyWith(fontWeight: FontWeight.bold),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+      title: Text("Pilih Bulan dan Tahun", style: hFont.copyWith(fontWeight: FontWeight.bold)),
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
@@ -51,15 +48,16 @@ class _MonthYearPickerState extends ConsumerState<MonthYearPicker> {
                     value: year,
                     child: Text(
                       '$year',
-                      style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
+                      style: bFont.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                      ),
                     ),
                   ),
                 )
                 .toList(),
             value: _selectedYear,
-            onChanged: (value) {
-              setState(() => _selectedYear = value ?? DateTime.now().year);
-            },
+            onChanged: (value) => setState(() => _selectedYear = value ?? DateTime.now().year),
           ),
           const SizedBox(height: 16.0),
           DropdownButton<int>(
@@ -90,16 +88,10 @@ class _MonthYearPickerState extends ConsumerState<MonthYearPicker> {
 
               Navigator.pop(context);
             },
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.all(16.0),
-              primary: primary,
-            ),
+            style: ElevatedButton.styleFrom(padding: const EdgeInsets.all(16.0), primary: primary),
             child: Text(
               "Update",
-              style: bFont.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
+              style: bFont.copyWith(fontWeight: FontWeight.bold, fontSize: 16.0),
             ),
           ),
           const SizedBox(height: 16.0),

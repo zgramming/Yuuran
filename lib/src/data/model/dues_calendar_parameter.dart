@@ -2,26 +2,27 @@ import 'package:equatable/equatable.dart';
 
 class DuesCalendarParameter extends Equatable {
   const DuesCalendarParameter({
-    required this.focusedDay,
-    required this.selectedDay,
+    required this.focusedDate,
+    required this.selectedDate,
   });
 
-  final DateTime focusedDay;
-  final DateTime selectedDay;
+  final DateTime focusedDate;
+  final DateTime selectedDate;
 
   @override
-  List<Object> get props => [focusedDay, selectedDay];
+  List<Object> get props => [focusedDate, selectedDate];
 
   @override
-  String toString() => 'DuesCalendarParameter(focusedDay: $focusedDay, selectedDay: $selectedDay)';
+  String toString() =>
+      'DuesCalendarParameter(focusedDate: $focusedDate, selectedDate: $selectedDate)';
 
   DuesCalendarParameter copyWith({
-    DateTime? focusedDay,
-    DateTime? selectedDay,
+    DateTime? focusedDate,
+    DateTime? selectedDate,
   }) {
     return DuesCalendarParameter(
-      focusedDay: focusedDay ?? this.focusedDay,
-      selectedDay: selectedDay ?? this.selectedDay,
+      focusedDate: focusedDate ?? this.focusedDate,
+      selectedDate: selectedDate ?? this.selectedDate,
     );
   }
 }

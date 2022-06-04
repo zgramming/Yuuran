@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../data/model/dues_category/dues_category_model.dart';
 import '../../../../utils/utils.dart';
 import '../../../riverpod/dues_category/dues_categories_notifier.dart';
-import '../../../riverpod/parameter/parameter_notifier.dart';
+import '../../../riverpod/parameter/dues_citizen_parameter.dart';
 
 class CitizenDuesFilter extends ConsumerStatefulWidget {
   const CitizenDuesFilter({
@@ -27,10 +27,12 @@ class _CitizenDuesFilterState extends ConsumerState<CitizenDuesFilter> {
   @override
   void initState() {
     super.initState();
-    final parameter = ref.read(duesCitizenParameter);
-    _selectedMonth = parameter.month;
-    _selectedYear = parameter.year;
-    _selectedDuesCategory = parameter.duesCategory;
+    Future.microtask(() {
+      final parameter = ref.read(duesCitizenParameter);
+      _selectedMonth = parameter.month;
+      _selectedYear = parameter.year;
+      _selectedDuesCategory = parameter.duesCategory;
+    });
   }
 
   @override

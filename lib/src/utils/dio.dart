@@ -23,7 +23,7 @@ class DioUtils {
         log("Error DioSendTimeOut");
         return const SendTimeoutFailure();
       default:
-        log("Error DioUncaughtTimeOut");
+        log("Error Unknow Failure $error");
         return const UncaughtFailure();
     }
   }

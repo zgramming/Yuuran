@@ -36,6 +36,7 @@ final goRouter = Provider<GoRouter>(
       refreshListenable: GoRouterNotifier(ref: ref),
       redirect: (state) {
         final appConfig = ref.read(appConfigNotifer).itemAsync.value!;
+
         final alreadyOnboarding = appConfig.alreadyOnboarding;
         final user = appConfig.userSession;
 
@@ -103,9 +104,7 @@ final goRouter = Provider<GoRouter>(
           builder: (ctx, state) {
             final params = state.params;
 
-            return DuesFormPage(
-              duesDetailID: params['duesDetailID'] ?? "",
-            );
+            return DuesFormPage(duesDetailID: params['duesDetailID'] ?? "");
           },
         ),
         GoRoute(
@@ -130,9 +129,7 @@ final goRouter = Provider<GoRouter>(
           name: citizenDuesRouteName,
           builder: (ctx, state) {
             final params = state.params;
-            return CitizenDuesPage(
-              username: params['username'] ?? '0',
-            );
+            return CitizenDuesPage(username: params['username'] ?? '0');
           },
         ),
         GoRoute(

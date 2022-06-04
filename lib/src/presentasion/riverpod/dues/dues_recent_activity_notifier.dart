@@ -1,20 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../injection.dart';
-import '../parameter/parameter_notifier.dart';
+import '../parameter/selected_year_month_parameter.dart';
 
 final getDuesRecentActivity = FutureProvider.autoDispose((ref) async {
   final repository = ref.watch(duesRepository);
-
-  final month = ref.watch(selectedYearMonthParameter.select((value) => value.month));
-  final year = ref.watch(selectedYearMonthParameter.select((value) => value.year));
-  final limit = ref.watch(selectedYearMonthParameter.select((value) => value.limit));
-
+  final parameter = ref.watch(selectedYearMonthParameter);
   final result = await repository.getRecentActivity(
-    limit: limit,
-    month: month,
-    year: year,
+    limit: parameter.limit,
+    month: parameter.month,
+    year: parameter.year,
   );
 
-  return result.fold((l) => throw Exception(l.message), (r) => r);
+  return result.fold((failure) => throw Exception(failure.message), (items) => items);
 });

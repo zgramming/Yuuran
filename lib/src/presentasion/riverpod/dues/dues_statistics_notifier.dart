@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../injection.dart';
-import '../parameter/parameter_notifier.dart';
+import '../parameter/selected_year_month_parameter.dart';
 
 final getDuesStatistics = FutureProvider.autoDispose((ref) async {
   final repository = ref.watch(duesRepository);

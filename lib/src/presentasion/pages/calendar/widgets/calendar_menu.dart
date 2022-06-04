@@ -4,7 +4,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../../../utils/utils.dart';
 import '../../../riverpod/dues/dues_calendar_notifier.dart';
-import '../../../riverpod/parameter/parameter_notifier.dart';
+import '../../../riverpod/parameter/dues_calendar_parameter.dart';
 
 class CalendarMenu extends StatelessWidget {
   const CalendarMenu({Key? key}) : super(key: key);
@@ -43,7 +43,7 @@ class CalendarMenu extends StatelessWidget {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                 child: TableCalendar(
                   headerStyle: calendarHeaderStyle,
-                  focusedDay: calendarParam.focusedDay,
+                  focusedDay: calendarParam.focusedDate,
                   daysOfWeekStyle: daysOfWeekStyle,
                   locale: 'id_ID',
                   firstDay: DateTime.utc(DateTime.now().year - 10),
@@ -97,21 +97,19 @@ class CalendarMenu extends StatelessWidget {
 
                     // Using `isSameDay` is recommended to disregard
                     // the time-part of compared DateTime objects.
-                    return isSameDay(calendarParam.selectedDay, day);
+                    return isSameDay(calendarParam.selectedDate, day);
                   },
-                  onDaySelected: (selectedDay, focusedDay) {
-                    if (!isSameDay(calendarParam.selectedDay, selectedDay)) {
+                  onDaySelected: (selectedDate, focusedDay) {
+                    if (!isSameDay(calendarParam.selectedDate, selectedDate)) {
                       // Call `setState()` when updating the selected day
                       ref
                           .watch(duesCalendarParameter.notifier)
-                          .update((state) => state.copyWith(selectedDay: selectedDay));
+                          .update((state) => state.copyWith(selectedDate: selectedDate));
                     }
                   },
-                  onPageChanged: (focusedDay) {
-                    ref
-                        .watch(duesCalendarParameter.notifier)
-                        .update((state) => state.copyWith(focusedDay: focusedDay));
-                  },
+                  onPageChanged: (focusedDate) => ref
+                      .watch(duesCalendarParameter.notifier)
+                      .update((state) => state.copyWith(focusedDate: focusedDate)),
                 ),
               );
             },

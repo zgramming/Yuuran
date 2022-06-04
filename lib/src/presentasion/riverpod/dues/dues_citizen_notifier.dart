@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../injection.dart';
 import '../../../data/model/dues_citizen/dues_citizen_model.dart';
-import '../parameter/parameter_notifier.dart';
+import '../parameter/dues_citizen_parameter.dart';
 
 final getCitizenDues =
     FutureProvider.autoDispose.family<DuesCitizenModel, String>((ref, username) async {

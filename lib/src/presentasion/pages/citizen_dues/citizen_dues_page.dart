@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../utils/utils.dart';
 import '../../riverpod/dues/dues_citizen_notifier.dart';
-import '../../riverpod/parameter/parameter_notifier.dart';
+import '../../riverpod/parameter/dues_citizen_parameter.dart';
 import '../widgets/dues_detail_card.dart';
 
 import 'widgets/citizen_dues_filter.dart';

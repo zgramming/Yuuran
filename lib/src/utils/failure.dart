@@ -10,31 +10,21 @@ abstract class Failure extends Equatable {
 }
 
 class ResponseFailure extends Failure {
-  const ResponseFailure({
-    String message = "Response Failure",
-  }) : super(message);
+  const ResponseFailure({String message = "Response Failure"}) : super(message);
 }
 
 class ConnectionTimeoutFailure extends Failure {
-  const ConnectionTimeoutFailure({
-    String message = "Connection Timeout Failure",
-  }) : super(message);
+  const ConnectionTimeoutFailure({String message = "Connection Timeout Failure"}) : super(message);
 }
 
 class SendTimeoutFailure extends Failure {
-  const SendTimeoutFailure({
-    String message = "Send Timeout Failure",
-  }) : super(message);
+  const SendTimeoutFailure({String message = "Send Timeout Failure"}) : super(message);
 }
 
 class ReceiveTimeoutFailure extends Failure {
-  const ReceiveTimeoutFailure({
-    String message = "Receive Timeout Failure",
-  }) : super(message);
+  const ReceiveTimeoutFailure({String message = "Receive Timeout Failure"}) : super(message);
 }
 
 class UncaughtFailure extends Failure {
-  const UncaughtFailure({
-    String message = "Uncaught Failure",
-  }) : super(message);
+  const UncaughtFailure({String message = "Uncaught Failure"}) : super(message);
 }
