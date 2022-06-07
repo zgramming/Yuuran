@@ -68,15 +68,13 @@ Application to manage dues in Kampung Kepu GG Marwah. This is final project Asso
 			<td>
 				<center>
 				<h3>Management Iuran Transaction</h3>
-				<img src="github/gif/7.
-				form_iuran.gif" height=400>
+				<img src="github/gif/7.form_iuran.gif" height=400>
 				</center>
 			</td>
 			<td>
 				<center>
 				<h3>Management Iuran Category</h3>
-				<img src="github/gif/8.
-				form_kategori_iuran.gif" height=400>
+				<img src="github/gif/8.form_kategori_iuran.gif" height=400>
 				</center>
 			</td>
 		</tr>
