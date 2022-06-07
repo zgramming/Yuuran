@@ -7,6 +7,65 @@
 # Yuuran
 Application to manage dues in Kampung Kepu GG Marwah. This is final project Associate’s degree System Information Universitas Bina Sarana Informatika.
 
+## Feature
+
+- [x] Onboarding
+- [x] Login
+- [x] Statistic Iuran
+- [x] Recent Activity Transaction
+- [x] Search Citizen
+- [x] List Dues by Citizen
+- [x] Calendar Activity
+- [x] Account Page (Logout & About Application)
+- [x] Management Iuran Category
+- [x] Management Iuran Transaction
+
+<table>
+    <tbody>
+        <tr>
+			<td>
+				<h3 align="center">Onboarding</h3>
+				<img src="github/gif/1.onboarding.gif" height=400>
+			</td>
+			<td>
+				<h3 align="center">Login</h3>
+				<img src="github/gif/2.login.gif" height=400>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<h3 align="center">Home</h3>
+				<img src="github/gif/3.home.gif" height=400>
+			</td>
+			<td>
+				<h3 align="center">Search</h3>
+				<img src="github/gif/4.0.search.gif" height=400>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<h3 align="center">Citizen Dues</h3>
+				<img src="github/gif/4.1.citizen_dues.gif" height=400>
+			</td>
+			<td>
+				<h3 align="center">Calendar</h3>
+				<img src="github/gif/5.calendar.gif" height=400>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<h3 align="center">Management Iuran Transaction</h3>
+				<img src="github/gif/7.form_iuran.gif" height=400>
+			</td>
+			<td>
+				<h3 align="center">Management Iuran Category</h3>
+				<img src="github/gif/8.form_kategori_iuran.gif" height=400>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+
 ## Issues
 
 Please file any issues, bugs or feature request as an issue on <a href="https://github.com/zgramming/Yuuran/issues"><b> Github </b></a>
