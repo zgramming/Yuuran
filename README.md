@@ -24,42 +24,60 @@ Application to manage dues in Kampung Kepu GG Marwah. This is final project Asso
     <tbody>
         <tr>
 			<td>
-				<h3 align="center">Onboarding</h3>
-				<img src="github/gif/1.onboarding.gif" height=400>
+				<center>
+					<h3>Onboarding</h3>
+					<img src="github/gif/1.onboarding.gif" height=400>
+				</center>
 			</td>
 			<td>
-				<h3 align="center">Login</h3>
+				<center>
+				<h3>Login</h3>
 				<img src="github/gif/2.login.gif" height=400>
+				</center>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<h3 align="center">Home</h3>
+				<center>
+				<h3>Home</h3>
 				<img src="github/gif/3.home.gif" height=400>
+				</center>
 			</td>
 			<td>
-				<h3 align="center">Search</h3>
+				<center>
+				<h3>Search</h3>
 				<img src="github/gif/4.0.search.gif" height=400>
+				</center>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<h3 align="center">Citizen Dues</h3>
+				<center>
+				<h3>Citizen Dues</h3>
 				<img src="github/gif/4.1.citizen_dues.gif" height=400>
+				</center>
 			</td>
 			<td>
-				<h3 align="center">Calendar</h3>
+				<center>
+				<h3>Calendar</h3>
 				<img src="github/gif/5.calendar.gif" height=400>
+				</center>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				<h3 align="center">Management Iuran Transaction</h3>
-				<img src="github/gif/7.form_iuran.gif" height=400>
+				<center>
+				<h3>Management Iuran Transaction</h3>
+				<img src="github/gif/7.
+				form_iuran.gif" height=400>
+				</center>
 			</td>
 			<td>
-				<h3 align="center">Management Iuran Category</h3>
-				<img src="github/gif/8.form_kategori_iuran.gif" height=400>
+				<center>
+				<h3>Management Iuran Category</h3>
+				<img src="github/gif/8.
+				form_kategori_iuran.gif" height=400>
+				</center>
 			</td>
 		</tr>
 	</tbody>
