@@ -22,6 +22,8 @@ class DuesCategoryActionNotifier extends StateNotifier<DuesCategoryActionState> 
       code: code,
       name: name,
       amount: amount,
+      description: description,
+      duesCategoryId: duesCategoryId,
     );
 
     result.fold(
