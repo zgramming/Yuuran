@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,13 +29,14 @@ class _CitizenFormPageState extends ConsumerState<CitizenFormPage> {
 
   @override
   Widget build(BuildContext context) {
+
     /// Listen [citizenById]
-    ref.listen<AsyncValue<UserModel>>(getCitizenById(widget.id), (_, state) {
+    ref.listen<AsyncValue<UserModel?>>(getCitizenById(widget.id ), (_, state) {
       state.whenData((value) {
         setState(() {
-          usernameController.text = value.username;
-          nameController.text = value.name;
-          emailController.text = value.email;
+          usernameController.text = value?.username ?? '';
+          nameController.text = value?.name ?? '';
+          emailController.text = value?.email ?? '';
         });
       });
     });
@@ -69,7 +71,7 @@ class _CitizenFormPageState extends ConsumerState<CitizenFormPage> {
       },
     );
 
-    final future = ref.watch(getCitizenById(widget.id));
+    final future = ref.watch(getCitizenById(widget.id ));
 
     return Scaffold(
       appBar: AppBar(
@@ -153,7 +155,7 @@ class _CitizenFormPageState extends ConsumerState<CitizenFormPage> {
                     /// Section Password & Confirmation Password
                     /// When mode update, we should hidden this input
                     /// We let user to update their password individual
-                    if (widget.id == 0)
+                    if (widget.id <= 0)
                       _PasswordSection(
                         passwordController: passwordController,
                         passwordConfirmationController: passwordConfirmationController,

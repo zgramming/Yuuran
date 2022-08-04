@@ -32,7 +32,7 @@ class GoToPage {
   }
 
   void Function()? citizenFormNew(BuildContext context) {
-    final params = {"id": "-1"};
+    final params = {"id": "0"};
     context.pushNamed(citizenFormRouteName, params: params);
 
     return null;

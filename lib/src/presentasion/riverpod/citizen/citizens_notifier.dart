@@ -1,5 +1,4 @@
 import 'dart:collection';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../injection.dart';
@@ -15,6 +14,7 @@ final citizenQuery = StateProvider<String?>((ref) => null);
 
 final citizenGrouping = FutureProvider.autoDispose<Map<String, List<UserModel>>>((ref) async {
   final values = await ref.watch(getCitizens.future);
+
   if (values.isEmpty) return {};
 
   final tempMap = <String, List<UserModel>>{};

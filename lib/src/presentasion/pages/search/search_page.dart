@@ -53,7 +53,7 @@ class SearchPage extends ConsumerWidget {
             child: RefreshIndicator(
               onRefresh: () async {
                 await Future.delayed(const Duration(seconds: 1));
-                ref.refresh(citizenGrouping);
+                ref.invalidate(citizenGrouping);
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -80,6 +80,7 @@ class SearchPage extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: 16.0),
+                      //TODO: Masih ada bug, saat sudah tambah warga belum tampil tetapi sudah tersimpan di datbaase
                       Consumer(
                         builder: (context, ref, child) {
                           final grouping = ref.watch(citizenGrouping).value ?? {};

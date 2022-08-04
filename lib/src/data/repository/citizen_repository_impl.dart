@@ -52,7 +52,7 @@ class CitizenRepositoryImpl implements CitizenRepository {
   }
 
   @override
-  Future<Either<Failure, UserModel>> getByID(int id) async {
+  Future<Either<Failure, UserModel?>> getByID(int id) async {
     try {
       final result = await remoteDataSource.getByID(id);
       return Right(result);

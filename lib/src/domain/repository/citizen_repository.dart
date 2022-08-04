@@ -6,7 +6,7 @@ import '../../utils/utils.dart';
 abstract class CitizenRepository {
   Future<Either<Failure, List<UserModel>>> get();
 
-  Future<Either<Failure, UserModel>> getByID(int id);
+  Future<Either<Failure, UserModel?>> getByID(int id);
 
   Future<Either<Failure, String>> saveCitizen({
     required int? id,

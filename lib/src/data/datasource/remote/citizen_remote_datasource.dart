@@ -4,7 +4,7 @@ import '../../model/user/user_model.dart';
 
 abstract class CitizenRemoteDataSource {
   Future<List<UserModel>> get();
-  Future<UserModel> getByID(int id);
+  Future<UserModel?> getByID(int id);
 
   Future<String> saveCitizen({
     required int? id,
@@ -37,9 +37,11 @@ class CitizenRemoteDataSourceImpl implements CitizenRemoteDataSource {
   }
 
   @override
-  Future<UserModel> getByID(int id) async {
+  Future<UserModel?> getByID(int id) async {
     final result = await dioClient.get("/citizen/$id");
     final response = result.data as Map<String, dynamic>;
+    if (response['data'] == null) return null;
+
     final user = UserModel.fromJson(Map<String, dynamic>.from(response['data']));
     return user;
   }
