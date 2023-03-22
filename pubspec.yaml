@@ -32,7 +32,7 @@ dependencies:
   convex_bottom_bar: ^3.0.0
   cupertino_icons: ^1.0.5
   dartz: ^0.10.1
-  dio: ^4.0.6
+  dio: ^5.0.3
   equatable: ^2.0.3
   flutter:
     sdk: flutter
